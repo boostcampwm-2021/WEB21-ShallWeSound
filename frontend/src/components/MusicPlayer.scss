@@ -1,0 +1,46 @@
+.musicplayer {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  margin-top: 4rem;
+  margin-left: 4rem;
+  width: 400px;
+  height: 400px;
+  background-color: orange;
+
+  & > * {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &-title {
+    box-sizing: border-box;
+    background-color: cyan;
+    margin: 1rem;
+    padding: 0.5rem;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+  }
+
+  &-body {
+    background-color: yellowgreen;
+    width: 100%;
+    height: 50%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+  }
+
+  &-cover {
+    box-sizing: border-box;
+    background-color: black;
+    border-radius: 999px;
+    width: 50%;
+    height: 100%;
+  }
+}
