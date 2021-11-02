@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
-
 import path from 'path';
 import http from 'http';
 import socketIo, { Socket } from 'socket.io';
 import { socketHandler } from './utils/SocketHandler';
+import roomRouter from './routes/room';
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
@@ -13,6 +13,7 @@ const io = require('socket.io')(server);
 
 app.use(cors);
 app.use(express.static(path.join(__dirname, 'videos')));
+
 app.get('/', (req, res) => {
   return res.status(200).sendFile(`${__dirname}/index.html`);
 });
@@ -38,8 +39,13 @@ io.on('connection', (socket: any) => {
 
 // server.listen(5000, () => console.log("App listening on port 5000..."));
 
-server.listen(3000, () => {
-  console.log('듣는중');
-});
+app.set('port', 3000);
 
 io.on('connection', socketHandler);
+
+app.use('/room', roomRouter);
+
+import socket from './socket';
+socket(server);
+
+server.listen(app.get('port'));
