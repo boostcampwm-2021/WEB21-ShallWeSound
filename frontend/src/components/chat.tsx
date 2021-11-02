@@ -1,6 +1,7 @@
 import React, { HtmlHTMLAttributes } from "react";
 import {useState, useRef, useEffect} from "react"
 import {io} from "socket.io-client";
+import styles from "./style.module.scss";
 const socket = io();
 type event = React.ChangeEvent<HTMLInputElement>;
 function ChatComponent() {
@@ -36,7 +37,7 @@ function ChatComponent() {
         setChats(curChat);
     }
     return(
-        <div className='chatBox'>
+        <div className={styles.chatBox}>
             <div>
                 <MakeChatList/>
             </div>
