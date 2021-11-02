@@ -1,7 +1,12 @@
 import './App.css';
+import Room from './pages/Room';
 
 function App() {
-  return <div className="App"></div>;
+  return (
+    <div className="App">
+      <Room></Room>
+    </div>
+  );
 }
 
 export default App;
