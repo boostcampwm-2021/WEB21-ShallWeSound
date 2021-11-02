@@ -36,8 +36,13 @@ function ChatComponent() {
         setNewChat('');
         setChats(curChat);
     }
+    const keyUpHandler=(e: React.KeyboardEvent<HTMLInputElement>)=>{
+        if(e.key === "Enter"){
+            clickHandler();
+        }
+    }
     return(
-        <div className={styles.chatBox}>
+        <div className={styles.chatBox} >
             <div className={styles.chatList}>
                 <MakeChatList/>
             </div>
@@ -48,9 +53,9 @@ function ChatComponent() {
                 placeholder="message"
                 value={newChat}
                 onChange={changeHandler}
+                onKeyPress={keyUpHandler}
                 />
-                <div 
-                onClick={clickHandler}>
+                <div onClick={clickHandler}>
                     <button >send</button>
                 </div>
             </div>
