@@ -15,13 +15,11 @@ interface userList{
 const userHash:userList={}
 let userNum:number = 0;
 io.on('connection', (socket)=>{
-  console.log('new user connected');
   socket.broadcast.emit('enterRoom', 'new user connected');
   socket.on('disconnect', ()=>{
     socket.broadcast.emit('leaveRoom', 'user disconnected');
   })
   socket.on('chatMessage', (message:string)=>{
-    console.log(message);
     socket.broadcast.emit('chatMessage', message);
   })
 })
