@@ -1,8 +1,8 @@
 import ChatComponent from './chat';
-
+import styles from "./style.module.scss";
 function App() {
   return (
-    <div className="App">
+    <div className={styles.App}>
       <ChatComponent/>
     </div>
   );

@@ -38,18 +38,21 @@ function ChatComponent() {
     }
     return(
         <div className={styles.chatBox}>
-            <div>
+            <div className={styles.chatList}>
                 <MakeChatList/>
             </div>
-            <div>
+            <div className={styles.chatInputSquare}>
                 <input
-                className="chatInput" 
+                className={styles.chatInput}
                 type="text"
                 placeholder="message"
                 value={newChat}
                 onChange={changeHandler}
                 />
-                <button onClick={clickHandler}>send</button>
+                <div 
+                onClick={clickHandler}>
+                    <button >send</button>
+                </div>
             </div>
         </div>
     );
