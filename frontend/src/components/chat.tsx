@@ -4,23 +4,16 @@ import {io} from "socket.io-client";
 const socket = io();
 type event = React.ChangeEvent<HTMLInputElement>;
 function ChatComponent() {
-    // interface chatInterface{
-    //     [id:number]:string
-    // }
     const [chats, setChats] = useState<string[]>([]);
     const [newChat, setNewChat] = useState<string>("");
     const chatListRef = useRef();
     const idRef = useRef<number>(0)
     useEffect(() => {
-        socket.on("chat", (message:string) => {
-            // idRef.current = idRef.current+1;
-            // const curId = idRef.current
+        socket.on("chatMessage", (message:string) => {
             const curChat = [...chats, message];
+            console.log(curChat);
             setChats(curChat);
         });
-    
-        // const chatList:any = chatListRef.current;
-        // chatList.scrollTop = chatList.scrollHeight;
     }, [chats]);
     
     function MakeChatList(){
@@ -33,28 +26,30 @@ function ChatComponent() {
         })
         return <ul>{chatlist}</ul>
     }
-    function ChatForm(){
-
-    }
     const changeHandler = (e:event) => {
         setNewChat(e.target.value);
     };
     const clickHandler =()=>{
         socket.emit('chatMessage', newChat);
-        const curChat = [...chats,newChat ]
-        setChats(curChat);
+        const curChat = [...chats,newChat]
         setNewChat('');
+        setChats(curChat);
     }
     return(
         <div className='chatBox'>
-            <MakeChatList/>
-            <form>
-                <input type="text"
+            <div>
+                <MakeChatList/>
+            </div>
+            <div>
+                <input
+                className="chatInput" 
+                type="text"
                 placeholder="message"
+                value={newChat}
                 onChange={changeHandler}
                 />
                 <button onClick={clickHandler}>send</button>
-            </form>
+            </div>
         </div>
     );
 }

@@ -21,6 +21,7 @@ io.on('connection', (socket)=>{
     socket.broadcast.emit('leaveRoom', 'user disconnected');
   })
   socket.on('chatMessage', (message:string)=>{
+    console.log(message);
     socket.broadcast.emit('chatMessage', message);
   })
 })
