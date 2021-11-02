@@ -5,6 +5,7 @@
   "scripts": {
     "start": "nodemon --exec ts-node app.ts"
   },
+  "proxy": "http://localhost:3000",
   "dependencies": {
     "@types/express": "^4.17.13",
     "cookie-parser": "~1.4.4",
