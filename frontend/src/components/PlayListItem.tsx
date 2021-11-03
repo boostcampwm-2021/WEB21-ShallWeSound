@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 type Props = {
-  name: string;
+  title: string;
+  singer: string;
 };
 
 type TextProps = {
@@ -11,15 +12,15 @@ type TextProps = {
   size: string;
 };
 
-const PlayListItem = ({ name }: Props) => {
+const PlayListItem = ({ title, singer }: Props) => {
   return (
     <Item>
       <div>
         <Text color="#ffffff" weight="500" size="20px">
-          {name}
+          {title}
         </Text>
         <Text color="#FAFAFA" weight="0" size="14px">
-          {'가수'}
+          {singer}
         </Text>
       </div>
       <Detail></Detail>

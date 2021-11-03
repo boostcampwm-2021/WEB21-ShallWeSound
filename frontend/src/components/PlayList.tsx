@@ -13,7 +13,7 @@ const PlayList = ({ playList }: Props) => {
       <Title>P L A Y &nbsp; L I S T</Title>
       <Wrapper>
         {playList.map((music: Music, i: number) => (
-          <PlayListItem key={i} name={music.name}></PlayListItem>
+          <PlayListItem key={i} title={music.title} singer={music.singer}></PlayListItem>
         ))}
       </Wrapper>
       <AddButton>+</AddButton>
