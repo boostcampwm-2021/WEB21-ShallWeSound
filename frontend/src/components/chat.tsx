@@ -24,13 +24,25 @@ function ChatComponent() {
     
     function MakeChatList(){
         const chatlist = chats.map((chat, idx)=>{
-            return(
-                <li>
-                    {chat.msg}
-                </li>
-            );
+            if(chat.id !== -1){
+                return(
+                    <div>
+                        <div>{chat.id}</div>
+                        <div>{chat.msg}</div>
+                    </div>
+                    
+                );
+            }else{
+                return(
+                    <div>
+                        <div>my chat</div>
+                        <div>{chat.msg}</div>
+                    </div>
+                    
+                );
+            }
         })
-        return <ul>{chatlist}</ul>
+        return <div>{chatlist}</div>
     }
     const changeHandler = (e:event) => {
         setNewChat(e.target.value);
