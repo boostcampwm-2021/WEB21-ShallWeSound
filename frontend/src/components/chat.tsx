@@ -10,8 +10,9 @@ function ChatComponent() {
     const chatListRef = useRef();
     const idRef = useRef<number>(0)
     useEffect(() => {
-        socket.on("chatMessage", (message:string) => {
-            const curChat = [...chats, message];
+        socket.on("chatMessage", ({id, msg}) => {
+            console.log('userid : ', id);
+            const curChat = [...chats, msg];
             console.log(curChat);
             setChats(curChat);
         });

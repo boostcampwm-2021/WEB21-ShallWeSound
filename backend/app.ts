@@ -10,17 +10,21 @@ app.get('/', (req, res) => {
   res.send('정상 작동합니다.');
 });
 interface userList{
-  [socketid:number] : number;
+  [socketid:string] : number;
 }
 const userHash:userList={}
 let userNum:number = 0;
 io.on('connection', (socket)=>{
+  console.log(socket.id);
+  userHash[socket.id] = userNum;
+  userNum+=1;
   socket.broadcast.emit('enterRoom', 'new user connected');
   socket.on('disconnect', ()=>{
     socket.broadcast.emit('leaveRoom', 'user disconnected');
   })
   socket.on('chatMessage', (message:string)=>{
-    socket.broadcast.emit('chatMessage', message);
+    console.log(userHash[socket.id]);
+    socket.broadcast.emit('chatMessage',{id:userHash[socket.id], msg:message});
   })
 })
 
