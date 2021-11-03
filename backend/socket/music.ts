@@ -10,17 +10,20 @@ interface PlayList {
 const PlayList: PlayList = {
   playlist: [
     {
-      name: 'Savage',
+      title: 'Savage',
+      singer: '에스파',
       src: 'http://localhost:3000/audio/Aespa_Savage.mp3',
       isPlayed: false,
     },
     {
-      name: 'Psycho',
+      title: 'Psycho',
+      singer: '레드벨벳',
       src: 'http://localhost:3000/audio/RedVelvet_Psycho.mp3',
       isPlayed: false,
     },
     {
-      name: 'Blueming',
+      title: 'Blueming',
+      singer: '아이유',
       src: 'http://localhost:3000/audio/IU_Blueming.mp3',
       isPlayed: false,
     },
