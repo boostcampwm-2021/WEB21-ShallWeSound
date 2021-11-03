@@ -40,6 +40,8 @@ function MusicThumbnail ({ name, thumbnail } : { name: string, thumbnail: string
     setIsHover(false);
   }
 
+  console.log("ghi")
+
   return (
     <div className="musicplayer-cover">
       <div className="cover-hover" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
@@ -62,9 +64,9 @@ function MusicThumbnail ({ name, thumbnail } : { name: string, thumbnail: string
 function MusicPlayer({ musicList } : { musicList: any }) {
   const [musicIndex, setmusicIndex] = useState(0);
   const [musicInfo, setMusicInfo] = useState({
-    'name': 'noname',
-    'singer': 'noname',
-    'thumbnail': ''
+    name: 'noname',
+    singer: 'noname',
+    thumbnail: '',
   });
 
   function goPrevMusic() {
@@ -76,23 +78,25 @@ function MusicPlayer({ musicList } : { musicList: any }) {
   }
 
   useEffect(() => {
-    console.log(musicIndex);
+    console.log("abc")
     setMusicInfo({
       ...musicInfo,
-      'name': musicList[musicIndex]['name'],
-      'singer': musicList[musicIndex]['singer'],
-      'thumbnail': musicList[musicIndex]['thumbnail'],
+      name: musicList[musicIndex]['name'],
+      singer: musicList[musicIndex]['singer'],
+      thumbnail: musicList[musicIndex]['thumbnail'],
     })
   }, [musicIndex])
+
+  console.log("def")
 
   return (
     <>
       <div className="musicplayer">
         <Title name={musicInfo['name']} singer={musicInfo['singer']} />
         <div className="musicplayer-body">
-          <PrevMusic onClick={goPrevMusic} />
+          <img src="/icons/chevron-left.svg" alt="chevron-left" onClick={goPrevMusic} />
           <MusicThumbnail name={musicInfo['name']} thumbnail={musicInfo['thumbnail']} />
-          <NextMusic onClick={goNextMusic} />
+          <img src="/icons/chevron-right.svg" alt="chevron-right" onClick={goNextMusic} />
         </div>
         <div className="musicplayer-timer">
           <span className="current-time">00:00</span>
