@@ -8,6 +8,7 @@
     // float: left;
     .othersChat{
         float: left;
+        border-radius: 5px;
         margin-block-start: 0em;
         margin-block-end: 5px;
         margin-left: 10px;
@@ -15,6 +16,7 @@
     }
     .myChat{
         float: right;
+        border-radius: 5px;
         margin-block-start: 0em;
         margin-block-end: 5px;
         margin-right: 10px;
@@ -31,13 +33,14 @@
 }
 
 .chatBox{
-    overflow: auto;
+    
     background-color: $color-chatbox;
     margin-left: 50px;
     margin-top: 200px;
     width: 500px;
     height: 500px;
     .chatList{
+        overflow: auto;
         height: 450px;
         width: 500px;
     }
@@ -47,7 +50,6 @@
         margin-top: 5px;
 
         display: flex;
-        z-index: 3;
         border-radius: 4px;
         height: 40px;
         .chatInput{
