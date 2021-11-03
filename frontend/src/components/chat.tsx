@@ -2,18 +2,22 @@ import React, { HtmlHTMLAttributes } from "react";
 import {useState, useRef, useEffect} from "react"
 import {io} from "socket.io-client";
 import styles from "./style.module.scss";
+import * as _ from "lodash"
 const socket = io();
+interface chatType{
+    id :number;
+    msg:string;
+}
 type event = React.ChangeEvent<HTMLInputElement>;
 function ChatComponent() {
-    const [chats, setChats] = useState<string[]>([]);
+    const [chats, setChats] = useState<chatType[]>([]);
     const [newChat, setNewChat] = useState<string>("");
     const chatListRef = useRef();
     const idRef = useRef<number>(0)
     useEffect(() => {
         socket.on("chatMessage", ({id, msg}) => {
-            console.log('userid : ', id);
-            const curChat = [...chats, msg];
-            console.log(curChat);
+            const curChat = _.cloneDeep(chats);
+            curChat.push({id:id, msg:msg});
             setChats(curChat);
         });
     }, [chats]);
@@ -22,7 +26,7 @@ function ChatComponent() {
         const chatlist = chats.map((chat, idx)=>{
             return(
                 <li>
-                    {chat}
+                    {chat.msg}
                 </li>
             );
         })
@@ -33,7 +37,8 @@ function ChatComponent() {
     };
     const clickHandler =()=>{
         socket.emit('chatMessage', newChat);
-        const curChat = [...chats,newChat]
+        const curChat = _.cloneDeep(chats);
+        curChat.push({id:-1, msg:newChat});
         setNewChat('');
         setChats(curChat);
     }
