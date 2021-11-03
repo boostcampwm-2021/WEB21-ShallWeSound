@@ -3,13 +3,35 @@
 
 .App{
 }
-.othersChat{
-    background-color: white;
+.msgBallon{
+    overflow: hidden;
+    // float: left;
+    .othersChat{
+        float: left;
+        margin-block-start: 0em;
+        margin-block-end: 5px;
+        margin-left: 10px;
+        background-color: white;
+    }
+    .myChat{
+        float: right;
+        margin-block-start: 0em;
+        margin-block-end: 5px;
+        margin-right: 10px;
+        background-color: #FEE500;
+    }
+    
+    
 }
-.myChat{
-    background-color: #FEE500;
+
+
+.myMsgBallon{
+    margin-top: 5px;
+    // float: right;
 }
+
 .chatBox{
+    overflow: auto;
     background-color: $color-chatbox;
     margin-left: 50px;
     margin-top: 200px;
@@ -17,7 +39,7 @@
     height: 500px;
     .chatList{
         height: 450px;
-        width: 480px;
+        width: 500px;
     }
 
     .chatInputSquare{

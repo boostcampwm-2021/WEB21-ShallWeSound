@@ -27,16 +27,19 @@ function ChatComponent() {
             if(chat.id !== -1){
                 const writer = `by user${chat.id}`;
                 return(
-                    <div>
-                        <div>{writer}</div>
-                        <div className={styles.othersChat}>{chat.msg}</div>
+                    
+                    <div className={styles.msgBallon}>
+                        <div>
+                            {writer}
+                        </div>
+                        <p className={styles.othersChat}>{chat.msg}</p>
                     </div>
                     
                 );
             }else{
                 return(
-                    <div>
-                        <div className={styles.myChat}>{chat.msg}</div>
+                    <div className={styles.msgBallon}>
+                        <p className={styles.myChat}>{chat.msg}</p>
                     </div>
                     
                 );
