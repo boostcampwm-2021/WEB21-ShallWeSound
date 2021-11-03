@@ -1,7 +1,8 @@
 type Music = {
-  name: string;
+  title: string;
   src: string;
   isPlayed: boolean;
+  singer: string;
 };
 
 export type { Music };
