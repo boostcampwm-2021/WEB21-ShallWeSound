@@ -25,18 +25,18 @@ function ChatComponent() {
     function MakeChatList(){
         const chatlist = chats.map((chat, idx)=>{
             if(chat.id !== -1){
+                const writer = `by user${chat.id}`;
                 return(
                     <div>
-                        <div>{chat.id}</div>
-                        <div>{chat.msg}</div>
+                        <div>{writer}</div>
+                        <div className={styles.othersChat}>{chat.msg}</div>
                     </div>
                     
                 );
             }else{
                 return(
                     <div>
-                        <div>my chat</div>
-                        <div>{chat.msg}</div>
+                        <div className={styles.myChat}>{chat.msg}</div>
                     </div>
                     
                 );
