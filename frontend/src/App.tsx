@@ -6,37 +6,37 @@ function App() {
     {
       name: "Harley Bird - Home",
       singer: "Jordan Schor",
-      img: "music-1",
+      thumbnail: "/images/music-1.jpg",
       src: "music-1"
     },
     {
       name: "Ikson Anywhere – Ikson",
       singer: "Audio Library",
-      img: "music-2",
+      thumbnail: "/images/music-2.jpg",
       src: "music-2"
     },
     {
       name: "Beauz & Jvna - Crazy",
       singer: "Beauz & Jvna",
-      img: "music-3",
+      thumbnail: "/images/music-3.jpg",
       src: "music-3"
     },
     {
       name: "Hardwind - Want Me",
       singer: "Mike Archangelo",
-      img: "music-4",
+      thumbnail: "/images/music-4.jpg",
       src: "music-4"
     },
     {
       name: "Jim - Sun Goes Down",
       singer: "Jim Yosef x Roy",
-      img: "music-5",
+      thumbnail: "/images/music-5.jpg",
       src: "music-5"
     },
     {
       name: "Lost Sky - Vision NCS",
       singer: "NCS Release",
-      img: "music-6",
+      thumbnail: "/images/music-6.jpg",
       src: "music-6"
     },
   ])

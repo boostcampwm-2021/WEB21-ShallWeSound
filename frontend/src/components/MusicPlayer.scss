@@ -51,8 +51,6 @@
   &-cover {
     position: relative;
     box-sizing: border-box;
-    background: url('./profile.jpg') no-repeat center;
-    background-size: cover;
     border-radius: 999px;
     width: 50%;
     height: 100%;
@@ -60,6 +58,7 @@
     img {
       width: 100%;
       height: 100%;
+      border-radius: 999px;
     }
 
     .cover-hover {
@@ -77,10 +76,15 @@
         left: calc(50% - 24px);
       }
 
-      &:hover {
-        visibility: visible;
-        opacity: 0.3;
+      .only-hover {
+        width: 100%;
+        height: 100%;
+        border-radius: 999px;
+        position: absolute;
+        top: 0;
+        left: 0;
         background-color: #000;
+        opacity: 0.3;
       }
     }
 
