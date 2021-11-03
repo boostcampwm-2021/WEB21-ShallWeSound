@@ -1,17 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
 import styled from 'styled-components';
 import type { Music } from '../types';
 import PlayListItem from './PlayListItem';
 
-type Props = {
-  playList: Music[];
-};
+const socket = io('http://localhost:3000/music');
 
-const PlayList = ({ playList }: Props) => {
+const PlayList = () => {
+  const [playList, setPlayList] = useState<Music[]>([]);
+  const [page, setPage] = useState(0);
+  const count = 8;
+
+  useEffect(() => {
+    socket.on('response', (data: Music[]) => {
+      setPlayList([...playList, ...data]);
+    });
+
+    return () => {
+      socket.off('response');
+    };
+  }, [playList]);
+
+  useEffect(() => {
+    socket.emit('request', [page, count]);
+  }, [page]);
+
+  const onScroll = (e: any) => {
+    if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight) {
+      setPage(page => page + count);
+    }
+  };
+
+  console.log(11);
   return (
     <Container>
       <Title>P L A Y &nbsp; L I S T</Title>
-      <Wrapper>
+      <Wrapper onScroll={onScroll}>
         {playList.map((music: Music, i: number) => (
           <PlayListItem key={i} title={music.title} singer={music.singer}></PlayListItem>
         ))}
@@ -50,7 +74,13 @@ const Wrapper = styled.div`
   scrollbar-width: none; /* Firefox */
 
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera*/
+    /* Chrome, Safari, Opera*/
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    height: 17%;
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 10px;
   }
 `;
 
