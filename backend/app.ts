@@ -5,6 +5,7 @@ import http from 'http';
 import socketIo, { Socket } from 'socket.io';
 import { socketHandler } from './utils/SocketHandler';
 import roomRouter from './routes/room';
+import audioRouter from './routes/audio';
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
@@ -44,6 +45,7 @@ app.set('port', 3000);
 io.on('connection', socketHandler);
 
 app.use('/room', roomRouter);
+app.use('/audio', audioRouter);
 
 import socket from './socket';
 socket(server);
