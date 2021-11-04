@@ -1,1 +1,4 @@
 node_modules
+.env
+*.mp3
+*.wav
