@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, MouseEventHandler, BaseSyntheticEvent } from "react";
 import './MusicPlayer.scss'
 
 function Title({ name="Test", singer="Singer" }) {
@@ -10,7 +10,7 @@ function Title({ name="Test", singer="Singer" }) {
   )
 }
 
-function MusicThumbnail ({ name, thumbnail, nowPlaying, onClick } : { name: string, thumbnail: string, nowPlaying: boolean, onClick: any }) {
+function MusicThumbnail ({ name, thumbnail, nowPlaying, onClick } : { name: string, thumbnail: string, nowPlaying: boolean, onClick: MouseEventHandler }) {
   const [isHover, setIsHover] = useState(false);
   function onMouseEnter () { setIsHover(true) }
   function onMouseLeave () { setIsHover(false) }
@@ -35,10 +35,16 @@ function MusicThumbnail ({ name, thumbnail, nowPlaying, onClick } : { name: stri
   )
 }
 
+interface musicInfo {
+  name: string,
+  singer: string,
+  thumbnail: string,
+  src: string,
+}
 
-function MusicPlayer({ musicList } : { musicList: any }) {
+function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
   const [musicIndex, setmusicIndex] = useState(0);
-  const [musicInfo, setMusicInfo] = useState({
+  const [musicInfo, setMusicInfo] = useState<musicInfo>({
     name: 'noname',
     singer: 'noname',
     thumbnail: '',
@@ -113,8 +119,8 @@ function MusicPlayer({ musicList } : { musicList: any }) {
     width: progressWidth + '%',
     borderRadius: "inherit",
   }
-
-  function mousePositionRelativeToProgressBar(e: any) {
+//React.PointerEvent<HTMLElement>
+  function mousePositionRelativeToProgressBar(e: React.MouseEvent) {
     if (musicControl.current) {
       musicControl.current.currentTime = totalTime * e.nativeEvent.offsetX / 352; // 352: progressBar total width
     }

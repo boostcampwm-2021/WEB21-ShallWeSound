@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import MusicPlayer from './components/MusicPlayer';
 
+interface musicInfo {
+  name: string,
+  singer: string,
+  thumbnail: string,
+  src: string,
+}
+
 function App() {
-  const [musicList, setMusicList] = useState([
+  const [musicList, setMusicList] = useState<musicInfo[]>([
     {
       name: "Harley Bird - Home",
       singer: "Jordan Schor",
