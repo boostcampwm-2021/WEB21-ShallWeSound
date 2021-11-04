@@ -82,6 +82,11 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
     socket.on('clientMoving', (data: number) => {
       aud.currentTime = data;
     });
+
+    setTimeout(() => {
+      aud.muted = false;
+    }, 200);
+
   }, []);
 
 
@@ -197,6 +202,9 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
   return (
     <>
       <div className="musicplayer">
+        {/* <div className="hover">
+          <img className="icon" src="/icons/play-circle.svg" alt="play-circle" />
+        </div> */}
         <video id="video" muted autoPlay src={musicInfo.src} ref={musicControl} onTimeUpdate={updateCurrentTime} onLoadedMetadata={updateMusic} onEnded={goNextMusic} ></video>
         <Title name={musicInfo.name} singer={musicInfo.singer} />
         <div className="musicplayer-body">
