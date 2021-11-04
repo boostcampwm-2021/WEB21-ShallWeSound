@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, MouseEventHandler, BaseSyntheticEvent } from "react";
+import React, { useState, useEffect, useRef, MouseEventHandler } from "react";
+import { useSocket } from '../pages/Room';
 import './MusicPlayer.scss'
 
 function Title({ name="Test", singer="Singer" }) {
@@ -51,17 +52,45 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
     src: '',
   });
   const musicControl = useRef<HTMLVideoElement>(null);
-  const [nowPlaying, setNowPlaying] = useState(false);
+  const [nowPlaying, setNowPlaying] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
   const [progressWidth, setProgressWidth] = useState(0);
+  const socket: any = useSocket();
+  
+  useEffect(() => {
+    const aud: any = document.getElementById('video')!;
+
+    socket.on('requestTime', (data: string) => {
+      console.log('방장이다.');
+      socket.emit('responseTime', aud.currentTime);
+    });
+
+    socket.on('sync', (data: string) => {
+      console.log(data);
+      aud.currentTime = data;
+    });
+
+    socket.on('clientPause', (data: string) => {
+      aud.pause();
+    });
+
+    socket.on('clientPlay', (data: string) => {
+      aud.play();
+    });
+
+    socket.on('clientMoving', (data: number) => {
+      aud.currentTime = data;
+    });
+  }, []);
+
 
   function goPrevMusic() {
     setmusicIndex((musicIndex - 1 + musicList.length) % musicList.length)
   }
   
   function goNextMusic() {
-    setmusicIndex((musicIndex + 1) % musicList.length)
+    setmusicIndex((musicIndex + 1) % musicList.length);
   }
 
   useEffect(() => {
@@ -72,7 +101,31 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
       thumbnail: musicList[musicIndex].thumbnail,
       src: musicList[musicIndex].src,
     })
+    socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
+  }, [])
+
+  useEffect(() => {
+    setMusicInfo({
+      ...musicInfo,
+      name: musicList[musicIndex].name,
+      singer: musicList[musicIndex].singer,
+      thumbnail: musicList[musicIndex].thumbnail,
+      src: musicList[musicIndex].src,
+    })
+    socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
   }, [musicIndex])
+
+  useEffect(() => {
+    console.log(musicInfo)
+    console.log(musicControl.current)
+    if (nowPlaying && musicInfo.src && musicControl.current) {
+      musicControl.current.play();
+      // socket.on('requestTime', (data: string) => {
+      //   console.log('방장이다.');
+      //   socket.emit('responseTime', currentTime);
+      // });
+    }
+  }, [musicControl])
 
   function changeFormatToTime(number: number) {
     const minute = Math.floor(number / 60);
@@ -82,16 +135,21 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
     return `${minute}:${formattedSecond}`;
   }
 
-
   function playOrPauseMusic() { 
     const playingMusic = musicControl && musicControl.current;
     if (playingMusic) {
       if (nowPlaying) {
         playingMusic.pause();
         setNowPlaying(false);
+        playingMusic.onpause = () => {
+          socket.emit('pause', '멈추시오');
+        };
       } else {
         playingMusic.play();
         setNowPlaying(true);
+        playingMusic.onplay = () => {
+          socket.emit('play', '사작하시오');
+        };
       }
     }
   }
@@ -111,6 +169,10 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
     if (playingMusic) {
       setCurrentTime(playingMusic.currentTime);
       setProgressWidth(playingMusic.currentTime / playingMusic.duration * 100);
+      playingMusic.onseeked = () => {
+        console.log(playingMusic.currentTime);
+        socket.emit('moving', playingMusic.currentTime);
+      };
     }
   }
 
@@ -119,10 +181,15 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
     width: progressWidth + '%',
     borderRadius: "inherit",
   }
-//React.PointerEvent<HTMLElement>
+
   function mousePositionRelativeToProgressBar(e: React.MouseEvent) {
-    if (musicControl.current) {
-      musicControl.current.currentTime = totalTime * e.nativeEvent.offsetX / 352; // 352: progressBar total width
+    const playingMusic = musicControl.current;
+    if (playingMusic) {
+      playingMusic.currentTime = totalTime * e.nativeEvent.offsetX / 352; // 352: progressBar total width
+      playingMusic.onseeked = () => {
+        console.log(playingMusic.currentTime);
+        socket.emit('moving', playingMusic.currentTime);
+      };
     }
     setCurrentTime(totalTime * e.nativeEvent.offsetX / 352);
   }
@@ -130,7 +197,7 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
   return (
     <>
       <div className="musicplayer">
-        <video src={musicInfo.src} ref={musicControl} onTimeUpdate={updateCurrentTime} onLoadedMetadata={updateMusic}></video>
+        <video id="video" muted autoPlay src={musicInfo.src} ref={musicControl} onTimeUpdate={updateCurrentTime} onLoadedMetadata={updateMusic} onEnded={goNextMusic} ></video>
         <Title name={musicInfo.name} singer={musicInfo.singer} />
         <div className="musicplayer-body">
           <img className="icon" src="/icons/chevron-left.svg" alt="chevron-left" onClick={goPrevMusic} />

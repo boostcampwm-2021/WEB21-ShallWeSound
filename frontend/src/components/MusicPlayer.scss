@@ -6,13 +6,13 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  // outline: 4px solid $white;
   padding: 1.5rem;
-  // margin-top: 4rem;
-  // margin-left: 4rem;
+  margin-right: 2rem;
   margin-bottom: 1rem;
   width: 400px;
   height: 400px;
-  background: $white;
+  background: linear-gradient(#4b6cb7, #182848);//$white;
   border-radius: 0.25rem;
 
   video {
@@ -26,9 +26,9 @@
 
   &-title-area {
     box-sizing: border-box;
-    outline: thick double $title-active;
+    outline: thick double $white;
     border-radius: 0.5rem;
-    color: $title-active;
+    color: $white;
     padding: 0.5rem;
     width: 100%;
     text-align: center;
@@ -111,7 +111,7 @@
   &-timer {
     width: 100%;
     font-weight: 700;
-    color: $title-active;
+    color: $white;
     display: flex;
     justify-content: space-between;
   }
@@ -119,7 +119,7 @@
   .progress {
     width: 100%;
     height: 6px;
-    outline: 1px solid $title-active;
+    outline: 1px solid $white;
     border-radius: 50px;
     cursor: pointer;
     position: relative;
