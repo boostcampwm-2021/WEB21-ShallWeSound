@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import MusicPlayer from './MusicPlayer';
 import ChatComponent from './chat';
+import '../stylesheet/reset.css';
 import styles from "./style.module.scss";
 
 function App() {
