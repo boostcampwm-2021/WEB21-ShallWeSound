@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
 import styled from 'styled-components';
 import type { Music } from '../types';
 import PlayListItem from './PlayListItem';
-
-const socket = io('http://localhost:3000/music');
+import { useSocket } from '../pages/Room';
 
 const PlayList = () => {
+  const socket: any = useSocket();
   const [playList, setPlayList] = useState<Music[]>([]);
   const [page, setPage] = useState(0);
   const count = 8;
@@ -31,7 +30,6 @@ const PlayList = () => {
     }
   };
 
-  console.log(11);
   return (
     <Container>
       <Title>P L A Y &nbsp; L I S T</Title>

@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import io from 'socket.io-client';
 import PlayList from '../components/PlayList';
+import Video from '../components/video';
+
+const socket: any = io('http://localhost:3000/music');
+const SocketProvider = React.createContext(null);
 
 const Room = () => {
   return (
-    <StyledDiv>
-      <PlayList></PlayList>
-    </StyledDiv>
+    <SocketProvider.Provider value={socket}>
+      <StyledDiv>
+        <PlayList></PlayList>
+        <Video />
+      </StyledDiv>
+    </SocketProvider.Provider>
   );
 };
 
@@ -15,4 +23,6 @@ const StyledDiv = styled.div`
   height: 100vh;
 `;
 
-export default Room;
+const useSocket = () => useContext(SocketProvider);
+
+export { Room, useSocket };

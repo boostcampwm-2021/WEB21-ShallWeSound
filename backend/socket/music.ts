@@ -158,14 +158,49 @@ const PlayList: PlayList = {
   },
 };
 
+const socketData: string[] = [];
+
 const musicSocket = (io: Server) => {
   const namespace = io.of('/music');
 
   namespace.on('connection', socket => {
     console.log(socket.id + ' connected');
 
+    if (socketData.length !== 0) {
+      socket.broadcast.to([socketData[0]]).emit('requestTime', 'time');
+    }
+
+    socketData.push(socket.id);
+
+    socket.on('responseTime', (data: string) => {
+      socket.broadcast.emit('sync', data);
+    });
+
+    socket.on('pause', (data: string) => {
+      if (socket.id === socketData[0]) {
+        socket.broadcast.emit('clientPause', '멈춰!');
+      }
+    });
+
+    socket.on('play', (data: string) => {
+      if (socket.id === socketData[0]) {
+        socket.broadcast.emit('clientPlay', '시작해!');
+      }
+    });
+
+    socket.on('moving', (data: string) => {
+      if (socket.id === socketData[0]) {
+        console.log('모두들 시작하세요');
+        socket.broadcast.emit('clientMoving', data);
+      }
+    });
+
     socket.on('request', ([page, count]) => {
       namespace.to(socket.id).emit('response', PlayList.getPlayListByPage(page, count));
+    });
+
+    socket.on('nextMusicReq', () => {
+      namespace.to(socket.id).emit('nextMusicRes', PlayList.getNextMusic());
     });
   });
 };
