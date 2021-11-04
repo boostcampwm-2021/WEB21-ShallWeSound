@@ -6,7 +6,6 @@ import styles from './style.module.scss';
 function App() {
   return (
     <div className={styles.App}>
-      
       <Room></Room>
     </div>
   );
