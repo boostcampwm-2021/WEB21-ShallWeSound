@@ -2,15 +2,23 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import http from 'http';
+<<<<<<< HEAD
 import socketIo, { Socket } from 'socket.io';
 import { socketHandler } from './utils/SocketHandler';
+=======
+import socket from './socket';
+import cors from 'cors';
+>>>>>>> 11bd731 (#101 #103 #104 병합)
 import roomRouter from './routes/room';
 import audioRouter from './routes/audio';
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
+<<<<<<< HEAD
 const io = require('socket.io')(server);
 // const io = new Server(server);
+=======
+>>>>>>> 11bd731 (#101 #103 #104 병합)
 
 app.use(cors);
 app.use(express.static(path.join(__dirname, 'videos')));
@@ -42,12 +50,9 @@ io.on('connection', (socket: any) => {
 
 app.set('port', 3000);
 
-io.on('connection', socketHandler);
+socket(server);
 
 app.use('/room', roomRouter);
 app.use('/audio', audioRouter);
-
-import socket from './socket';
-socket(server);
 
 server.listen(app.get('port'));

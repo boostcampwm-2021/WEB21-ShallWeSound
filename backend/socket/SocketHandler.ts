@@ -3,6 +3,8 @@ import { Socket } from 'socket.io';
 const socketData: string[] = [];
 
 const socketHandler = (socket: Socket) => {
+  console.log(socket.id + ' connected');
+
   if (socketData.length !== 0) {
     socket.broadcast.to([socketData[0]]).emit('requestTime', 'time');
   }
