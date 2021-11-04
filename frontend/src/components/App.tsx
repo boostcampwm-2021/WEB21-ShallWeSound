@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import MusicPlayer from './MusicPlayer';
-import ChatComponent from './chat';
 import { Room } from '../pages/Room';
 import '../stylesheet/reset.css';
 import styles from './style.module.scss';
@@ -55,7 +54,6 @@ function App() {
   return (
     <div className={styles.App}>
       <MusicPlayer musicList={musicList}></MusicPlayer>
-      <ChatComponent />
       <Room></Room>
     </div>
   );

@@ -1,21 +1,23 @@
 import React, { HtmlHTMLAttributes } from 'react';
 import { useState, useRef, useEffect } from 'react';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import styles from './style.module.scss';
 import * as _ from 'lodash';
-const socket = io();
+// const socket = io();
+import { useSocket } from '../pages/Room';
 interface chatType {
   id: number;
   msg: string;
 }
 type event = React.ChangeEvent<HTMLInputElement>;
 function ChatComponent() {
+  const socket: any = useSocket();
   const [chats, setChats] = useState<chatType[]>([]);
   const [newChat, setNewChat] = useState<string>('');
   const chatListRef = useRef();
   const idRef = useRef<number>(0);
   useEffect(() => {
-    socket.on('chatMessage', ({ id, msg }) => {
+    socket?.on('chatMessage', ({ id, msg }: chatType) => {
       const curChat = _.cloneDeep(chats);
       curChat.push({ id: id, msg: msg });
       setChats(curChat);
@@ -46,7 +48,7 @@ function ChatComponent() {
     setNewChat(e.target.value);
   };
   const clickHandler = () => {
-    socket.emit('chatMessage', newChat);
+    socket?.emit('chatMessage', newChat);
     const curChat = _.cloneDeep(chats);
     curChat.push({ id: -1, msg: newChat });
     setNewChat('');
