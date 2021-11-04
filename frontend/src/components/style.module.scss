@@ -1,0 +1,83 @@
+@import "../stylesheet/global.scss";
+
+
+
+.msgBallon{
+    overflow: hidden;
+    height: auto;
+    margin-top: 10px;
+    .othersChat{
+        display: block;
+        height: auto;
+        overflow: hidden;
+        max-width: 250px;
+        min-height: 25px;
+        float: left;
+        border-radius: 5px;
+        margin-block-start: 0em;
+        margin-block-end: 5px;
+        margin-left: 10px;
+        background-color: white;
+    }
+    .myChat{
+        float: right;
+        max-width: 250px;
+        min-height: 25px;
+        height: auto;
+        overflow: hidden;
+        border-radius: 5px;
+        margin-block-start: 0em;
+        margin-block-end: 5px;
+        margin-right: 10px;
+        background-color: #FEE500;
+    }
+    .writer{
+        display: block;
+        margin-left: 10px;
+    }
+    
+    
+}
+
+.chatBox{
+    background-color: $color-chatbox;
+    margin-left: 50px;
+    margin-top: 200px;
+    width: 500px;
+    height: 500px;
+    .chatList{
+        overflow: auto;
+        height: 450px;
+        width: 500px;
+    }
+
+    .chatInputSquare{
+        background-color: white;
+        margin-top: 5px;
+
+        display: flex;
+        border-radius: 4px;
+        height: 40px;
+        .chatInput{
+            margin-top: 5px;
+            width: 430px;
+            height: 30px;
+            border: none;
+        }
+        button{
+            margin-left: 10px;
+            height: 40px;
+            width:55px;
+            display: hidden;
+            border: none;
+            border-radius: 4px;
+            background-color: #FEE500;
+            &:active{
+                background-color: darken($color: #FEE500, $amount: 10);
+            }
+        }
+        
+    }
+    
+}
+
