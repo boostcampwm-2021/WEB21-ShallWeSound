@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MusicPlayer from './MusicPlayer';
 import ChatComponent from './chat';
-import Room from '../pages/Room';
+import { Room } from '../pages/Room';
 import '../stylesheet/reset.css';
 import styles from './style.module.scss';
 
