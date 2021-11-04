@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import MusicPlayer from './components/MusicPlayer';
-
-interface musicInfo {
-  name: string,
-  singer: string,
-  thumbnail: string,
-  src: string,
-}
+import MusicPlayer from './MusicPlayer';
+import ChatComponent from './chat';
+import styles from "./style.module.scss";
 
 function App() {
+  interface musicInfo {
+    name: string,
+    singer: string,
+    thumbnail: string,
+    src: string,
+  }
+
   const [musicList, setMusicList] = useState<musicInfo[]>([
     {
       name: "Harley Bird - Home",
@@ -49,9 +51,10 @@ function App() {
   ])
 
   return (
-    <>
+    <div className={styles.App}>
       <MusicPlayer musicList={musicList}></MusicPlayer>
-    </>
+      <ChatComponent/>
+    </div>
   );
 }
 
