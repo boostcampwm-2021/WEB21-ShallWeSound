@@ -60,7 +60,7 @@ function Video() {
 
   return (
     <div>
-      <video id="video" controls src={music}>
+      <video id="video" controls autoPlay={true} muted={true} src={music}>
         <source type="video/mp4"></source>
       </video>
       <input value="노래" className="bts" type="button" onClick={change} />
