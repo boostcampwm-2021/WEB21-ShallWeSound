@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { nodeModuleNameResolver } from "typescript";
+import React, { useState, useEffect, useRef } from "react";
 import './MusicPlayer.scss'
 
 function Title({ name="Test", singer="Singer" }) {
@@ -29,21 +28,15 @@ function NextMusic ({ onClick } : { onClick: any }) {
   )
 }
 
-function MusicThumbnail ({ name, thumbnail } : { name: string, thumbnail: string }) {
+function MusicThumbnail ({ name, thumbnail, nowPlaying, onClick } : { name: string, thumbnail: string, nowPlaying: boolean, onClick: any }) {
   const [isHover, setIsHover] = useState(false);
+  function onMouseEnter () { setIsHover(true) }
+  function onMouseLeave () { setIsHover(false) }
 
-  function onMouseEnter () {
-    setIsHover(true);
-  }
-  
-  function onMouseLeave () {
-    setIsHover(false);
-  }
-
-  console.log("ghi")
+  // console.log("ghi")
 
   return (
-    <div className="musicplayer-cover">
+    <div className="musicplayer-cover" onClick={onClick} >
       <div className="cover-hover" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         {thumbnail &&
         <img src={thumbnail} alt={name} />
@@ -51,8 +44,10 @@ function MusicThumbnail ({ name, thumbnail } : { name: string, thumbnail: string
         {isHover && 
         <>
           <div className="only-hover"></div>
-          <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 0 24 24" width="48px" fill="#FFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-          </svg>
+          {nowPlaying ?
+          <img className="icon" src="/icons/pause.svg" alt="pause" /> :
+          <img className="icon" src="/icons/play.svg" alt="play" />
+          }
         </>
         }
       </div>
@@ -67,7 +62,13 @@ function MusicPlayer({ musicList } : { musicList: any }) {
     name: 'noname',
     singer: 'noname',
     thumbnail: '',
+    src: '',
   });
+  const musicControl = useRef<HTMLVideoElement>(null);
+  const [nowPlaying, setNowPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [totalTime, setTotalTime] = useState(0);
+  const [playingMusic, setPlayingMusic] = useState(musicControl && musicControl.current);
 
   function goPrevMusic() {
     setmusicIndex((musicIndex - 1 + musicList.length) % musicList.length)
@@ -81,21 +82,42 @@ function MusicPlayer({ musicList } : { musicList: any }) {
     console.log("abc")
     setMusicInfo({
       ...musicInfo,
-      name: musicList[musicIndex]['name'],
-      singer: musicList[musicIndex]['singer'],
-      thumbnail: musicList[musicIndex]['thumbnail'],
+      name: musicList[musicIndex].name,
+      singer: musicList[musicIndex].singer,
+      thumbnail: musicList[musicIndex].thumbnail,
+      src: musicList[musicIndex].src,
     })
   }, [musicIndex])
+
+  // useEffect(() => {
+  //   const playingMusic = musicControl && musicControl.current;
+  //   if (playingMusic) {
+  //     playingMusic.play();
+  //   }
+  // }, [musicInfo, controlInfo])
+
+  function playOrPauseMusic() { 
+    const playingMusic = musicControl && musicControl.current;
+    if (playingMusic) {
+      if (nowPlaying) {
+        playingMusic.pause();
+        setNowPlaying(false);
+      } else {
+        playingMusic.play();
+        setNowPlaying(true);
+      }
+    }
+  }
 
   console.log("def")
 
   return (
     <>
       <div className="musicplayer">
-        <Title name={musicInfo['name']} singer={musicInfo['singer']} />
+        <Title name={musicInfo.name} singer={musicInfo.singer} />
         <div className="musicplayer-body">
           <img src="/icons/chevron-left.svg" alt="chevron-left" onClick={goPrevMusic} />
-          <MusicThumbnail name={musicInfo['name']} thumbnail={musicInfo['thumbnail']} />
+          <MusicThumbnail name={musicInfo.name} thumbnail={musicInfo.thumbnail} nowPlaying={nowPlaying} onClick={playOrPauseMusic} />
           <img src="/icons/chevron-right.svg" alt="chevron-right" onClick={goNextMusic} />
         </div>
         <div className="musicplayer-timer">
@@ -104,10 +126,10 @@ function MusicPlayer({ musicList } : { musicList: any }) {
         </div>
         <div className="progress">
           <div className="progress-bar">
-            <audio src=""></audio>
           </div>
         </div>
       </div>
+          <video controls src={musicInfo.src} ref={musicControl}></video>
     </>
   );
 }
