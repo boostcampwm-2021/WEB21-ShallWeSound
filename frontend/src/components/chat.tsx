@@ -29,17 +29,15 @@ function ChatComponent() {
                 return(
                     
                     <div className={styles.msgBallon}>
-                        <div>
-                            {writer}
-                        </div>
-                        <p className={styles.othersChat}>{chat.msg}</p>
+                        <div className={styles.writer}>{writer}</div>
+                        <div className={styles.othersChat}>{chat.msg}</div>
                     </div>
                     
                 );
             }else{
                 return(
                     <div className={styles.msgBallon}>
-                        <p className={styles.myChat}>{chat.msg}</p>
+                        <div className={styles.myChat}>{chat.msg}</div>
                     </div>
                     
                 );

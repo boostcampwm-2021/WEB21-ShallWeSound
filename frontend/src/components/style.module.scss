@@ -1,12 +1,17 @@
 @import "../stylesheet/global.scss";
 
 
-.App{
-}
+
 .msgBallon{
     overflow: hidden;
-    // float: left;
+    height: auto;
+    margin-top: 10px;
     .othersChat{
+        display: block;
+        height: auto;
+        overflow: hidden;
+        max-width: 250px;
+        min-height: 25px;
         float: left;
         border-radius: 5px;
         margin-block-start: 0em;
@@ -16,24 +21,25 @@
     }
     .myChat{
         float: right;
+        max-width: 250px;
+        min-height: 25px;
+        height: auto;
+        overflow: hidden;
         border-radius: 5px;
         margin-block-start: 0em;
         margin-block-end: 5px;
         margin-right: 10px;
         background-color: #FEE500;
     }
+    .writer{
+        display: block;
+        margin-left: 10px;
+    }
     
     
-}
-
-
-.myMsgBallon{
-    margin-top: 5px;
-    // float: right;
 }
 
 .chatBox{
-    
     background-color: $color-chatbox;
     margin-left: 50px;
     margin-top: 200px;
