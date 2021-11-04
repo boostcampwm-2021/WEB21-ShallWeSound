@@ -12,6 +12,10 @@
   background: linear-gradient(#4b6cb7, #182848);
   border-radius: 15px;
 
+  video {
+    display: none;
+  }
+
   & > * {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
@@ -43,7 +47,7 @@
     justify-content: space-around;
     align-items: center;
 
-    svg { 
+    .icon { 
       cursor: pointer;
     }
   }
@@ -66,7 +70,6 @@
       width: 100%;
       height: 100%;
       border-radius: 999px;
-      // visibility: hidden;
       cursor: pointer;
 
       .icon {
@@ -131,7 +134,7 @@
         top: -8px;  // 50% of progress-bar-height
         right: -5px;
         z-index: 2;
-        background: inherit;
+        background: linear-gradient(270deg, #4b6cb7, #182848);
       }
     }
 

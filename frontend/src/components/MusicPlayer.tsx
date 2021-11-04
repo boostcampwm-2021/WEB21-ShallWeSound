@@ -112,30 +112,37 @@ function MusicPlayer({ musicList } : { musicList: any }) {
     height: "inherit",
     width: progressWidth + '%',
     borderRadius: "inherit",
-    background: "#FFF",
+  }
+
+  function mousePositionRelativeToProgressBar(e: any) {
+    if (musicControl.current) {
+      musicControl.current.currentTime = totalTime * e.nativeEvent.offsetX / 352; // 352: progressBar total width
+    }
+    setCurrentTime(totalTime * e.nativeEvent.offsetX / 352);
   }
 
   return (
     <>
       <div className="musicplayer">
+        <video src={musicInfo.src} ref={musicControl} onTimeUpdate={updateCurrentTime} onLoadedMetadata={updateMusic}></video>
         <Title name={musicInfo.name} singer={musicInfo.singer} />
         <div className="musicplayer-body">
-          <img src="/icons/chevron-left.svg" alt="chevron-left" onClick={goPrevMusic} />
+          <img className="icon" src="/icons/chevron-left.svg" alt="chevron-left" onClick={goPrevMusic} />
           <MusicThumbnail name={musicInfo.name} thumbnail={musicInfo.thumbnail} nowPlaying={nowPlaying} onClick={playOrPauseMusic} />
-          <img src="/icons/chevron-right.svg" alt="chevron-right" onClick={goNextMusic} />
+          <img className="icon" src="/icons/chevron-right.svg" alt="chevron-right" onClick={goNextMusic} />
         </div>
         <div className="musicplayer-timer">
           <span className="current-time" >{changeFormatToTime(currentTime)}</span>
           <span className="max-duration">{changeFormatToTime(totalTime)}</span>
         </div>
-        <div className="progress">
+        <div className="progress" onClick={mousePositionRelativeToProgressBar}>
           <div
           className="progress-bar"
-          style={progressStyle}>
+          style={progressStyle}
+          >
           </div>
         </div>
       </div>
-          <video src={musicInfo.src} ref={musicControl} onTimeUpdate={updateCurrentTime} onLoadedMetadata={updateMusic}></video>
     </>
   );
 }
