@@ -6,13 +6,13 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  outline: 4px solid $white;
+  // outline: 4px solid $white;
   padding: 1.5rem;
   margin-right: 2rem;
   margin-bottom: 1rem;
   width: 400px;
   height: 400px;
-  background: none;//linear-gradient(#4b6cb7, #182848);//$white;
+  background: linear-gradient(#4b6cb7, #182848);//$white;
   border-radius: 0.25rem;
 
   video {

@@ -7,7 +7,10 @@ router.get('/:name', (req: express.Request, res: express.Response) => {
   const music = req.params.name;
 
   const data = fs.readFileSync(path.resolve(__dirname, `../audio/${music}`));
-  res.writeHead(200, { 'Content-Type': 'audio/mpeg' });
+  res.writeHead(200, {
+    'Content-Type': 'audio/mpeg',
+    'Accept-Ranges': 'none',
+  });
   res.write(data);
   res.end();
 });
