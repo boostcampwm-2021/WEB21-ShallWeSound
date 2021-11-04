@@ -200,7 +200,10 @@ const musicSocket = (io: Server) => {
     });
 
     socket.on('nextMusicReq', () => {
-      namespace.to(socket.id).emit('nextMusicRes', PlayList.getNextMusic());
+      if (socket.id !== socketData[0]) return;
+
+      // namespace.to(socket.id).emit('nextMusicRes', PlayList.getNextMusic());
+      namespace.emit('nextMusicRes', PlayList.getNextMusic());
     });
   });
 };
