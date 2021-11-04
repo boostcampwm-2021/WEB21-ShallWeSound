@@ -10,30 +10,10 @@ function Title({ name="Test", singer="Singer" }) {
   )
 }
 
-function PrevMusic ({ onClick } : { onClick: any }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFF" onClick={onClick} >
-      <path d="M0 0h24v24H0V0z" fill="none" opacity=".87"/>
-      <path d="M17.51 3.87L15.73 2.1 5.84 12l9.9 9.9 1.77-1.77L9.38 12l8.13-8.13z" />
-    </svg>
-  )
-}
-
-function NextMusic ({ onClick } : { onClick: any }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFF" onClick={onClick} >
-      <g><path d="M0,0h24v24H0V0z" fill="none"/></g>
-      <g><polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12" /></g>
-    </svg>
-  )
-}
-
 function MusicThumbnail ({ name, thumbnail, nowPlaying, onClick } : { name: string, thumbnail: string, nowPlaying: boolean, onClick: any }) {
   const [isHover, setIsHover] = useState(false);
   function onMouseEnter () { setIsHover(true) }
   function onMouseLeave () { setIsHover(false) }
-
-  // console.log("ghi")
 
   return (
     <div className="musicplayer-cover" onClick={onClick} >
@@ -68,7 +48,7 @@ function MusicPlayer({ musicList } : { musicList: any }) {
   const [nowPlaying, setNowPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
-  const [playingMusic, setPlayingMusic] = useState(musicControl && musicControl.current);
+  const [progressWidth, setProgressWidth] = useState(0);
 
   function goPrevMusic() {
     setmusicIndex((musicIndex - 1 + musicList.length) % musicList.length)
@@ -79,7 +59,6 @@ function MusicPlayer({ musicList } : { musicList: any }) {
   }
 
   useEffect(() => {
-    console.log("abc")
     setMusicInfo({
       ...musicInfo,
       name: musicList[musicIndex].name,
@@ -89,12 +68,14 @@ function MusicPlayer({ musicList } : { musicList: any }) {
     })
   }, [musicIndex])
 
-  // useEffect(() => {
-  //   const playingMusic = musicControl && musicControl.current;
-  //   if (playingMusic) {
-  //     playingMusic.play();
-  //   }
-  // }, [musicInfo, controlInfo])
+  function changeFormatToTime(number: number) {
+    const minute = Math.floor(number / 60);
+    const second = Math.floor(number % 60);
+    const formattedSecond = second >= 10 ? second : '0' + second.toString();
+
+    return `${minute}:${formattedSecond}`;
+  }
+
 
   function playOrPauseMusic() { 
     const playingMusic = musicControl && musicControl.current;
@@ -109,7 +90,30 @@ function MusicPlayer({ musicList } : { musicList: any }) {
     }
   }
 
-  console.log("def")
+  function updateMusic() {
+    const playingMusic = musicControl.current;
+    if (playingMusic) {
+      setCurrentTime(0);
+      setTotalTime(playingMusic.duration);
+      if (nowPlaying)
+        playingMusic.play();
+    }
+  }
+
+  function updateCurrentTime() {
+    const playingMusic = musicControl.current;
+    if (playingMusic) {
+      setCurrentTime(playingMusic.currentTime);
+      setProgressWidth(playingMusic.currentTime / playingMusic.duration * 100);
+    }
+  }
+
+  const progressStyle = {
+    height: "inherit",
+    width: progressWidth + '%',
+    borderRadius: "inherit",
+    background: "#FFF",
+  }
 
   return (
     <>
@@ -121,15 +125,17 @@ function MusicPlayer({ musicList } : { musicList: any }) {
           <img src="/icons/chevron-right.svg" alt="chevron-right" onClick={goNextMusic} />
         </div>
         <div className="musicplayer-timer">
-          <span className="current-time">00:00</span>
-          <span className="max-duration">04:22</span>
+          <span className="current-time" >{changeFormatToTime(currentTime)}</span>
+          <span className="max-duration">{changeFormatToTime(totalTime)}</span>
         </div>
         <div className="progress">
-          <div className="progress-bar">
+          <div
+          className="progress-bar"
+          style={progressStyle}>
           </div>
         </div>
       </div>
-          <video controls src={musicInfo.src} ref={musicControl}></video>
+          <video src={musicInfo.src} ref={musicControl} onTimeUpdate={updateCurrentTime} onLoadedMetadata={updateMusic}></video>
     </>
   );
 }

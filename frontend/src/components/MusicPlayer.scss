@@ -117,16 +117,18 @@
       height: inherit;
       width: 0%;
       position: relative;
+      border: 0.5px solid #FFF;
       border-radius: inherit;
-      background: #FFF;
+      background: linear-gradient(90deg, #4b6cb7, #182848);
       
       &::before {
         content: "";
         position: absolute;
-        height: 12px;
-        width: 12px;
+        height: 18px;
+        width: 18px;
+        border: 0.5px solid #FFF;
         border-radius: 50%;
-        top: -50%;
+        top: -8px;  // 50% of progress-bar-height
         right: -5px;
         z-index: 2;
         background: inherit;
