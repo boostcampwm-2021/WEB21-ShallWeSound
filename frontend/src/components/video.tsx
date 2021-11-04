@@ -4,14 +4,27 @@ import { Music } from '../types';
 
 function Video() {
   const socket: any = useSocket();
-  const [music, setMusic] = useState('/music/FlowerDance.wav');
+  const [music, setMusic] = useState<string>();
+
+  useEffect(() => {
+    socket.emit('currentMusicReq');
+    console.log('useEEEEE');
+  }, []);
 
   useEffect(() => {
     socket.on('nextMusicRes', (data: Music) => {
       setMusic(data.src);
     });
 
-    return () => socket.off('nextMusicRes');
+    socket.on('currentMusicRes', (data: Music) => {
+      console.log(data);
+      setMusic(data.src);
+    });
+
+    return () => {
+      socket.off('nextMusicRes');
+      socket.off('currentMusicRes');
+    };
   }, []);
 
   useEffect(() => {

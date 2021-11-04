@@ -6,6 +6,7 @@ interface PlayList {
   getPlayList: () => Music[];
   getPlayListByPage: (page: number, count: number) => Music[];
   getNextMusic: () => Music;
+  getCurrentMusic: () => Music;
 }
 
 const PlayList: PlayList = {
@@ -14,7 +15,7 @@ const PlayList: PlayList = {
       title: 'Savage',
       singer: '에스파',
       src: 'http://localhost:3000/audio/Aespa_Savage.mp3',
-      isPlayed: false,
+      isPlayed: true,
     },
     {
       title: 'Psycho',
@@ -156,7 +157,17 @@ const PlayList: PlayList = {
 
     return next;
   },
+  getCurrentMusic() {
+    const current = this.playlist.find(music => music.isPlayed)!;
+    return current;
+  },
 };
+
+interface userList {
+  [socketid: string]: number;
+}
+const userHash: userList = {};
+let userNum: number = 0;
 
 const socketData: string[] = [];
 
@@ -164,13 +175,21 @@ const musicSocket = (io: Server) => {
   const namespace = io.of('/music');
 
   namespace.on('connection', socket => {
-    console.log(socket.id + ' connected');
+    console.log(socket.id);
 
-    if (socketData.length !== 0) {
-      socket.broadcast.to([socketData[0]]).emit('requestTime', 'time');
-    }
+    userHash[socket.id] = userNum;
+    userNum += 1;
 
     socketData.push(socket.id);
+
+    socket.broadcast.emit('enterRoom', 'new user connected');
+    socket.on('disconnect', () => {
+      socket.broadcast.emit('leaveRoom', 'user disconnected');
+    });
+    socket.on('chatMessage', (message: string) => {
+      console.log(userHash[socket.id]);
+      socket.broadcast.emit('chatMessage', { id: userHash[socket.id], msg: message });
+    });
 
     socket.on('responseTime', (data: string) => {
       socket.broadcast.emit('sync', data);
@@ -204,6 +223,14 @@ const musicSocket = (io: Server) => {
 
       // namespace.to(socket.id).emit('nextMusicRes', PlayList.getNextMusic());
       namespace.emit('nextMusicRes', PlayList.getNextMusic());
+    });
+
+    socket.on('currentMusicReq', () => {
+      socket.emit('currentMusicRes', PlayList.getCurrentMusic());
+
+      if (socketData.length > 1) {
+        socket.broadcast.to([socketData[0]]).emit('requestTime', 'time');
+      }
     });
   });
 };

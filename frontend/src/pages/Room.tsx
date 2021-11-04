@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import io from 'socket.io-client';
 import PlayList from '../components/PlayList';
 import Video from '../components/video';
+import ChatComponent from '../components/chat';
 
 const socket: any = io('http://localhost:3000/music');
 const SocketProvider = React.createContext(null);
@@ -13,6 +14,7 @@ const Room = () => {
       <StyledDiv>
         <PlayList></PlayList>
         <Video />
+        <ChatComponent />
       </StyledDiv>
     </SocketProvider.Provider>
   );
