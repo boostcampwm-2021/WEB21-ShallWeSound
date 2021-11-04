@@ -1,7 +1,7 @@
 @import "../stylesheet/global.scss";
 
 .App {
-    background: $white;//$background;//$white;//$background; //#e9ecef;
+    background: $background;//$background;//$white;//$background; //#e9ecef;
     background-size: cover;
     min-height: 100vh;//calc(100vw - (100vw - 100%));
     display: flex;
@@ -54,9 +54,9 @@
 }
 
 .chatBox{
-    // background: none;//linear-gradient(#4b6cb7, #182848);
-    background-color: $color-chatbox;
-    // outline: 4px solid $white;
+    background: none;//linear-gradient(#4b6cb7, #182848);
+    // background-color: $color-chatbox;
+    outline: 4px solid $white;
     width: 400px;
     height: 400px;
     position: relative;
