@@ -1,3 +1,5 @@
+@import '../stylesheet/global.scss';
+
 .musicplayer {
   box-sizing: border-box;
   display: flex;
@@ -5,12 +7,13 @@
   justify-content: center;
   align-items: center;
   padding: 1.5rem;
-  margin-top: 4rem;
-  margin-left: 4rem;
+  // margin-top: 4rem;
+  // margin-left: 4rem;
+  margin-bottom: 1rem;
   width: 400px;
   height: 400px;
-  background: linear-gradient(#4b6cb7, #182848);
-  border-radius: 15px;
+  background: $white;
+  border-radius: 0.25rem;
 
   video {
     display: none;
@@ -23,7 +26,9 @@
 
   &-title-area {
     box-sizing: border-box;
-    color: #FFF;
+    outline: thick double $title-active;
+    border-radius: 0.5rem;
+    color: $title-active;
     padding: 0.5rem;
     width: 100%;
     text-align: center;
@@ -33,10 +38,13 @@
 
   &-title {
     font-size: 1.75rem;
+    font-weight: 700;
     text-overflow: ellipsis;
+    margin-bottom: 0.25rem;
   }
 
   &-subtitle {
+    font-style: italic;
     font-size: 1.25rem;
   }
 
@@ -88,13 +96,13 @@
         position: absolute;
         top: 0;
         left: 0;
-        background-color: #000;
+        background-color: $black;
         opacity: 0.3;
       }
     }
 
     &:hover {
-      background-color: lighten($color: #000, $amount: 30);
+      background-color: lighten($color: $black, $amount: 30);
       
     }
     
@@ -103,7 +111,7 @@
   &-timer {
     width: 100%;
     font-weight: 700;
-    color: #FFF;
+    color: $title-active;
     display: flex;
     justify-content: space-between;
   }
@@ -111,7 +119,7 @@
   .progress {
     width: 100%;
     height: 6px;
-    background-color: #FFF;
+    outline: 1px solid $title-active;
     border-radius: 50px;
     cursor: pointer;
     position: relative;
@@ -120,7 +128,7 @@
       height: inherit;
       width: 0%;
       position: relative;
-      border: 0.5px solid #FFF;
+      border: 0.5px solid $background;
       border-radius: inherit;
       background: linear-gradient(90deg, #4b6cb7, #182848);
       
@@ -129,9 +137,8 @@
         position: absolute;
         height: 18px;
         width: 18px;
-        border: 0.5px solid #FFF;
         border-radius: 50%;
-        top: -8px;  // 50% of progress-bar-height
+        top: -6px;
         right: -5px;
         z-index: 2;
         background: linear-gradient(270deg, #4b6cb7, #182848);
