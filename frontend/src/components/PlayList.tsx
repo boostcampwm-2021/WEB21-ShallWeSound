@@ -44,12 +44,12 @@ const PlayList = () => {
 };
 
 const Container = styled.div`
-  background: linear-gradient(to top right, blue, pink);
+  background: none;//linear-gradient(#4b6cb7, #182848);//linear-gradient(to top right, blue, pink);
+  outline: 4px solid #FFF;
   border-radius: 10px;
   box-shadow: rgb(0 0 0 / 50%) 0px 10px 25px;
-  width: 250px;
-  height: 500px;
-  margin: 48px;
+  width: 280px;
+  height: 816px;
   float: right;
   position: relative;
 `;

@@ -12,15 +12,15 @@ const Room = () => {
     <SocketProvider.Provider value={socket}>
       <StyledDiv>
         <PlayList></PlayList>
-        <Video />
+        {/* <Video /> */}
       </StyledDiv>
     </SocketProvider.Provider>
   );
 };
 
 const StyledDiv = styled.div`
-  width: 100vw;
-  height: 100vh;
+  /* width: 100vw; */
+  /* height: 100vh; */
 `;
 
 const useSocket = () => useContext(SocketProvider);

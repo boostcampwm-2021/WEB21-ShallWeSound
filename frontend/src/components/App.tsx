@@ -54,8 +54,10 @@ function App() {
 
   return (
     <div className={styles.App}>
-      <MusicPlayer musicList={musicList}></MusicPlayer>
-      <ChatComponent />
+      <div>
+        <MusicPlayer musicList={musicList}></MusicPlayer>
+        <ChatComponent />
+      </div>
       <Room></Room>
     </div>
   );
