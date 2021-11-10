@@ -7,17 +7,24 @@ import roomRouter from './routes/room';
 import audioRouter from './routes/audio';
 import 'dotenv/config';
 
+const models = require('./models/index.js');
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
-const Sequelize = require('sequelize');
+const sequelize = require('sequelize');
 const SequelizeAuto = require('sequelize-auto');
-const auto = new SequelizeAuto('SWS', process.env.DB_ID, process.env.DB_PW, {
-  host: process.env.DB_HOST,
-  dialect: 'mysql',
+
+models.sequelize.sync().then(() => {
+  console.log('연결 성공');
 });
-auto.run((err: Error) => {
-  if (err) throw err;
+
+models.MUSIC.findAll({
+  where: { singer: 'IU' },
+}).then((result: any) => {
+  console.log(result[0].singer);
 });
+
+console.log(process.env.DB_HOST, process.env.DB_ID, process.env.DB_PW);
+
 // const io = require('socket.io')(server);
 // const io = new Server(server);
 
