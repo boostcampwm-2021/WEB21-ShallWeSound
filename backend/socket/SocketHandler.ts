@@ -59,8 +59,9 @@ const socketHandler = (io: Server) => {
       }
     });
 
-    socket.on('request', ([page, count]) => {
-      namespace.to(socket.id).emit('response', PlayList.getPlayListByPage(page, count));
+    socket.on('requestPlayList', page => {
+      const res = PlayList.getPlayListByPage(page);
+      namespace.to(socket.id).emit('responsePlayList', res);
     });
 
     socket.on('nextMusicReq', ({ src }) => {

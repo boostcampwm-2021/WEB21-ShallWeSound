@@ -3,171 +3,225 @@ import type { Music } from '../types';
 interface PlayList {
   playlist: Music[];
   getPlayList: () => Music[];
-  getPlayListByPage: (page: number, count: number) => Music[];
+  getPlayListByPage: (page: number) => Music[];
   getNextMusic: () => Music;
   getCurrentMusic: () => Music;
 }
 
 const PlayList: PlayList = {
   playlist: [
-    // {
-    //   title: 'Savage',
-    //   singer: '에스파',
-    //   src: 'http://localhost:3000/audio/Aespa_Savage.mp3',
-    //   isPlayed: true,
-    // },
-    // {
-    //   title: 'Psycho',
-    //   singer: '레드벨벳',
-    //   src: 'http://localhost:3000/audio/RedVelvet_Psycho.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Blueming',
-    //   singer: '아이유',
-    //   src: 'http://localhost:3000/audio/IU_Blueming.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Savage',
-    //   singer: '에스파',
-    //   src: 'http://localhost:3000/audio/Aespa_Savage.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Psycho',
-    //   singer: '레드벨벳',
-    //   src: 'http://localhost:3000/audio/RedVelvet_Psycho.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Blueming',
-    //   singer: '아이유',
-    //   src: 'http://localhost:3000/audio/IU_Blueming.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Savage',
-    //   singer: '에스파',
-    //   src: 'http://localhost:3000/audio/Aespa_Savage.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Psycho',
-    //   singer: '레드벨벳',
-    //   src: 'http://localhost:3000/audio/RedVelvet_Psycho.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Blueming',
-    //   singer: '아이유',
-    //   src: 'http://localhost:3000/audio/IU_Blueming.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Savage',
-    //   singer: '에스파',
-    //   src: 'http://localhost:3000/audio/Aespa_Savage.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Psycho',
-    //   singer: '레드벨벳',
-    //   src: 'http://localhost:3000/audio/RedVelvet_Psycho.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Blueming',
-    //   singer: '아이유',
-    //   src: 'http://localhost:3000/audio/IU_Blueming.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Savage',
-    //   singer: '에스파',
-    //   src: 'http://localhost:3000/audio/Aespa_Savage.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Psycho',
-    //   singer: '레드벨벳',
-    //   src: 'http://localhost:3000/audio/RedVelvet_Psycho.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Blueming',
-    //   singer: '아이유',
-    //   src: 'http://localhost:3000/audio/IU_Blueming.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Savage',
-    //   singer: '에스파',
-    //   src: 'http://localhost:3000/audio/Aespa_Savage.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Psycho',
-    //   singer: '레드벨벳',
-    //   src: 'http://localhost:3000/audio/RedVelvet_Psycho.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Blueming',
-    //   singer: '아이유',
-    //   src: 'http://localhost:3000/audio/IU_Blueming.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Savage',
-    //   singer: '에스파',
-    //   src: 'http://localhost:3000/audio/Aespa_Savage.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Psycho',
-    //   singer: '레드벨벳',
-    //   src: 'http://localhost:3000/audio/RedVelvet_Psycho.mp3',
-    //   isPlayed: false,
-    // },
-    // {
-    //   title: 'Blueming',
-    //   singer: '아이유',
-    //   src: 'http://localhost:3000/audio/IU_Blueming.mp3',
-    //   isPlayed: false,
-    // },
     {
-      title: 'Harley Bird - Home',
+      title: '1Harley Bird - Home',
       singer: 'Jordan Schor',
       isPlayed: false,
       src: '/songs/music-1.mp3',
     },
     {
-      title: 'Ikson Anywhere – Ikson',
+      title: '2Ikson Anywhere – Ikson',
       singer: 'Audio Library',
       isPlayed: false,
       src: '/songs/music-2.mp3',
     },
     {
-      title: 'Beauz & Jvna - Crazy',
+      title: '3Beauz & Jvna - Crazy',
       singer: 'Beauz & Jvna',
       isPlayed: false,
       src: '/songs/music-3.mp3',
     },
     {
-      title: 'Hardwind - Want Me',
+      title: '4Hardwind - Want Me',
       singer: 'Mike Archangelo',
       isPlayed: false,
       src: '/songs/music-4.mp3',
     },
     {
-      title: 'Jim - Sun Goes Down',
+      title: '5Jim - Sun Goes Down',
       singer: 'Jim Yosef x Roy',
       isPlayed: false,
       src: '/songs/music-5.mp3',
     },
     {
-      title: 'Lost Sky - Vision NCS',
+      title: '6Lost Sky - Vision NCS',
+      singer: 'NCS Release',
+      isPlayed: false,
+      src: '/songs/music-6.mp3',
+    },
+    {
+      title: '7Harley Bird - Home',
+      singer: 'Jordan Schor',
+      isPlayed: false,
+      src: '/songs/music-1.mp3',
+    },
+    {
+      title: '8Ikson Anywhere – Ikson',
+      singer: 'Audio Library',
+      isPlayed: false,
+      src: '/songs/music-2.mp3',
+    },
+    {
+      title: '9Beauz & Jvna - Crazy',
+      singer: 'Beauz & Jvna',
+      isPlayed: false,
+      src: '/songs/music-3.mp3',
+    },
+    {
+      title: '10Hardwind - Want Me',
+      singer: 'Mike Archangelo',
+      isPlayed: false,
+      src: '/songs/music-4.mp3',
+    },
+    {
+      title: '11Jim - Sun Goes Down',
+      singer: 'Jim Yosef x Roy',
+      isPlayed: false,
+      src: '/songs/music-5.mp3',
+    },
+    {
+      title: '12Lost Sky - Vision NCS',
+      singer: 'NCS Release',
+      isPlayed: false,
+      src: '/songs/music-6.mp3',
+    },
+    {
+      title: '13Harley Bird - Home',
+      singer: 'Jordan Schor',
+      isPlayed: false,
+      src: '/songs/music-1.mp3',
+    },
+    {
+      title: '14Ikson Anywhere – Ikson111111121222',
+      singer: 'Audio Library',
+      isPlayed: false,
+      src: '/songs/music-2.mp3',
+    },
+    {
+      title: '15Beauz & Jvna - Crazy',
+      singer: 'Beauz & Jvna',
+      isPlayed: false,
+      src: '/songs/music-3.mp3',
+    },
+    {
+      title: '16Hardwind - Want Me',
+      singer: 'Mike Archangelo',
+      isPlayed: false,
+      src: '/songs/music-4.mp3',
+    },
+    {
+      title: '17Jim - Sun Goes Down',
+      singer: 'Jim Yosef x Roy',
+      isPlayed: false,
+      src: '/songs/music-5.mp3',
+    },
+    {
+      title: '18Lost Sky - Vision NCS',
+      singer: 'NCS Release',
+      isPlayed: false,
+      src: '/songs/music-6.mp3',
+    },
+    {
+      title: '19Harley Bird - Home',
+      singer: 'Jordan Schor',
+      isPlayed: false,
+      src: '/songs/music-1.mp3',
+    },
+    {
+      title: '20Ikson Anywhere – Ikson',
+      singer: 'Audio Library',
+      isPlayed: false,
+      src: '/songs/music-2.mp3',
+    },
+    {
+      title: '21Beauz & Jvna - Crazy',
+      singer: 'Beauz & Jvna',
+      isPlayed: false,
+      src: '/songs/music-3.mp3',
+    },
+    {
+      title: '22Hardwind - Want Me',
+      singer: 'Mike Archangelo',
+      isPlayed: false,
+      src: '/songs/music-4.mp3',
+    },
+    {
+      title: '23Jim - Sun Goes Down',
+      singer: 'Jim Yosef x Roy',
+      isPlayed: false,
+      src: '/songs/music-5.mp3',
+    },
+    {
+      title: '24Lost Sky - Vision NCS',
+      singer: 'NCS Release',
+      isPlayed: false,
+      src: '/songs/music-6.mp3',
+    },
+    {
+      title: '25Harley Bird - Home',
+      singer: 'Jordan Schor',
+      isPlayed: false,
+      src: '/songs/music-1.mp3',
+    },
+    {
+      title: '26Ikson Anywhere – Ikson',
+      singer: 'Audio Library',
+      isPlayed: false,
+      src: '/songs/music-2.mp3',
+    },
+    {
+      title: '27Beauz & Jvna - Crazy',
+      singer: 'Beauz & Jvna',
+      isPlayed: false,
+      src: '/songs/music-3.mp3',
+    },
+    {
+      title: '28Hardwind - Want Me',
+      singer: 'Mike Archangelo',
+      isPlayed: false,
+      src: '/songs/music-4.mp3',
+    },
+    {
+      title: '29Jim - Sun Goes Down',
+      singer: 'Jim Yosef x Roy',
+      isPlayed: false,
+      src: '/songs/music-5.mp3',
+    },
+    {
+      title: '30Lost Sky - Vision NCS',
+      singer: 'NCS Release',
+      isPlayed: false,
+      src: '/songs/music-6.mp3',
+    },
+    {
+      title: '31Harley Bird - Home',
+      singer: 'Jordan Schor',
+      isPlayed: false,
+      src: '/songs/music-1.mp3',
+    },
+    {
+      title: '32Ikson Anywhere – Ikson111111121222',
+      singer: 'Audio Library',
+      isPlayed: false,
+      src: '/songs/music-2.mp3',
+    },
+    {
+      title: '33Beauz & Jvna - Crazy',
+      singer: 'Beauz & Jvna',
+      isPlayed: false,
+      src: '/songs/music-3.mp3',
+    },
+    {
+      title: '34Hardwind - Want Me',
+      singer: 'Mike Archangelo',
+      isPlayed: false,
+      src: '/songs/music-4.mp3',
+    },
+    {
+      title: '35Jim - Sun Goes Down',
+      singer: 'Jim Yosef x Roy',
+      isPlayed: false,
+      src: '/songs/music-5.mp3',
+    },
+    {
+      title: '36Lost Sky - Vision NCS',
       singer: 'NCS Release',
       isPlayed: false,
       src: '/songs/music-6.mp3',
@@ -176,8 +230,9 @@ const PlayList: PlayList = {
   getPlayList() {
     return this.playlist;
   },
-  getPlayListByPage(page, count) {
-    return this.playlist.slice(page, page + count);
+  getPlayListByPage(page) {
+    const bloc = 15;
+    return this.playlist.slice(page, page + bloc);
   },
   getNextMusic() {
     const now = this.playlist.find(music => music.isPlayed);

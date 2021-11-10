@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import type { Music } from '../types';
 import PlayListItem from './PlayListItem';
@@ -7,26 +7,29 @@ import { useSocket } from '../pages/Room';
 const PlayList = () => {
   const socket: any = useSocket();
   const [playList, setPlayList] = useState<Music[]>([]);
-  const [page, setPage] = useState(0);
-  const count = 8;
+  const page = useRef(0);
 
   useEffect(() => {
-    socket.on('response', (data: Music[]) => {
+    socket.on('responsePlayList', (data: Music[]) => {
       setPlayList([...playList, ...data]);
+      page.current += data.length;
     });
 
     return () => {
-      socket.off('response');
+      socket.off('responsePlayList');
     };
-  }, [playList]);
+  }, [playList, socket]);
 
   useEffect(() => {
-    socket.emit('request', [page, count]);
-  }, [page]);
+    socket.emit('requestPlayList', page.current);
+  }, [socket]);
 
-  const onScroll = (e: any) => {
-    if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight) {
-      setPage(page => page + count);
+  const isEndOfScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>): boolean =>
+    e.currentTarget.scrollTop + e.currentTarget.clientHeight >= e.currentTarget.scrollHeight;
+
+  const onScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>): void => {
+    if (isEndOfScroll(e)) {
+      socket.emit('requestPlayList', page.current);
     }
   };
 
@@ -44,8 +47,8 @@ const PlayList = () => {
 };
 
 const Container = styled.div`
-  background: none;//linear-gradient(#4b6cb7, #182848);//linear-gradient(to top right, blue, pink);
-  outline: 4px solid #FFF;
+  background: none; //linear-gradient(#4b6cb7, #182848);//linear-gradient(to top right, blue, pink);
+  outline: 4px solid #fff;
   border-radius: 10px;
   box-shadow: rgb(0 0 0 / 50%) 0px 10px 25px;
   width: 280px;
