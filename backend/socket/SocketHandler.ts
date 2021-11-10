@@ -19,12 +19,17 @@ const socketHandler = (io: Server) => {
   const namespace = io.of('/music');
 
   namespace.on('connection', socket => {
+    console.log('아이디: ', socket.id);
+
     userHash[socket.id] = userNum;
     userNum += 1;
 
     socket.broadcast.emit('enterRoom', 'new user connected');
     socket.on('disconnect', () => {
       socket.broadcast.emit('leaveRoom', 'user disconnected');
+
+      console.log(socketData);
+      console.log(socket.id);
 
       const targetRoom: socketInfo = socketData.find(
         val => val.socketId.some(client => client === socket.id) === true,
