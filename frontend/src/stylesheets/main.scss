@@ -1,5 +1,11 @@
 @import './global.scss';
 
+.ssd {
+  background: $background;
+  width: 100vw;
+  height: 100vh;
+}
+
 .roomList {
   position: absolute;
   display: flex;
@@ -10,7 +16,7 @@
   cursor: pointer;
 
   .room {
-    color: blue;
+    color: orange;
     padding-bottom: 50px;
   }
 }

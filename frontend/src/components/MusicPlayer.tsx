@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, MouseEventHandler } from 'react';
 import { useSocket } from '../context/MyContext';
-import '../stylesheets/MusicPlayer.scss'
+import '../stylesheets/MusicPlayer.scss';
 
-function Title({ name, singer } : { name: string, singer: string}) {
+function Title({ name, singer }: { name: string; singer: string }) {
   return (
     <div className="musicplayer-title-area">
       <span className="musicplayer-title">{name}</span>
@@ -65,7 +65,7 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
     src: '',
   });
   const musicControl = useRef<HTMLVideoElement>(null);
-  const [nowPlaying, setNowPlaying] = useState(false);
+  const [nowPlaying, setNowPlaying] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
   const [progressWidth, setProgressWidth] = useState(0);
@@ -213,10 +213,10 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   }
 
   const progressVolumeStyle = {
-    height: "inherit",
+    height: 'inherit',
     width: progressVolumeWidth + '%',
-    borderRadius: "inherit",
-  }
+    borderRadius: 'inherit',
+  };
 
   function mousePositionRelativeToVolumeProgressBar(e: React.MouseEvent) {
     const playingMusic = musicControl.current;
@@ -232,14 +232,14 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
     const playingMusic = musicControl.current;
     if (playingMusic) {
       if (playingMusic.volume > 0) {
-        setBackupMusicVolume(playingMusic.volume)
+        setBackupMusicVolume(playingMusic.volume);
         playingMusic.volume = 0;
         setMusicVolume(0);
         setProgressVolumeWidth(0);
       } else {
         playingMusic.volume = backupMusicVolume;
         setMusicVolume(backupMusicVolume);
-        setProgressVolumeWidth(backupMusicVolume * 100)
+        setProgressVolumeWidth(backupMusicVolume * 100);
       }
     }
   }
@@ -247,7 +247,14 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   return (
     <>
       <div className="musicplayer">
-        <video id="video" src={musicInfo.src} ref={musicControl} onTimeUpdate={updateCurrentTime} onLoadedMetadata={updateMusic} onEnded={goNextMusic} ></video>
+        <video
+          id="video"
+          src={musicInfo.src}
+          ref={musicControl}
+          onTimeUpdate={updateCurrentTime}
+          onLoadedMetadata={updateMusic}
+          onEnded={goNextMusic}
+        ></video>
         <Title name={musicInfo.name} singer={musicInfo.singer} />
         <div className="musicplayer-body">
           <img
@@ -278,10 +285,21 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
         </div>
         <div className="serveral-icons">
           <div className="volume-wrap width-half">
-            {musicVolume === 0 ?
-            <img className="icon" src="/icons/volume-off.svg" alt="volume-off" onClick={toggleVolume} /> :
-            <img className="icon" src="/icons/volume-up.svg" alt="volume-up" onClick={toggleVolume}/>
-            }
+            {musicVolume === 0 ? (
+              <img
+                className="icon"
+                src="/icons/volume-off.svg"
+                alt="volume-off"
+                onClick={toggleVolume}
+              />
+            ) : (
+              <img
+                className="icon"
+                src="/icons/volume-up.svg"
+                alt="volume-up"
+                onClick={toggleVolume}
+              />
+            )}
             <div className="progress-wrap width-half">
               <div className="progress" onClick={mousePositionRelativeToVolumeProgressBar}>
                 <div className="progress-bar" style={progressVolumeStyle}></div>
