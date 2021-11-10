@@ -2,12 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import http from 'http';
+import dotenv from 'dotenv';
+dotenv.config({path:__dirname+'/config/.env'});
+
 import socket from './socket';
 import roomRouter from './routes/room';
 import audioRouter from './routes/audio';
 import uploadRouter from './routes/upload';
-import dotenv from 'dotenv';
-dotenv.config({path:'config/.env'});
+
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
 // const io = require('socket.io')(server);

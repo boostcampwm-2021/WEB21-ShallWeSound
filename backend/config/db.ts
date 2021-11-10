@@ -7,7 +7,7 @@ const db_info:mysql.ConnectionConfig = {
     database: `${process.env.DB_DATABASE}`
 }
 const connection = mysql.createConnection(db_info);
-const db = function () {
+const initDB = function () {
     return mysql.createConnection(db_info);
 }
 const connect = function(conn:mysql.Connection) {
@@ -17,6 +17,6 @@ const connect = function(conn:mysql.Connection) {
     });
 }
 export {
-    db,
+    initDB,
     connect
 }
