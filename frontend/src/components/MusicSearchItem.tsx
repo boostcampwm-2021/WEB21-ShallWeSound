@@ -6,9 +6,10 @@ interface Props {
   singer: string;
   thumnail: string;
   description: string;
+  selected: boolean;
 }
 
-const MusicSearchItem = ({ name, singer, thumnail, description }: Props) => {
+const MusicSearchItem = ({ name, singer, thumnail, description, selected }: Props) => {
   const [detail, setDetail] = useState(false);
 
   const onDetail = () => {
@@ -19,7 +20,7 @@ const MusicSearchItem = ({ name, singer, thumnail, description }: Props) => {
   };
 
   return (
-    <SearchResultItem>
+    <SearchResultItem color={selected ? '#E5E7E9' : '#ffffff'}>
       <Image>
         <div>IMG</div>
       </Image>
@@ -50,6 +51,7 @@ const SearchResultItem = styled.div`
   border-radius: 0.3rem;
   cursor: pointer;
 
+  background-color: ${prop => prop.color};
   &:hover {
     background-color: #f2f3f4;
   }

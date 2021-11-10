@@ -15,37 +15,53 @@ interface Music {
 
 const MusicSearch = () => {
   const [result, setResult] = useState<Music[]>([]);
+  const [seletedMusics, setSeletedMusics] = useState<number[]>([]);
 
   const fetchMusic = useCallback(async (keyword: string) => {
+    setSeletedMusics([]);
+
     const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}`);
     setResult(await res.json());
   }, []);
 
+  const isSelected = (mid: number): boolean => (seletedMusics.indexOf(mid) >= 0 ? true : false);
+
+  const selectMusic = (e: React.MouseEvent<HTMLDivElement>) => {
+    const mid = +e.currentTarget.dataset.id!;
+    const index = seletedMusics.indexOf(mid);
+
+    index >= 0
+      ? setSeletedMusics(seletedMusics.filter(id => id !== mid))
+      : setSeletedMusics([...seletedMusics, mid]);
+  };
+
   return (
     <>
-      <Wrapper>
+      <Layout>
         <SearchBar doFetch={fetchMusic} />
-      </Wrapper>
-      <Wrapper>
+      </Layout>
+      <Layout>
         {result.length ? (
-          result.map((k: Music, i: number) => (
-            <MusicSearchItem
-              key={i}
-              name={k.name}
-              singer={k.singer}
-              thumnail={k.thumnail}
-              description={k.description}
-            />
+          result.map((k: Music) => (
+            <div key={k.MID} data-id={k.MID} onClick={selectMusic}>
+              <MusicSearchItem
+                name={k.name}
+                singer={k.singer}
+                thumnail={k.thumnail}
+                description={k.description}
+                selected={isSelected(+k.MID)}
+              />
+            </div>
           ))
         ) : (
           <div>검색 결과 없음</div>
         )}
-      </Wrapper>
+      </Layout>
     </>
   );
 };
 
-const Wrapper = styled.div`
+const Layout = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
