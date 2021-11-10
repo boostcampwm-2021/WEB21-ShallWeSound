@@ -30,8 +30,13 @@ const socketHandler = (io: Server) => {
       // });
     });
     socket.on('chatMessage', (message: string) => {
-      // console.log(userHash[socket.id]);
-      socket.to('최고다 이순신').emit('chatMessage', { id: userHash[socket.id], msg: message });
+      const targetRoom = socketData.find(
+        val => val.socketId.some(client => client === socket.id) === true,
+      );
+
+      if (targetRoom !== undefined) {
+        socket.to(targetRoom.title).emit('chatMessage', { id: userHash[socket.id], msg: message });
+      }
     });
 
     socket.on('responseTime', (data: string) => {
@@ -66,12 +71,16 @@ const socketHandler = (io: Server) => {
       namespace.to(socket.id).emit('response', PlayList.getPlayListByPage(page, count));
     });
 
-    // socket.on('nextMusicReq', ({ src }) => {
-    //   if (socket.id !== socketData[0]) return;
+    socket.on('nextMusicReq', ({ src }) => {
+      const targetRoom = socketData.find(
+        val => val.socketId.some(client => client === socket.id) === true,
+      );
 
-    //   // namespace.to(socket.id).emit('nextMusicRes', PlayList.getNextMusic());
-    //   namespace.emit('nextMusicRes', src);
-    // });
+      if (socket.id !== targetRoom?.socketId[0]) return;
+
+      // namespace.to(socket.id).emit('nextMusicRes', PlayList.getNextMusic());
+      socket.to(targetRoom.title).emit('clientPlay', src);
+    });
 
     socket.on('currentMusicReq', () => {
       socket.emit('currentMusicRes', PlayList.getCurrentMusic());

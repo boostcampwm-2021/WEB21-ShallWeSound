@@ -2,6 +2,8 @@ import React, { useState, useContext, useEffect, useRef, EventHandler } from 're
 import { Socket } from 'socket.io-client';
 import { useSocket } from '../context/MyContext';
 
+import { Room } from './Room';
+
 export const MainPage = ({ history }: { history: any }) => {
   const socket: Socket = useSocket()!;
 
@@ -20,6 +22,7 @@ export const MainPage = ({ history }: { history: any }) => {
   return (
     <>
       <div>메인 인데요</div>
+
       <div className={'room'} onClick={fff}>
         최고다 아이유
       </div>
