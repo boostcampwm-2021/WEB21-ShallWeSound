@@ -4,7 +4,7 @@ import { io, Socket } from 'socket.io-client';
 import styles from '../stylesheets/style.module.scss';
 import * as _ from 'lodash';
 // const socket = io();
-import { useSocket } from '../pages/Room';
+import { useSocket } from '../context/MyContext';
 interface chatType {
   id: number;
   msg: string;
