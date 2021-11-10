@@ -15,15 +15,15 @@ function UploadModalInner(){
             <form className={styles.uploadForm} action="upload" method="post" encType="multipart/form-data">
                 <div>음악파일</div>
                 
-                <input  value={musicName}/>
-                <label className='musicLabel'htmlFor="musicFile">업로드</label>
+                <input className={styles.musicName} value={musicName} placeholder='음악파일' disabled={true}/>
+                <label htmlFor="musicFile">업로드</label>
                 
                 <input className={styles.input} id="musicFile" type="file" name='userFile1' 
                 onChange={isFileUpload} />
                 <div>썸네일 이미지</div>
             
-                <input  value={thumbnailName}/>
-                <label className='thumbnailLabel' htmlFor="thumbnailFile">업로드</label>
+                <input className={styles.thumbnailName}value={thumbnailName} placeholder='썸네일'disabled={true} />
+                <label htmlFor="thumbnailFile">업로드</label>
                 
                 <input className={styles.input} id='thumbnailFile' type="file" name='userFile2'
                 onChange={isThumbUpload} />
