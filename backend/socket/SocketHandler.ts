@@ -121,4 +121,4 @@ const socketHandler = (io: Server) => {
   });
 };
 
-export { socketHandler };
+export { socketHandler, socketData };
