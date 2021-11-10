@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import type { Music } from '../types';
 import PlayListItem from './PlayListItem';
-import { useSocket } from '../pages/Room';
+import { useSocket } from '../context/MyContext';
 
 const PlayList = () => {
   const socket: any = useSocket();
@@ -44,8 +44,8 @@ const PlayList = () => {
 };
 
 const Container = styled.div`
-  background: none;//linear-gradient(#4b6cb7, #182848);//linear-gradient(to top right, blue, pink);
-  outline: 4px solid #FFF;
+  background: none; //linear-gradient(#4b6cb7, #182848);//linear-gradient(to top right, blue, pink);
+  outline: 4px solid #fff;
   border-radius: 10px;
   box-shadow: rgb(0 0 0 / 50%) 0px 10px 25px;
   width: 280px;

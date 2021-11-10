@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSocket } from '../pages/Room';
+import { useSocket } from '../context/MyContext';
 import { Music } from '../types';
 
 function Video() {

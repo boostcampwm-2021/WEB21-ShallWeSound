@@ -1,49 +1,62 @@
-import React, { useState, useEffect, useRef, MouseEventHandler } from "react";
-import { useSocket } from '../pages/Room';
-import './MusicPlayer.scss'
+import React, { useState, useEffect, useRef, MouseEventHandler } from 'react';
+import { useSocket } from '../context/MyContext';
+import './MusicPlayer.scss';
 
-function Title({ name="Test", singer="Singer" }) {
+function Title({ name = 'Test', singer = 'Singer' }) {
   return (
     <div className="musicplayer-title-area">
       <span className="musicplayer-title">{name}</span>
       <span className="musicplayer-subtitle">{singer}</span>
     </div>
-  )
+  );
 }
 
-function MusicThumbnail ({ name, thumbnail, nowPlaying, onClick } : { name: string, thumbnail: string, nowPlaying: boolean, onClick: MouseEventHandler }) {
+function MusicThumbnail({
+  name,
+  thumbnail,
+  nowPlaying,
+  onClick,
+}: {
+  name: string;
+  thumbnail: string;
+  nowPlaying: boolean;
+  onClick: MouseEventHandler;
+}) {
   const [isHover, setIsHover] = useState(false);
-  function onMouseEnter () { setIsHover(true) }
-  function onMouseLeave () { setIsHover(false) }
+  function onMouseEnter() {
+    setIsHover(true);
+  }
+  function onMouseLeave() {
+    setIsHover(false);
+  }
 
   return (
-    <div className="musicplayer-cover" onClick={onClick} >
+    <div className="musicplayer-cover" onClick={onClick}>
       <div className="cover-hover" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-        {thumbnail &&
-        <img src={thumbnail} alt={name} />
-        }
-        {isHover && 
-        <>
-          <div className="only-hover"></div>
-          {nowPlaying ?
-          <img className="icon" src="/icons/pause.svg" alt="pause" /> :
-          <img className="icon" src="/icons/play.svg" alt="play" />
-          }
-        </>
-        }
+        {thumbnail && <img src={thumbnail} alt={name} />}
+        {isHover && (
+          <>
+            <div className="only-hover"></div>
+            {nowPlaying ? (
+              <img className="icon" src="/icons/pause.svg" alt="pause" />
+            ) : (
+              <img className="icon" src="/icons/play.svg" alt="play" />
+            )}
+          </>
+        )}
       </div>
     </div>
-  )
+  );
 }
 
 interface musicInfo {
-  name: string,
-  singer: string,
-  thumbnail: string,
-  src: string,
+  name: string;
+  singer: string;
+  thumbnail: string;
+  src: string;
 }
 
-function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
+function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   const [musicIndex, setmusicIndex] = useState(0);
   const [musicInfo, setMusicInfo] = useState<musicInfo>({
     name: 'noname',
@@ -57,7 +70,7 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
   const [totalTime, setTotalTime] = useState(0);
   const [progressWidth, setProgressWidth] = useState(0);
   const socket: any = useSocket();
-  
+
   useEffect(() => {
     const aud: any = document.getElementById('video')!;
 
@@ -86,14 +99,12 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
     setTimeout(() => {
       aud.muted = false;
     }, 200);
-
   }, []);
 
-
   function goPrevMusic() {
-    setmusicIndex((musicIndex - 1 + musicList.length) % musicList.length)
+    setmusicIndex((musicIndex - 1 + musicList.length) % musicList.length);
   }
-  
+
   function goNextMusic() {
     setmusicIndex((musicIndex + 1) % musicList.length);
   }
@@ -105,9 +116,9 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
       singer: musicList[musicIndex].singer,
       thumbnail: musicList[musicIndex].thumbnail,
       src: musicList[musicIndex].src,
-    })
+    });
     socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
-  }, [])
+  }, []);
 
   useEffect(() => {
     setMusicInfo({
@@ -116,13 +127,13 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
       singer: musicList[musicIndex].singer,
       thumbnail: musicList[musicIndex].thumbnail,
       src: musicList[musicIndex].src,
-    })
+    });
     socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
-  }, [musicIndex])
+  }, [musicIndex]);
 
   useEffect(() => {
-    console.log(musicInfo)
-    console.log(musicControl.current)
+    console.log(musicInfo);
+    console.log(musicControl.current);
     if (nowPlaying && musicInfo.src && musicControl.current) {
       musicControl.current.play();
       // socket.on('requestTime', (data: string) => {
@@ -130,7 +141,7 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
       //   socket.emit('responseTime', currentTime);
       // });
     }
-  }, [musicControl])
+  }, [musicControl]);
 
   function changeFormatToTime(number: number) {
     const minute = Math.floor(number / 60);
@@ -140,7 +151,7 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
     return `${minute}:${formattedSecond}`;
   }
 
-  function playOrPauseMusic() { 
+  function playOrPauseMusic() {
     const playingMusic = musicControl && musicControl.current;
     if (playingMusic) {
       if (nowPlaying) {
@@ -164,8 +175,7 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
     if (playingMusic) {
       setCurrentTime(0);
       setTotalTime(playingMusic.duration);
-      if (nowPlaying)
-        playingMusic.play();
+      if (nowPlaying) playingMusic.play();
     }
   }
 
@@ -173,7 +183,7 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
     const playingMusic = musicControl.current;
     if (playingMusic) {
       setCurrentTime(playingMusic.currentTime);
-      setProgressWidth(playingMusic.currentTime / playingMusic.duration * 100);
+      setProgressWidth((playingMusic.currentTime / playingMusic.duration) * 100);
       playingMusic.onseeked = () => {
         console.log(playingMusic.currentTime);
         socket.emit('moving', playingMusic.currentTime);
@@ -182,21 +192,21 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
   }
 
   const progressStyle = {
-    height: "inherit",
+    height: 'inherit',
     width: progressWidth + '%',
-    borderRadius: "inherit",
-  }
+    borderRadius: 'inherit',
+  };
 
   function mousePositionRelativeToProgressBar(e: React.MouseEvent) {
     const playingMusic = musicControl.current;
     if (playingMusic) {
-      playingMusic.currentTime = totalTime * e.nativeEvent.offsetX / 352; // 352: progressBar total width
+      playingMusic.currentTime = (totalTime * e.nativeEvent.offsetX) / 352; // 352: progressBar total width
       playingMusic.onseeked = () => {
         console.log(playingMusic.currentTime);
         socket.emit('moving', playingMusic.currentTime);
       };
     }
-    setCurrentTime(totalTime * e.nativeEvent.offsetX / 352);
+    setCurrentTime((totalTime * e.nativeEvent.offsetX) / 352);
   }
 
   return (
@@ -205,23 +215,43 @@ function MusicPlayer({ musicList } : { musicList: musicInfo[] }) {
         {/* <div className="hover">
           <img className="icon" src="/icons/play-circle.svg" alt="play-circle" />
         </div> */}
-        <video id="video" muted autoPlay src={musicInfo.src} ref={musicControl} onTimeUpdate={updateCurrentTime} onLoadedMetadata={updateMusic} onEnded={goNextMusic} ></video>
+        <video
+          id="video"
+          muted
+          autoPlay
+          src={musicInfo.src}
+          ref={musicControl}
+          onTimeUpdate={updateCurrentTime}
+          onLoadedMetadata={updateMusic}
+          onEnded={goNextMusic}
+        ></video>
         <Title name={musicInfo.name} singer={musicInfo.singer} />
         <div className="musicplayer-body">
-          <img className="icon" src="/icons/chevron-left.svg" alt="chevron-left" onClick={goPrevMusic} />
-          <MusicThumbnail name={musicInfo.name} thumbnail={musicInfo.thumbnail} nowPlaying={nowPlaying} onClick={playOrPauseMusic} />
-          <img className="icon" src="/icons/chevron-right.svg" alt="chevron-right" onClick={goNextMusic} />
+          <img
+            className="icon"
+            src="/icons/chevron-left.svg"
+            alt="chevron-left"
+            onClick={goPrevMusic}
+          />
+          <MusicThumbnail
+            name={musicInfo.name}
+            thumbnail={musicInfo.thumbnail}
+            nowPlaying={nowPlaying}
+            onClick={playOrPauseMusic}
+          />
+          <img
+            className="icon"
+            src="/icons/chevron-right.svg"
+            alt="chevron-right"
+            onClick={goNextMusic}
+          />
         </div>
         <div className="musicplayer-timer">
-          <span className="current-time" >{changeFormatToTime(currentTime)}</span>
+          <span className="current-time">{changeFormatToTime(currentTime)}</span>
           <span className="max-duration">{changeFormatToTime(totalTime)}</span>
         </div>
         <div className="progress" onClick={mousePositionRelativeToProgressBar}>
-          <div
-          className="progress-bar"
-          style={progressStyle}
-          >
-          </div>
+          <div className="progress-bar" style={progressStyle}></div>
         </div>
       </div>
     </>
