@@ -12,8 +12,6 @@ import uploadRouter from './routes/upload';
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
-// const io = require('socket.io')(server);
-// const io = new Server(server);
 
 app.get('/', (req, res) => {
   res.send('hello');

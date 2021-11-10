@@ -1,21 +1,12 @@
 import express from 'express';
 import multer from 'multer';
 import * as AWS from 'aws-sdk';
-import * as fs from 'fs';
 import {Readable} from 'stream';
 import {initDB, connect} from '../config/db'
 import crypto from 'crypto'
 const db = initDB();
 connect(db);
 const upload = multer({
-    // storage: multer.diskStorage({
-    //     destination: function (req, file, cb) {
-    //         cb(null, 'uploads/');
-    //     },
-    //     filename: function (req, file, cb) {
-    //         cb(null, file.originalname);
-    //     }
-    // }),
     storage: multer.memoryStorage()
 });
 const router = express.Router();
@@ -31,6 +22,9 @@ const S3 = new AWS.S3({
         secretAccessKey: secret_key
     }
 });
+function makeHash(fileBuffer:string):string{
+    return crypto.createHash('sha512').update(fileBuffer + `${process.env.SALT}`).digest('hex');
+}
 const cpUpload = upload.fields([{name:'userFile1'}, {name:'userFile2'}])
 router.post('/', cpUpload,(req, res, next)=>{
     const bucket_name = 'sws';
@@ -39,22 +33,19 @@ router.post('/', cpUpload,(req, res, next)=>{
     let options = {
         partSize: 5 * 1024 * 1024
     };
-    const contentHash = crypto.createHash('sha512').update(files.userFile1[0].toString() + `${process.env.SALT}`).digest('hex');
+    const contentHash = makeHash(files.userFile1[0].toString());
     (async () => {
         await S3.upload({
             Bucket: bucket_name,
             Key: object_name,
-            // Body: fs.createReadStream(`./uploads/${req.file?.filename}`)
             Body: Readable.from(files.userFile1[0].buffer)
         }, options).promise();
         const thumbnailName = object_name.split('.')[0]+'.'+files.userFile2[0].originalname.split('.')[1];
         await S3.upload({
             Bucket: bucket_name,
             Key: thumbnailName,
-            // Body: fs.createReadStream(`./uploads/${req.file?.filename}`)
             Body: Readable.from(files.userFile2[0].buffer)
         }, options).promise();
-        // await fs.unlink(`./uploads/${req.file?.filename}`, err=>{});
         db.query(
             'INSERT INTO MUSIC (name, singer, description, thumbnail, path, content_hash) values (?,?,?,?,?,?)',
             [object_name, '기범기범', '설명설명', thumbnailName, '경로경로', contentHash],
