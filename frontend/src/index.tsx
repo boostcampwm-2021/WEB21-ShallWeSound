@@ -11,8 +11,8 @@ ReactDOM.render(
     <React.StrictMode>
       <ContextProvider>
         <div>
-          <Route exact path="/" component={MainPage} />
           <Route path="/room" component={App} />
+          <Route exact path="/" component={MainPage} />
         </div>
       </ContextProvider>
     </React.StrictMode>
