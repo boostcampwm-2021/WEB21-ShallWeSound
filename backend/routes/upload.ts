@@ -48,10 +48,7 @@ router.post('/', cpUpload,(req, res, next)=>{
         }, options).promise();
         db.query(
             'INSERT INTO MUSIC (name, singer, description, thumbnail, path, content_hash) values (?,?,?,?,?,?)',
-            [object_name, '기범기범', '설명설명', thumbnailName, '경로경로', contentHash],
-            function(err, rows, fields){
-                if(err) res.send(500);
-            }
+            [object_name, '기범기범', '설명설명', thumbnailName, '경로경로', contentHash]
         )
     })();
     res.send(200);

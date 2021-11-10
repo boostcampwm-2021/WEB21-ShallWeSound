@@ -2,10 +2,11 @@
 
 .root{
     background: $background;//$background;//$white;//$background; //#e9ecef;
+    position: relative;
 
 }
 .App {
-    
+    position: relative;
     background-size: cover;
     display: flex;
     min-height: 100vh;//calc(100vw - (100vw - 100%));
@@ -108,3 +109,26 @@
     
 }
 
+
+.modalContainer{
+    padding-left: 1em;
+}
+.UploadModalInner{
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background-color: white;
+    z-index: 100;
+    border-radius: 10px;
+    .uploadForm{
+        padding-left: 1em;
+        .input{
+            display: none;
+        }
+        .submitButton{
+            display: block;
+        }
+    }
+    
+    
+}
