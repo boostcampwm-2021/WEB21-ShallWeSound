@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import * as AWS from 'aws-sdk';
 import * as fs from 'fs';
+require('dotenv').config({path:'../config/.env'});
 const upload = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
@@ -14,8 +15,8 @@ const upload = multer({
 });
 const router = express.Router();
 const region = 'kr-standard';
-const access_key = 'BiClEadIFu2KIbxQfYdn';
-const secret_key = 'k81U0KPx9cNu2hHrpw3Ro69HFCfsuy5DSnwdO8H9';
+const access_key = `${process.env.ACCESS_KEY}`;
+const secret_key = `${process.env.SECRET_KEY}`;
 const S3 = new AWS.S3({
     endpoint:'https://kr.object.ncloudstorage.com',
     region,
