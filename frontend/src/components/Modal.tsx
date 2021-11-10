@@ -59,7 +59,7 @@ const StyledModal = styled.div<StyledProps>`
 `;
 
 const Head = styled.div`
-  height: 8%;
+  height: 3rem;
   display: flex;
   align-items: center;
   justify-content: flex-end;
