@@ -1,4 +1,4 @@
-@import '../stylesheet/global.scss';
+@import './global.scss';
 
 .musicplayer {
   box-sizing: border-box;
@@ -151,20 +151,21 @@
       height: inherit;
       width: 0%;
       position: relative;
-      border: 0.5px solid $background;
+      border: 0.5px solid $white;
       border-radius: inherit;
-      background: linear-gradient(90deg, #4b6cb7, #182848);
+      background-color: $white;
       
       &::before {
         content: "";
         position: absolute;
         height: 18px;
         width: 18px;
+        box-sizing: border-box;
         border-radius: 50%;
         top: -6px;
         right: -5px;
         z-index: 2;
-        background: linear-gradient(270deg, #4b6cb7, #182848);
+        background-color: $white;
       }
     }
 

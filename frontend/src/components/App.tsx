@@ -1,6 +1,6 @@
 import React from 'react';
 import { Room } from '../pages/Room';
-import '../stylesheet/reset.css';
+import '../stylesheets/reset.css';
 import styles from './style.module.scss';
 
 function App() {

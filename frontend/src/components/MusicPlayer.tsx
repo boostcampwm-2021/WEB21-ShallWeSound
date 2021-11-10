@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, MouseEventHandler } from "react";
 import { useSocket } from '../pages/Room';
-import './MusicPlayer.scss'
+import '../stylesheets/MusicPlayer.scss'
 
-function Title({ name="Test", singer="Singer" }) {
+function Title({ name, singer } : { name: string, singer: string}) {
   return (
     <div className="musicplayer-title-area">
       <span className="musicplayer-title">{name}</span>
