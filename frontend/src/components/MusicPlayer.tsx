@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, MouseEventHandler } from 'react';
 import { useSocket } from '../context/MyContext';
-import './MusicPlayer.scss';
+import '../stylesheets/MusicPlayer.scss'
 
-function Title({ name = 'Test', singer = 'Singer' }) {
+function Title({ name, singer } : { name: string, singer: string}) {
   return (
     <div className="musicplayer-title-area">
       <span className="musicplayer-title">{name}</span>
@@ -65,10 +65,13 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
     src: '',
   });
   const musicControl = useRef<HTMLVideoElement>(null);
-  const [nowPlaying, setNowPlaying] = useState(true);
+  const [nowPlaying, setNowPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
   const [progressWidth, setProgressWidth] = useState(0);
+  const [musicVolume, setMusicVolume] = useState(1);
+  const [backupMusicVolume, setBackupMusicVolume] = useState(0);
+  const [progressVolumeWidth, setProgressVolumeWidth] = useState(100);
   const socket: any = useSocket();
 
   useEffect(() => {
@@ -209,22 +212,42 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
     setCurrentTime((totalTime * e.nativeEvent.offsetX) / 352);
   }
 
+  const progressVolumeStyle = {
+    height: "inherit",
+    width: progressVolumeWidth + '%',
+    borderRadius: "inherit",
+  }
+
+  function mousePositionRelativeToVolumeProgressBar(e: React.MouseEvent) {
+    const playingMusic = musicControl.current;
+    const offsetX = Math.max(0, Math.min(e.nativeEvent.offsetX / 88, 1));
+    if (playingMusic) {
+      playingMusic.volume = offsetX; // 88: progressBar total width
+    }
+    setProgressVolumeWidth(offsetX * 100);
+    setMusicVolume(offsetX);
+  }
+
+  function toggleVolume() {
+    const playingMusic = musicControl.current;
+    if (playingMusic) {
+      if (playingMusic.volume > 0) {
+        setBackupMusicVolume(playingMusic.volume)
+        playingMusic.volume = 0;
+        setMusicVolume(0);
+        setProgressVolumeWidth(0);
+      } else {
+        playingMusic.volume = backupMusicVolume;
+        setMusicVolume(backupMusicVolume);
+        setProgressVolumeWidth(backupMusicVolume * 100)
+      }
+    }
+  }
+
   return (
     <>
       <div className="musicplayer">
-        {/* <div className="hover">
-          <img className="icon" src="/icons/play-circle.svg" alt="play-circle" />
-        </div> */}
-        <video
-          id="video"
-          muted
-          autoPlay
-          src={musicInfo.src}
-          ref={musicControl}
-          onTimeUpdate={updateCurrentTime}
-          onLoadedMetadata={updateMusic}
-          onEnded={goNextMusic}
-        ></video>
+        <video id="video" src={musicInfo.src} ref={musicControl} onTimeUpdate={updateCurrentTime} onLoadedMetadata={updateMusic} onEnded={goNextMusic} ></video>
         <Title name={musicInfo.name} singer={musicInfo.singer} />
         <div className="musicplayer-body">
           <img
@@ -252,6 +275,23 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
         </div>
         <div className="progress" onClick={mousePositionRelativeToProgressBar}>
           <div className="progress-bar" style={progressStyle}></div>
+        </div>
+        <div className="serveral-icons">
+          <div className="volume-wrap width-half">
+            {musicVolume === 0 ?
+            <img className="icon" src="/icons/volume-off.svg" alt="volume-off" onClick={toggleVolume} /> :
+            <img className="icon" src="/icons/volume-up.svg" alt="volume-up" onClick={toggleVolume}/>
+            }
+            <div className="progress-wrap width-half">
+              <div className="progress" onClick={mousePositionRelativeToVolumeProgressBar}>
+                <div className="progress-bar" style={progressVolumeStyle}></div>
+              </div>
+            </div>
+          </div>
+          <div className="icons-wrap">
+            <img className="icon" src="/icons/thumbs-up.svg" alt="thumbs-up" />
+            <img className="icon" src="/icons/playlist-add.svg" alt="playlist-add" />
+          </div>
         </div>
       </div>
     </>

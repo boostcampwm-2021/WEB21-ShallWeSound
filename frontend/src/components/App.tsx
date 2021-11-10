@@ -1,7 +1,7 @@
 import React from 'react';
 import { Room } from '../pages/Room';
-import '../stylesheet/reset.css';
-import styles from './style.module.scss';
+import '../stylesheets/reset.css';
+import styles from '../stylesheets/style.module.scss';
 
 function App() {
   return (
