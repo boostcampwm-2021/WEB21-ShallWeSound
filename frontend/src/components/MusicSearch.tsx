@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import config from '../config.host.json';
+import config from '../config.json';
 
 interface Music {
   MID: number;
@@ -33,13 +33,17 @@ const MusicSearch = () => {
         <input type="text" value={keyword} onChange={onChange}></input>
       </div>
       <div>
-        {result.map((k: Music, i: number) => (
-          <div key={i}>
-            {k.name}
-            {k.singer}
-            {k.description}
-          </div>
-        ))}
+        {result.length ? (
+          result.map((k: Music, i: number) => (
+            <div key={i}>
+              {k.name}
+              {k.singer}
+              {k.description}
+            </div>
+          ))
+        ) : (
+          <div>검색 결과 없음</div>
+        )}
       </div>
     </>
   );
