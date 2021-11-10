@@ -5,12 +5,13 @@ interface Props {
   children: string;
   size: string;
   color: string;
+  onClick?: () => void;
 }
 
-const CircleButton = ({ children, size, color }: Props) => {
+const CircleButton = ({ children, size, color, onClick }: Props) => {
   return (
     <>
-      <StyledButton size={size} color={color}>
+      <StyledButton size={size} color={color} onClick={onClick}>
         {children}
       </StyledButton>
     </>

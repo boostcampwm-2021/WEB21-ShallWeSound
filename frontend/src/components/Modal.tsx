@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 interface Props {
   width: string;
   height: string;
+  onToggle: () => void;
   children: JSX.Element;
 }
 
@@ -12,25 +13,15 @@ interface StyledProps {
   height: string;
 }
 
-const Modal = ({ width, height, children }: Props) => {
-  const [visible, setVisible] = useState(true);
-
+const Modal = ({ width, height, onToggle, children }: Props) => {
   useEffect(() => {
-    if (visible) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
+    document.body.style.overflow = 'hidden';
+
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, [visible]);
+  }, []);
 
-  const onToggle = (e: React.MouseEvent<HTMLElement>) => {
-    setVisible(!visible);
-  };
-
-  if (!visible) return null;
   return (
     <>
       <BlackScreen onClick={onToggle}>

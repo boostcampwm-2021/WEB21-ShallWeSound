@@ -5,7 +5,11 @@ import PlayListItem from './PlayListItem';
 import CircleButton from './CircleButton';
 import { useSocket } from '../pages/Room';
 
-const PlayList = () => {
+interface Props {
+  onToggle: () => void;
+}
+
+const PlayList = ({ onToggle }: Props) => {
   const socket: any = useSocket();
   const [playList, setPlayList] = useState<Music[]>([]);
   const page = useRef(0);
@@ -43,7 +47,7 @@ const PlayList = () => {
         ))}
       </PlayListWrapper>
       <ButtonWrapper>
-        <CircleButton size="45px" color="#ffffff">
+        <CircleButton size="45px" color="#ffffff" onClick={onToggle}>
           +
         </CircleButton>
       </ButtonWrapper>

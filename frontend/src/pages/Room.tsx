@@ -1,6 +1,5 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, createContext } from 'react';
 import MusicPlayer from '../components/MusicPlayer';
-import styled from 'styled-components';
 import io from 'socket.io-client';
 import PlayList from '../components/PlayList';
 import ChatComponent from '../components/chat';
@@ -9,17 +8,16 @@ import MusicSearch from '../components/MusicSearch';
 import { localhost } from '../config.host.json';
 
 const socket: any = io(`${localhost}/music`);
+const SocketContext = createContext(null);
 
-const SocketProvider = React.createContext(null);
+interface musicInfo {
+  name: string;
+  singer: string;
+  thumbnail: string;
+  src: string;
+}
 
 const Room = () => {
-  interface musicInfo {
-    name: string;
-    singer: string;
-    thumbnail: string;
-    src: string;
-  }
-
   const [musicList, setMusicList] = useState<musicInfo[]>([
     {
       name: 'Harley Bird - Home',
@@ -59,22 +57,27 @@ const Room = () => {
     },
   ]);
 
+  const [musicModalVisible, setMusicModalVisible] = useState<boolean>(false);
+  const onToggle = () => setMusicModalVisible(!musicModalVisible);
+
   return (
     <>
-      <SocketProvider.Provider value={socket}>
+      <SocketContext.Provider value={socket}>
         <div>
           <MusicPlayer musicList={musicList} />
           <ChatComponent />
         </div>
-        <PlayList />
-        <Modal width="350px" height="650px">
-          <MusicSearch />
-        </Modal>
-      </SocketProvider.Provider>
+        <PlayList onToggle={onToggle} />
+        {musicModalVisible ? (
+          <Modal width="350px" height="650px" onToggle={onToggle}>
+            <MusicSearch />
+          </Modal>
+        ) : null}
+      </SocketContext.Provider>
     </>
   );
 };
 
-const useSocket = () => useContext(SocketProvider);
+const useSocket = () => useContext(SocketContext);
 
 export { Room, useSocket };
