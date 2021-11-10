@@ -1,56 +1,25 @@
 import express from 'express';
+import MusicService from '../../services/music';
+
 const router = express.Router();
 
-router.get('/', (req: express.Request, res: express.Response) => {
-  const keyword = req.query.keyword;
-  console.log(keyword);
+router.get('/', async (req: express.Request, res: express.Response) => {
+  const keyword = (req.query.keyword as string) ?? '';
 
   if (keyword === '') {
     res.send([
       {
         MID: '1',
-        name: '스트로베리문',
+        name: '독하다독해 (feat: 호눅스)',
         thumbnail: '서버 썸네일 저장 경로',
-        singer: '아이유',
-        description: '딸기딸기딸기',
+        singer: '크롱',
+        description: '독하다독해 요구 사항 하나 더 ...',
         path: '서버 음악 저장 경로',
       },
     ]);
   } else {
-    res.send([
-      {
-        MID: '음악 id (MID)',
-        name: '곡명',
-        thumbnail: '서버 썸네일 저장 경로',
-        singer: '가수',
-        description: '곡 설명',
-        path: '서버 음악 저장 경로',
-      },
-      {
-        MID: '음악 id (MID)',
-        name: '곡명',
-        thumbnail: '서버 썸네일 저장 경로',
-        singer: '가수',
-        description: '곡 설명',
-        path: '서버 음악 저장 경로',
-      },
-      {
-        MID: '음악 id (MID)',
-        name: '곡명',
-        thumbnail: '서버 썸네일 저장 경로',
-        singer: '가수',
-        description: '곡 설명',
-        path: '서버 음악 저장 경로',
-      },
-      {
-        MID: '음악 id (MID)',
-        name: '곡명',
-        thumbnail: '서버 썸네일 저장 경로',
-        singer: '가수',
-        description: '곡 설명',
-        path: '서버 음악 저장 경로',
-      },
-    ]);
+    const result = await MusicService.search(keyword);
+    res.send(result);
   }
 });
 
