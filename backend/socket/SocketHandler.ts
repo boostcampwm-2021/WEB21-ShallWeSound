@@ -27,6 +27,9 @@ const socketHandler = (io: Server) => {
     socket.broadcast.emit('enterRoom', 'new user connected');
     socket.on('disconnect', () => {
       socket.broadcast.emit('leaveRoom', 'user disconnected');
+      socketData = socketData.filter(socketID => {
+        return socketID !== socket.id;
+      });
     });
     socket.on('chatMessage', (message: string) => {
       // console.log(userHash[socket.id]);
@@ -73,12 +76,6 @@ const socketHandler = (io: Server) => {
       // if (socketData.length > 1) {
       //   socket.broadcast.to([socketData[0]]).emit('requestTime', 'time');
       // }
-    });
-
-    socket.on('disconnect', () => {
-      socketData = socketData.filter(socketID => {
-        return socketID !== socket.id;
-      });
     });
   });
 };
