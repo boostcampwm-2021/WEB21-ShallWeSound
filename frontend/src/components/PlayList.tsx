@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import type { Music } from '../types';
 import PlayListItem from './PlayListItem';
+import CircleButton from './CircleButton';
 import { useSocket } from '../pages/Room';
 
 const PlayList = () => {
@@ -36,18 +37,22 @@ const PlayList = () => {
   return (
     <Container>
       <Title>P L A Y &nbsp; L I S T</Title>
-      <Wrapper onScroll={onScroll}>
+      <PlayListWrapper onScroll={onScroll}>
         {playList.map((music: Music, i: number) => (
-          <PlayListItem key={i} title={music.title} singer={music.singer}></PlayListItem>
+          <PlayListItem key={i} title={music.title} singer={music.singer} />
         ))}
-      </Wrapper>
-      <AddButton>+</AddButton>
+      </PlayListWrapper>
+      <ButtonWrapper>
+        <CircleButton size="45px" color="#ffffff">
+          +
+        </CircleButton>
+      </ButtonWrapper>
     </Container>
   );
 };
 
 const Container = styled.div`
-  background: none; //linear-gradient(#4b6cb7, #182848);//linear-gradient(to top right, blue, pink);
+  background: none;
   outline: 4px solid #fff;
   border-radius: 10px;
   box-shadow: rgb(0 0 0 / 50%) 0px 10px 25px;
@@ -68,7 +73,7 @@ const Title = styled.div`
   margin: 10px 0px;
 `;
 
-const Wrapper = styled.div`
+const PlayListWrapper = styled.div`
   height: 80%;
   overflow: auto;
   -ms-overflow-style: none; /* IE and Edge */
@@ -85,24 +90,11 @@ const Wrapper = styled.div`
   }
 `;
 
-const AddButton = styled.button`
-  border-radius: 50%;
-  border: 1px solid #ffffff;
-  padding: 0;
-  width: 45px;
-  height: 45px;
+const ButtonWrapper = styled.div`
   position: absolute;
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  box-shadow: rgb(0 0 0 / 70%) 0px 10px 25px;
-  background-color: #ffffff;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 0.8;
-    background-color: transparent;
-  }
 `;
 
 export default PlayList;
