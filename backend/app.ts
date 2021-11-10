@@ -5,9 +5,19 @@ import http from 'http';
 import socket from './socket';
 import roomRouter from './routes/room';
 import audioRouter from './routes/audio';
+import 'dotenv/config';
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
+const Sequelize = require('sequelize');
+const SequelizeAuto = require('sequelize-auto');
+const auto = new SequelizeAuto('SWS', process.env.DB_ID, process.env.DB_PW, {
+  host: process.env.DB_HOST,
+  dialect: 'mysql',
+});
+auto.run((err: Error) => {
+  if (err) throw err;
+});
 // const io = require('socket.io')(server);
 // const io = new Server(server);
 

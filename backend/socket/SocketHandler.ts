@@ -1,5 +1,4 @@
 import { Server, Socket } from 'socket.io';
-import { couldStartTrivia } from 'typescript';
 import { PlayList } from './music';
 
 interface userList {
