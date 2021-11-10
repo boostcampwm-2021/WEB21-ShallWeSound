@@ -4,36 +4,34 @@ import { PlayList } from './music';
 interface userList {
   [socketid: string]: number;
 }
+
+interface socketInfo {
+  title: string;
+  socketId: string[];
+}
+
 const userHash: userList = {};
 let userNum: number = 0;
 
-let socketData: string[] = [];
+let socketData: socketInfo[] = [];
 
 const socketHandler = (io: Server) => {
   const namespace = io.of('/music');
 
   namespace.on('connection', socket => {
-    console.log(socket.id);
-
     userHash[socket.id] = userNum;
     userNum += 1;
-
-    socketData.push(socket.id);
-
-    if (!!socketData.length) {
-      socket.broadcast.to([socketData[0]]).emit('requestTime', 'time');
-    }
 
     socket.broadcast.emit('enterRoom', 'new user connected');
     socket.on('disconnect', () => {
       socket.broadcast.emit('leaveRoom', 'user disconnected');
-      socketData = socketData.filter(socketID => {
-        return socketID !== socket.id;
-      });
+      // socketData = socketData.filter(socketID => {
+      //   return socketID !== socket.id;
+      // });
     });
     socket.on('chatMessage', (message: string) => {
       // console.log(userHash[socket.id]);
-      socket.broadcast.emit('chatMessage', { id: userHash[socket.id], msg: message });
+      socket.to('최고다 이순신').emit('chatMessage', { id: userHash[socket.id], msg: message });
     });
 
     socket.on('responseTime', (data: string) => {
@@ -41,21 +39,26 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('pause', (data: string) => {
-      if (socket.id === socketData[0]) {
-        socket.broadcast.emit('clientPause', '멈춰!');
+      const targetRoom = socketData.find(val => val.socketId[0] === socket.id);
+
+      if (targetRoom !== undefined) {
+        socket.to(targetRoom.title).emit('clientPause', '멈춰!');
       }
     });
 
     socket.on('play', (data: string) => {
-      if (socket.id === socketData[0]) {
-        socket.broadcast.emit('clientPlay', '시작해!');
+      const targetRoom = socketData.find(val => val.socketId[0] === socket.id);
+
+      if (targetRoom !== undefined) {
+        socket.to(targetRoom.title).emit('clientPlay', '시작해!');
       }
     });
 
     socket.on('moving', (data: string) => {
-      if (socket.id === socketData[0]) {
-        console.log('모두들 시작하세요');
-        socket.broadcast.emit('clientMoving', data);
+      const targetRoom = socketData.find(val => val.socketId[0] === socket.id);
+
+      if (targetRoom !== undefined) {
+        socket.to(targetRoom.title).emit('clientMoving', data);
       }
     });
 
@@ -63,12 +66,12 @@ const socketHandler = (io: Server) => {
       namespace.to(socket.id).emit('response', PlayList.getPlayListByPage(page, count));
     });
 
-    socket.on('nextMusicReq', ({ src }) => {
-      if (socket.id !== socketData[0]) return;
+    // socket.on('nextMusicReq', ({ src }) => {
+    //   if (socket.id !== socketData[0]) return;
 
-      // namespace.to(socket.id).emit('nextMusicRes', PlayList.getNextMusic());
-      namespace.emit('nextMusicRes', src);
-    });
+    //   // namespace.to(socket.id).emit('nextMusicRes', PlayList.getNextMusic());
+    //   namespace.emit('nextMusicRes', src);
+    // });
 
     socket.on('currentMusicReq', () => {
       socket.emit('currentMusicRes', PlayList.getCurrentMusic());
@@ -76,6 +79,25 @@ const socketHandler = (io: Server) => {
       // if (socketData.length > 1) {
       //   socket.broadcast.to([socketData[0]]).emit('requestTime', 'time');
       // }
+    });
+
+    socket.on('joinRoom', roomTitle => {
+      socket.join(roomTitle);
+      if (
+        !socketData.some(val => {
+          return val.title === roomTitle;
+        })
+      ) {
+        socketData.push({ title: roomTitle, socketId: [socket.id] });
+      } else {
+        const target = socketData.find(val => val.title === roomTitle);
+        target?.socketId.push(socket.id);
+        if (!!target?.socketId.length) {
+          socket.broadcast.to([target.socketId[0]]).emit('requestTime', 'time');
+        }
+      }
+
+      namespace.to(roomTitle).emit('joinRoomClient', `${roomTitle} 입니다. 누군가가 입장했습니다.`);
     });
   });
 };
