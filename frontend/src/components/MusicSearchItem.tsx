@@ -117,8 +117,7 @@ const DescriptionIcon = styled.div`
 `;
 
 const Description = styled.div`
-  position: absolute;
-  left: 0.7rem;
+  position: fixed;
   width: 8rem;
   font-size: 0.8rem;
   border: 1px solid #cacfd2;

@@ -50,7 +50,7 @@ const ModalOverlay = styled.div`
 const StyledModal = styled.div<StyledProps>`
   width: ${props => props.widthP};
   height: ${props => props.heightP};
-  background-color: #ffffff;
+  background: #ffffff;
   border-radius: 10px;
   box-shadow: rgb(0 0 0 / 100%) 0px 10px 25px;
   position: fixed;

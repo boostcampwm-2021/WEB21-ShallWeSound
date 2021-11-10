@@ -4,14 +4,14 @@ import styled from 'styled-components';
 interface Props {
   children: string;
   size: string;
-  color: string;
+  colorP: string;
   onClick?: () => void;
 }
 
-const CircleButton = ({ children, size, color, onClick }: Props) => {
+const CircleButton = ({ children, size, colorP, onClick }: Props) => {
   return (
     <>
-      <StyledButton size={size} color={color} onClick={onClick}>
+      <StyledButton size={size} colorP={colorP} onClick={onClick}>
         {children}
       </StyledButton>
     </>
@@ -21,16 +21,15 @@ const CircleButton = ({ children, size, color, onClick }: Props) => {
 const StyledButton = styled.button<Props>`
   width: ${props => props.size};
   height: ${props => props.size};
-  background-color: ${props => props.color};
+  background: ${props => props.colorP};
   border-radius: 50%;
-  border: 1px solid #ffffff;
+  border: none;
   padding: 0;
-  box-shadow: rgb(0 0 0 / 70%) 0px 10px 25px;
+  box-shadow: rgb(0 0 0 / 30%) 0px 10px 25px;
   cursor: pointer;
 
   &:hover {
-    opacity: 0.8;
-    background-color: transparent;
+    transform: scale(0.95);
   }
 `;
 

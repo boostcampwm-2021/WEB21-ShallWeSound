@@ -48,7 +48,7 @@ const PlayList = () => {
         ))}
       </PlayListWrapper>
       <ButtonWrapper>
-        <CircleButton size="45px" color="#ffffff" onClick={toggleModal}>
+        <CircleButton size="45px" colorP="#ffffff" onClick={toggleModal}>
           +
         </CircleButton>
       </ButtonWrapper>
