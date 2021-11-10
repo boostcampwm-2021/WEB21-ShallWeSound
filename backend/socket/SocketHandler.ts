@@ -25,9 +25,14 @@ const socketHandler = (io: Server) => {
     socket.broadcast.emit('enterRoom', 'new user connected');
     socket.on('disconnect', () => {
       socket.broadcast.emit('leaveRoom', 'user disconnected');
-      // socketData = socketData.filter(socketID => {
-      //   return socketID !== socket.id;
-      // });
+
+      const targetRoom: socketInfo = socketData.find(
+        val => val.socketId.some(client => client === socket.id) === true,
+      )!;
+
+      targetRoom.socketId = targetRoom.socketId.filter(val => val !== socket.id);
+
+      // targetRoom이 존재하지 않을 경우도 고려해서 try, catch 적용해보기.
     });
     socket.on('chatMessage', (message: string) => {
       const targetRoom = socketData.find(
