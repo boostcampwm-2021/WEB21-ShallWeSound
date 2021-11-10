@@ -3,8 +3,6 @@ import multer from 'multer';
 import * as AWS from 'aws-sdk';
 import * as fs from 'fs';
 import {Readable} from 'stream';
-import dotenv from 'dotenv';
-dotenv.config({path:'config/.env'});
 const upload = multer({
     // storage: multer.diskStorage({
     //     destination: function (req, file, cb) {
@@ -29,12 +27,11 @@ const S3 = new AWS.S3({
         secretAccessKey: secret_key
     }
 });
-
-router.post('/', upload.single('userFile'),(req, res)=>{
+const cpUpload = upload.fields([{name:'userFile1'}, {name:'userFile2'}])
+router.post('/', cpUpload,(req, res, next)=>{
     const bucket_name = 'sws';
-    const object_name = `${req.file?.originalname}`;
-    // const object_name = `${req.file?.filename}`;
-    console.log(req.file)
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    const object_name = `${files.userFile1[0].originalname}`;
     let options = {
         partSize: 5 * 1024 * 1024
     };
@@ -44,7 +41,14 @@ router.post('/', upload.single('userFile'),(req, res)=>{
             Bucket: bucket_name,
             Key: object_name,
             // Body: fs.createReadStream(`./uploads/${req.file?.filename}`)
-            Body: Readable.from(req.file!.buffer)
+            Body: Readable.from(files.userFile1[0].buffer)
+        }, options).promise();
+        const thumbnailName = object_name.split('.')[0]+'.'+files.userFile2[0].originalname.split('.')[1];
+        await S3.upload({
+            Bucket: bucket_name,
+            Key: thumbnailName,
+            // Body: fs.createReadStream(`./uploads/${req.file?.filename}`)
+            Body: Readable.from(files.userFile2[0].buffer)
         }, options).promise();
         // await fs.unlink(`./uploads/${req.file?.filename}`, err=>{});
     })();
