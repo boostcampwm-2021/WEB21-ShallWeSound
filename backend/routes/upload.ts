@@ -28,31 +28,29 @@ const cpUpload = upload.fields([{name:'userFile1'}, {name:'userFile2'}])
 router.post('/', cpUpload,(req, res, next)=>{
     const bucket_name = 'sws';
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-    console.log(files.userFile1[0])
-    console.log(files.userFile2[0])
+    const object_name = `${files.userFile1[0].originalname}`;
+    let options = {
+        partSize: 5 * 1024 * 1024
+    };
+    const contentHash = makeHash(files.userFile1[0].buffer.toString());
+    (async () => {
+        await S3.upload({
+            Bucket: bucket_name,
+            Key: object_name,
+            Body: Readable.from(files.userFile1[0].buffer)
+        }, options).promise();
+        const thumbnailName = object_name.split('.')[0]+'.'+files.userFile2[0].originalname.split('.')[1];
+        await S3.upload({
+            Bucket: bucket_name,
+            Key: thumbnailName,
+            Body: Readable.from(files.userFile2[0].buffer)
+        }, options).promise();
+        db.query(
+            'INSERT INTO MUSIC (name, singer, description, thumbnail, path, content_hash) values (?,?,?,?,?,?)',
+            [object_name, '기범기범', '설명설명', thumbnailName, '경로경로', contentHash]
+        )
+    })();
     res.send(200);
-    // const object_name = `${files.userFile1[0].originalname}`;
-    // let options = {
-    //     partSize: 5 * 1024 * 1024
-    // };
-    // const contentHash = makeHash(files.userFile1[0].buffer.toString());
-    // (async () => {
-    //     await S3.upload({
-    //         Bucket: bucket_name,
-    //         Key: object_name,
-    //         Body: Readable.from(files.userFile1[0].buffer)
-    //     }, options).promise();
-    //     const thumbnailName = object_name.split('.')[0]+'.'+files.userFile2[0].originalname.split('.')[1];
-    //     await S3.upload({
-    //         Bucket: bucket_name,
-    //         Key: thumbnailName,
-    //         Body: Readable.from(files.userFile2[0].buffer)
-    //     }, options).promise();
-    //     db.query(
-    //         'INSERT INTO MUSIC (name, singer, description, thumbnail, path, content_hash) values (?,?,?,?,?,?)',
-    //         [object_name, '기범기범', '설명설명', thumbnailName, '경로경로', contentHash]
-    //     )
-    // })();
     
 })
 export default router;
