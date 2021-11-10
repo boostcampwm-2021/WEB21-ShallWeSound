@@ -2,8 +2,7 @@ import { listenerCount } from 'process';
 import React, { useState, useContext, useEffect, useRef, EventHandler } from 'react';
 import { Socket } from 'socket.io-client';
 import { useSocket } from '../context/MyContext';
-import './Main.scss';
-
+import '../stylesheets/main.scss';
 import { Room } from './Room';
 
 export const MainPage = ({ history }: { history: any }) => {

@@ -1,0 +1,16 @@
+@import './global.scss';
+
+.roomList {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+
+  .room {
+    color: blue;
+    padding-bottom: 50px;
+  }
+}
