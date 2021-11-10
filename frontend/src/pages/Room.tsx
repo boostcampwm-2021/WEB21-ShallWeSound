@@ -3,8 +3,8 @@ import MusicPlayer from '../components/MusicPlayer';
 import styled from 'styled-components';
 import io from 'socket.io-client';
 import PlayList from '../components/PlayList';
-import Video from '../components/video';
 import ChatComponent from '../components/chat';
+import Modal from '../components/Modal';
 import { localhost } from '../config.host.json';
 
 const socket: any = io(`${localhost}/music`);
@@ -65,19 +65,14 @@ const Room = () => {
           <MusicPlayer musicList={musicList}></MusicPlayer>
           <ChatComponent />
         </div>
-        <StyledDiv>
-          <PlayList></PlayList>
-          {/* <Video /> */}
-        </StyledDiv>
+        <PlayList></PlayList>
+        <Modal width="350px" height="650px">
+          <div></div>
+        </Modal>
       </SocketProvider.Provider>
     </>
   );
 };
-
-const StyledDiv = styled.div`
-  /* width: 100vw; */
-  /* height: 100vh; */
-`;
 
 const useSocket = () => useContext(SocketProvider);
 
