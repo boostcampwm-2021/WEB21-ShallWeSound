@@ -69,7 +69,7 @@ const Room = () => {
         </div>
         <PlayList onToggle={onToggle} />
         {musicModalVisible ? (
-          <Modal width="350px" height="650px" onToggle={onToggle}>
+          <Modal widthP="350px" heightP="650px" onToggle={onToggle}>
             <MusicSearch />
           </Modal>
         ) : null}

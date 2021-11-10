@@ -26,8 +26,8 @@ const MusicSearch = () => {
 
   const isSelected = (mid: number): boolean => (seletedMusics.indexOf(mid) >= 0 ? true : false);
 
-  const selectMusic = (e: React.MouseEvent<HTMLDivElement>) => {
-    const mid = +e.currentTarget.dataset.id!;
+  const selectMusic = (mid: number) => {
+    // const mid = +e.currentTarget.dataset.id!;
     const index = seletedMusics.indexOf(mid);
 
     index >= 0
@@ -43,7 +43,7 @@ const MusicSearch = () => {
       <Layout>
         {result.length ? (
           result.map((k: Music) => (
-            <div key={k.MID} data-id={k.MID} onClick={selectMusic}>
+            <div key={k.MID} onClick={() => selectMusic(+k.MID)}>
               <MusicSearchItem
                 name={k.name}
                 singer={k.singer}

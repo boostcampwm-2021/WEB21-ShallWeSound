@@ -2,18 +2,18 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 
 interface Props {
-  width: string;
-  height: string;
+  widthP: string;
+  heightP: string;
   onToggle: () => void;
   children: JSX.Element;
 }
 
 interface StyledProps {
-  width: string;
-  height: string;
+  widthP: string;
+  heightP: string;
 }
 
-const Modal = ({ width, height, onToggle, children }: Props) => {
+const Modal = ({ widthP, heightP, onToggle, children }: Props) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
 
@@ -25,7 +25,7 @@ const Modal = ({ width, height, onToggle, children }: Props) => {
   return (
     <>
       <BlackScreen onClick={onToggle}>
-        <StyledModal width={width} height={height} onClick={e => e.stopPropagation()}>
+        <StyledModal widthP={widthP} heightP={heightP} onClick={e => e.stopPropagation()}>
           <Head>
             <CloseButton onClick={onToggle}>X</CloseButton>
           </Head>
@@ -46,8 +46,8 @@ const BlackScreen = styled.div`
 `;
 
 const StyledModal = styled.div<StyledProps>`
-  width: ${props => props.width};
-  height: ${props => props.height};
+  width: ${props => props.widthP};
+  height: ${props => props.heightP};
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: rgb(0 0 0 / 100%) 0px 10px 25px;

@@ -20,7 +20,7 @@ const MusicSearchItem = ({ name, singer, thumnail, description, selected }: Prop
   };
 
   return (
-    <SearchResultItem color={selected ? '#E5E7E9' : '#ffffff'}>
+    <SearchResultItem colorProp={selected ? '#E5E7E9' : '#ffffff'}>
       <Image>
         <div>IMG</div>
       </Image>
@@ -39,7 +39,11 @@ const MusicSearchItem = ({ name, singer, thumnail, description, selected }: Prop
   );
 };
 
-const SearchResultItem = styled.div`
+interface SearchResultItemProps {
+  colorProp: string;
+}
+
+const SearchResultItem = styled.div<SearchResultItemProps>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -51,7 +55,8 @@ const SearchResultItem = styled.div`
   border-radius: 0.3rem;
   cursor: pointer;
 
-  background-color: ${prop => prop.color};
+  background-color: ${prop => prop.colorProp || '#ffffff'};
+
   &:hover {
     background-color: #f2f3f4;
   }
