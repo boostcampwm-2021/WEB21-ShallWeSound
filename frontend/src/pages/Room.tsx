@@ -5,6 +5,7 @@ import io from 'socket.io-client';
 import PlayList from '../components/PlayList';
 import ChatComponent from '../components/chat';
 import Modal from '../components/Modal';
+import MusicSearch from '../components/MusicSearch';
 import { localhost } from '../config.host.json';
 
 const socket: any = io(`${localhost}/music`);
@@ -62,12 +63,12 @@ const Room = () => {
     <>
       <SocketProvider.Provider value={socket}>
         <div>
-          <MusicPlayer musicList={musicList}></MusicPlayer>
+          <MusicPlayer musicList={musicList} />
           <ChatComponent />
         </div>
-        <PlayList></PlayList>
+        <PlayList />
         <Modal width="350px" height="650px">
-          <div></div>
+          <MusicSearch />
         </Modal>
       </SocketProvider.Provider>
     </>

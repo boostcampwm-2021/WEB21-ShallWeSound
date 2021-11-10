@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 interface Props {
@@ -13,18 +13,39 @@ interface StyledProps {
 }
 
 const Modal = ({ width, height, children }: Props) => {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    if (visible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [visible]);
+
+  const onToggle = (e: React.MouseEvent<HTMLElement>) => {
+    setVisible(!visible);
+  };
+
+  if (!visible) return null;
   return (
     <>
-      <Container>
-        <StyledModal width={width} height={height}>
+      <BlackScreen onClick={onToggle}>
+        <StyledModal width={width} height={height} onClick={e => e.stopPropagation()}>
+          <Head>
+            <CloseButton onClick={onToggle}>X</CloseButton>
+          </Head>
           {children}
         </StyledModal>
-      </Container>
+      </BlackScreen>
     </>
   );
 };
 
-const Container = styled.div`
+const BlackScreen = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -44,6 +65,23 @@ const StyledModal = styled.div<StyledProps>`
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 200;
+`;
+
+const Head = styled.div`
+  height: 8%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0px 15px;
+`;
+
+const CloseButton = styled.button`
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  padding: 0;
 `;
 
 export default Modal;
