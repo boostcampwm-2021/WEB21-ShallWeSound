@@ -33,7 +33,7 @@ router.post('/', cpUpload,(req, res, next)=>{
     let options = {
         partSize: 5 * 1024 * 1024
     };
-    const contentHash = makeHash(files.userFile1[0].toString());
+    const contentHash = makeHash(files.userFile1[0].buffer.toString());
     (async () => {
         await S3.upload({
             Bucket: bucket_name,
