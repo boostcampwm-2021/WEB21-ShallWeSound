@@ -3,6 +3,7 @@ import multer from 'multer';
 import * as AWS from 'aws-sdk';
 import * as fs from 'fs';
 import {Readable} from 'stream';
+import {db, connect} from '../config/db'
 const upload = multer({
     // storage: multer.diskStorage({
     //     destination: function (req, file, cb) {

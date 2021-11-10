@@ -7,14 +7,16 @@ const db_info:mysql.ConnectionConfig = {
     database: `${process.env.DB_DATABASE}`
 }
 const connection = mysql.createConnection(db_info);
-module.exports = {
-    db: function () {
-        return mysql.createConnection(db_info);
-    },
-    connect: function(conn:mysql.Connection) {
-        conn.connect(function(err) {
-            if(err) console.error('mysql connection error : ' + err);
-            else console.log('mysql is connected successfully!');
-        });
-    }
+const db = function () {
+    return mysql.createConnection(db_info);
+}
+const connect = function(conn:mysql.Connection) {
+    conn.connect(function(err) {
+        if(err) console.error('mysql connection error : ' + err);
+        else console.log('mysql is connected successfully!');
+    });
+}
+export {
+    db,
+    connect
 }
