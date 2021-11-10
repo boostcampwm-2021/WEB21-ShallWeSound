@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import config from '../config.json';
+import React, { useState, useCallback } from 'react';
+import styled from 'styled-components';
+import config from '../config.host.json';
+import SearchBar from './SearchBar';
 
 interface Music {
   MID: number;
@@ -11,26 +13,17 @@ interface Music {
 }
 
 const MusicSearch = () => {
-  const [keyword, setKeyword] = useState('');
   const [result, setResult] = useState<Music[]>([]);
 
-  useEffect(() => {
-    const fetchMusic = async () => {
-      const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}`);
-      setResult(await res.json());
-    };
-
-    fetchMusic();
-  }, [keyword]);
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-  };
+  const fetchMusic = useCallback(async (keyword: string) => {
+    const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}`);
+    setResult(await res.json());
+  }, []);
 
   return (
     <>
       <div>
-        <input type="text" value={keyword} onChange={onChange}></input>
+        <SearchBar doFetch={fetchMusic} />
       </div>
       <div>
         {result.length ? (
@@ -48,5 +41,7 @@ const MusicSearch = () => {
     </>
   );
 };
+
+const SearchResult = styled.div``;
 
 export default MusicSearch;
