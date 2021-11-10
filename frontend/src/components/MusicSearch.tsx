@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import config from '../config.host.json';
 import SearchBar from './SearchBar';
+import MusicSearchItem from './MusicSearchItem';
 
 interface Music {
   MID: number;
@@ -22,26 +23,34 @@ const MusicSearch = () => {
 
   return (
     <>
-      <div>
+      <Wrapper>
         <SearchBar doFetch={fetchMusic} />
-      </div>
-      <div>
+      </Wrapper>
+      <Wrapper>
         {result.length ? (
           result.map((k: Music, i: number) => (
-            <div key={i}>
-              {k.name}
-              {k.singer}
-              {k.description}
-            </div>
+            <MusicSearchItem
+              key={i}
+              name={k.name}
+              singer={k.singer}
+              thumnail={k.thumnail}
+              description={k.description}
+            />
           ))
         ) : (
           <div>검색 결과 없음</div>
         )}
-      </div>
+      </Wrapper>
     </>
   );
 };
 
-const SearchResult = styled.div``;
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin: 1rem 0;
+`;
 
 export default MusicSearch;

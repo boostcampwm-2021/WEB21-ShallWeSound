@@ -17,7 +17,7 @@ const SearchBar = ({ doFetch }: Props) => {
   };
 
   return (
-    <Container>
+    <>
       <label htmlFor="keyword"></label>
       <StyledInput
         type="text"
@@ -25,12 +25,11 @@ const SearchBar = ({ doFetch }: Props) => {
         value={keyword}
         onChange={onChange}
         placeholder="가수, 제목"
+        autoComplete="off"
       />
-    </Container>
+    </>
   );
 };
-
-const Container = styled.div``;
 
 const StyledInput = styled.input`
   width: 15rem;
