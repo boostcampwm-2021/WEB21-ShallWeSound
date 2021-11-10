@@ -3,14 +3,13 @@ import styled from 'styled-components';
 import type { Music } from '../types';
 import PlayListItem from './PlayListItem';
 import CircleButton from './CircleButton';
+import Modal from './Modal';
+import MusicSearch from './MusicSearch';
 import { useSocket } from '../pages/Room';
 
-interface Props {
-  onToggle: () => void;
-}
-
-const PlayList = ({ onToggle }: Props) => {
+const PlayList = () => {
   const socket: any = useSocket();
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [playList, setPlayList] = useState<Music[]>([]);
   const page = useRef(0);
 
@@ -28,6 +27,8 @@ const PlayList = ({ onToggle }: Props) => {
   useEffect(() => {
     socket.emit('requestPlayList', page.current);
   }, [socket]);
+
+  const toggleModal = () => setModalVisible(!modalVisible);
 
   const isEndOfScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>): boolean =>
     e.currentTarget.scrollTop + e.currentTarget.clientHeight >= e.currentTarget.scrollHeight;
@@ -47,10 +48,16 @@ const PlayList = ({ onToggle }: Props) => {
         ))}
       </PlayListWrapper>
       <ButtonWrapper>
-        <CircleButton size="45px" color="#ffffff" onClick={onToggle}>
+        <CircleButton size="45px" color="#ffffff" onClick={toggleModal}>
           +
         </CircleButton>
       </ButtonWrapper>
+
+      {modalVisible ? (
+        <Modal widthP="350px" heightP="650px" onToggle={toggleModal}>
+          <MusicSearch />
+        </Modal>
+      ) : null}
     </Container>
   );
 };

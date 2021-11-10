@@ -3,8 +3,6 @@ import MusicPlayer from '../components/MusicPlayer';
 import io from 'socket.io-client';
 import PlayList from '../components/PlayList';
 import ChatComponent from '../components/chat';
-import Modal from '../components/Modal';
-import MusicSearch from '../components/MusicSearch';
 import { localhost } from '../config.host.json';
 
 const socket: any = io(`${localhost}/music`);
@@ -57,9 +55,6 @@ const Room = () => {
     },
   ]);
 
-  const [musicModalVisible, setMusicModalVisible] = useState<boolean>(false);
-  const onToggle = () => setMusicModalVisible(!musicModalVisible);
-
   return (
     <>
       <SocketContext.Provider value={socket}>
@@ -67,12 +62,7 @@ const Room = () => {
           <MusicPlayer musicList={musicList} />
           <ChatComponent />
         </div>
-        <PlayList onToggle={onToggle} />
-        {musicModalVisible ? (
-          <Modal widthP="350px" heightP="650px" onToggle={onToggle}>
-            <MusicSearch />
-          </Modal>
-        ) : null}
+        <PlayList />
       </SocketContext.Provider>
     </>
   );

@@ -24,23 +24,25 @@ const Modal = ({ widthP, heightP, onToggle, children }: Props) => {
 
   return (
     <>
-      <BlackScreen onClick={onToggle}>
+      <ModalOverlay onClick={onToggle}>
         <StyledModal widthP={widthP} heightP={heightP} onClick={e => e.stopPropagation()}>
           <Head>
             <CloseButton onClick={onToggle}>X</CloseButton>
           </Head>
           {children}
         </StyledModal>
-      </BlackScreen>
+      </ModalOverlay>
     </>
   );
 };
 
-const BlackScreen = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  margin: 0px;
+const ModalOverlay = styled.div`
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
   background: rgba(0, 0, 0, 0.4);
   z-index: 100;
 `;
@@ -51,9 +53,9 @@ const StyledModal = styled.div<StyledProps>`
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: rgb(0 0 0 / 100%) 0px 10px 25px;
-  position: absolute;
-  left: 50%;
+  position: fixed;
   top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
   z-index: 200;
 `;
