@@ -5,7 +5,7 @@ import http from 'http';
 import socket from './socket';
 import roomRouter from './routes/room';
 import audioRouter from './routes/audio';
-
+import uploadRouter from './routes/upload';
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
 // const io = require('socket.io')(server);
@@ -14,8 +14,10 @@ const server: http.Server = http.createServer(app);
 app.get('/', (req, res) => {
   res.send('hello');
 });
+
 app.use('/room', roomRouter);
 app.use('/audio', audioRouter);
+app.use('/upload', uploadRouter);
 
 app.use(cors);
 app.use(express.static(path.join(__dirname, 'videos')));

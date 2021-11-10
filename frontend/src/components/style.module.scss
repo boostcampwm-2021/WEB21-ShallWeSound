@@ -1,10 +1,14 @@
 @import "../stylesheet/global.scss";
 
-.App {
+.root{
     background: $background;//$background;//$white;//$background; //#e9ecef;
+
+}
+.App {
+    
     background-size: cover;
-    min-height: 100vh;//calc(100vw - (100vw - 100%));
     display: flex;
+    min-height: 100vh;//calc(100vw - (100vw - 100%));
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
