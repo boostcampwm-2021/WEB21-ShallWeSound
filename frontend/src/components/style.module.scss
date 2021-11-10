@@ -116,17 +116,27 @@
 .UploadModalInner{
     position: absolute;
     width: 300px;
-    height: 300px;
+    height: 530px;
     background-color: white;
     z-index: 100;
     border-radius: 10px;
     .uploadForm{
-        padding-left: 1em;
+        position: relative;
+        margin-top: 13%;
+        margin-left: 2.5em;
         .input{
             display: none;
         }
         .submitButton{
+            float: right;
+            margin-right: 42px;
             display: block;
+        }
+        .musicForm{
+            margin-bottom: 2em;
+        }
+        .thumbnailForm{
+            margin-bottom: 2em;
         }
         .musicName{
             height: 30px;
@@ -136,6 +146,21 @@
             height: 30px;
             width: 150px;
         }
+        .title{
+            margin-bottom: 0.5em;
+            font-weight: bold;
+        }
+        .singer{
+            height: 30px;
+            width: 210px;
+            margin-bottom: 2em;
+        }
+        .descript{
+            height: 100px;
+            width: 212px;
+            margin-bottom: 2em;
+        }
+
         label{
 
             padding: 8px 12px;
