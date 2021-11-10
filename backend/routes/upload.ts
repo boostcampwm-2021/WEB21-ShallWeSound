@@ -2,8 +2,9 @@ import express from 'express';
 import multer from 'multer';
 import * as AWS from 'aws-sdk';
 import {Readable} from 'stream';
-import {initDB, connect} from '../config/db'
-import crypto from 'crypto'
+import {initDB, connect} from '../config/db';
+import crypto from 'crypto';
+import bodyParser from 'body-parser';
 const db = initDB();
 connect(db);
 const upload = multer({
@@ -47,7 +48,7 @@ router.post('/', cpUpload,(req, res, next)=>{
         }, options).promise();
         db.query(
             'INSERT INTO MUSIC (name, singer, description, thumbnail, path, content_hash) values (?,?,?,?,?,?)',
-            [object_name, '기범기범', '설명설명', thumbnailName, '경로경로', contentHash]
+            [object_name, req.body.singer, req.body.description, thumbnailName, '경로경로', contentHash]
         )
     })();
     res.send(200);

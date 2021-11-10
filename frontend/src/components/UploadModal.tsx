@@ -25,6 +25,8 @@ function UploadModalInner(){
         Object.values(thumbnailFile!).forEach((el)=>{
             formData.append('userFile2', el);
         })
+        formData.append('singer', singer!);
+        formData.append('description', descript!);
         fetch("/upload", {
             method: "POST",
             body: formData
@@ -34,7 +36,15 @@ function UploadModalInner(){
             setThumbnailName("파일선택");
             setMusicFile(undefined);
             setThumbnailFile(undefined);
+            setSinger('');
+            setDescript('');
         });
+    }
+    const writeSingerName = (e: React.ChangeEvent<HTMLInputElement>)=>{
+        setSinger(e.target.value);
+    }
+    const writeDescription = (e: React.ChangeEvent<HTMLTextAreaElement>)=>{
+        setDescript(e.target.value);
     }
     return(
         <div className={styles.UploadModalInner}>
@@ -42,12 +52,12 @@ function UploadModalInner(){
                 <div className={styles.singerForm}>
                     <div className={styles.title}>아티스트</div>
                     <input className={styles.singer} value={singer} type='text' placeholder='아티스트 이름'
-                    />
+                    onChange={writeSingerName}/>
                 </div>
                 <div className={styles.descriptForm}>
                     <div className={styles.title}>곡 설명</div>
                     <textarea className={styles.descript} value={descript}  placeholder='곡 설명을 입력하세요'
-                    />
+                    onChange={writeDescription}/>
                 </div>
                 <div className={styles.musicForm}>
                     <div className={styles.title}>음악파일</div>
