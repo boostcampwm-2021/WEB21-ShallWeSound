@@ -1,4 +1,5 @@
 import { Server, Socket } from 'socket.io';
+import { couldStartTrivia } from 'typescript';
 import { PlayList } from './music';
 
 interface userList {
@@ -7,7 +8,7 @@ interface userList {
 const userHash: userList = {};
 let userNum: number = 0;
 
-const socketData: string[] = [];
+let socketData: string[] = [];
 
 const socketHandler = (io: Server) => {
   const namespace = io.of('/music');
@@ -73,6 +74,12 @@ const socketHandler = (io: Server) => {
       // if (socketData.length > 1) {
       //   socket.broadcast.to([socketData[0]]).emit('requestTime', 'time');
       // }
+    });
+
+    socket.on('disconnect', () => {
+      socketData = socketData.filter(socketID => {
+        return socketID !== socket.id;
+      });
     });
   });
 };
