@@ -247,14 +247,7 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   return (
     <>
       <div className="musicplayer">
-        <video
-          id="video"
-          src={musicInfo.src}
-          ref={musicControl}
-          onTimeUpdate={updateCurrentTime}
-          onLoadedMetadata={updateMusic}
-          onEnded={goNextMusic}
-        ></video>
+        <video id="video" src={musicInfo.src} muted autoPlay ref={musicControl} onTimeUpdate={updateCurrentTime} onLoadedMetadata={updateMusic} onEnded={goNextMusic} ></video>
         <Title name={musicInfo.name} singer={musicInfo.singer} />
         <div className="musicplayer-body">
           <img
