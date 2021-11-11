@@ -4,6 +4,7 @@ import config from '../config.host.json';
 import SearchBar from './SearchBar';
 import MusicSearchItem from './MusicSearchItem';
 import CircleButton from './CircleButton';
+import { useSocket } from '../pages/Room';
 
 interface Music {
   MID: number;
@@ -17,6 +18,7 @@ interface Music {
 const color: string = 'linear-gradient(94.75deg,#918fe7 6.7%,#699eef 85.54%)';
 
 const MusicSearch = () => {
+  const socket: any = useSocket();
   const [result, setResult] = useState<Music[]>([]);
   const [seletedMusics, setSeletedMusics] = useState<number[]>([]);
 
@@ -26,6 +28,11 @@ const MusicSearch = () => {
     const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}`);
     setResult(await res.json());
   }, []);
+
+  const submitMusic = () => {
+    socket.emit('addMusicInPlayList', seletedMusics);
+    setSeletedMusics([]);
+  };
 
   const isSelected = (mid: number): boolean => (seletedMusics.indexOf(mid) >= 0 ? true : false);
 
@@ -60,7 +67,7 @@ const MusicSearch = () => {
         )}
       </ResultWrapper>
       <ButtonWrapper>
-        <CircleButton size="45px" colorP={color} onClick={() => {}}>
+        <CircleButton size="45px" colorP={color} onClick={submitMusic}>
           +
         </CircleButton>
       </ButtonWrapper>
@@ -82,6 +89,7 @@ const SearchBarWrapper = styled.div`
 `;
 
 const ResultWrapper = styled(Layout)`
+  line-height: 1.2rem;
   height: calc(100% * 0.7);
   overflow-y: auto;
   overflow-x: hidden;
@@ -94,7 +102,7 @@ const ResultWrapper = styled(Layout)`
   }
   &::-webkit-scrollbar-thumb {
     height: 17%;
-    background: #e5e7e9;
+    background: #e8ecee;
     border-radius: 10px;
   }
 `;
