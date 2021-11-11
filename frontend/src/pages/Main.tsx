@@ -4,22 +4,21 @@ import styled, { css, keyframes } from 'styled-components';
 import { Socket } from 'socket.io-client';
 import { useSocket } from '../context/MyContext';
 import '../stylesheets/main.scss';
-import { Room } from './Room';
+
+interface Room {
+  id: number;
+  name: string;
+  description: string;
+}
 
 export const MainPage = ({ history }: { history: any }) => {
   const socket: Socket = useSocket()!;
 
-  const [roomList, setRoomList] = useState([
-    {
-      name: '더미',
-      description: '더미',
-      id: 0,
-    },
-  ]);
+  const [roomList, setRoomList] = useState<Room[]>([]);
   const [visible, setVisible] = useState(false);
   const [appear, setAppear] = useState(false);
   const [nextRoomIndex, setNextRoomIndex] = useState(3);
-  const [dialogInput, setDialogInput] = useState({
+  const [dialogInput, setDialogInput] = useState<Room>({
     id: nextRoomIndex,
     name: '',
     description: '',
@@ -57,7 +56,11 @@ export const MainPage = ({ history }: { history: any }) => {
 
   function createRoom() {
     if (dialogInput.name && dialogInput.description) {
-      socket.emit('createRoom', { name: dialogInput.name, description: dialogInput.description });
+      socket.emit('createRoom', {
+        id: nextRoomIndex,
+        name: dialogInput.name,
+        description: dialogInput.description,
+      });
       history.push('/room');
     } else {
       console.log('입력 칸이 비어있습니다');
@@ -69,21 +72,34 @@ export const MainPage = ({ history }: { history: any }) => {
       .then(res => res.json())
       .then(data => {
         console.log(data.list);
-        console.log('여기로 오나?');
+        setRoomList(data.list);
       });
   }, []);
 
   return (
-    <>
+    <div className={'body'}>
       {visible && (
         <div className="dark-background">
           <div className="dialog">
             <p>방 생성</p>
             <form className="input-wrap" action="submit">
               <label htmlFor="room-id">방 제목</label>
-              <input type="text" id="room-id" onChange={changeDialogRoomName} />
+              <input
+                type="text"
+                id="room-id"
+                placeholder="방 제목"
+                onChange={changeDialogRoomName}
+              />
               <label htmlFor="room-detail">방 설명</label>
-              <input type="text" id="room-detail" onChange={changeDialogRoomDescription} />
+              <textarea
+                name="text1"
+                cols={40}
+                rows={5}
+                className="input-description"
+                id="room-detail"
+                placeholder="방 설명"
+                onChange={changeDialogRoomDescription}
+              />
             </form>
             <div className="button-wrap">
               <div className="button" onClick={createRoom}>
@@ -97,14 +113,16 @@ export const MainPage = ({ history }: { history: any }) => {
         </div>
       )}
       <div className={'roomList'}>
-        {roomList.map(val => (
-          <div className={'room'} onClick={fff} key={val.id}>
-            <p>{val.name}</p>
-            <p>{val.description}</p>
-          </div>
-        ))}
+        {roomList.length
+          ? roomList.map(val => (
+              <div className={'room'} onClick={fff} key={val.id}>
+                <p className="room-name">{val.name}</p>
+                <p className="room-description">{val.description}</p>
+              </div>
+            ))
+          : null}
+        <input type={'button'} value={'방 추가'} onClick={toggleCreateRoomDialog}></input>
       </div>
-      <input type={'button'} value={'방 추가'} onClick={toggleCreateRoomDialog}></input>
-    </>
+    </div>
   );
 };

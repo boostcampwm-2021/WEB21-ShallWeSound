@@ -1,23 +1,50 @@
 @import './global.scss';
 
-.ssd {
+.body {
   background: $background;
   width: 100vw;
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .roomList {
-  position: absolute;
+  border: 4px double $white;
+  padding: 4rem;
+  border-radius: 3rem;
   display: flex;
   flex-direction: column;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
+
+  * + * {
+    margin-top: 1.5rem;
+    // margin-bottom: 0.5rem;
+  }
 
   .room {
-    color: orange;
-    padding-bottom: 50px;
+    border: 4px solid $white;
+    border-radius: 1rem;
+    color: $white;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+
+    p {
+      display: inline-block;
+    }
+
+    p + p {
+      margin-top: 1rem;
+    }
+
+    .room-name {
+      font-size: 1.5rem;
+    }
+
+    .room-descripton {
+      font-size: 0.875rem;
+    }
   }
 }
 
@@ -34,9 +61,10 @@
 }
 
 .dialog {
-  width: 320px;
-  height: 400px;
+  width: 20rem;
+  height: 25rem;
   background-color: $white;
+  padding: 2rem;
   border-radius: 2rem;
   display: flex;
   flex-direction: column;
@@ -45,6 +73,18 @@
 
   *:nth-child(n) {
     margin-bottom: 1rem;
+  }
+
+  input {
+    padding: 0.5rem;
+    border: 1px solid $black;
+    border-radius: 0.5rem;
+  }
+
+  textarea {
+    padding: 0.5rem;
+    border: 1px solid $black;
+    border-radius: 0.5rem;
   }
 
   .input-wrap {
@@ -62,10 +102,7 @@
       border: 4px solid gray;
       border-radius: 1rem;
       cursor: pointer;
-
-      & + & {
-        margin-right: 1rem;
-      }
+      margin: 0 0.5rem;
     }
   }
 }

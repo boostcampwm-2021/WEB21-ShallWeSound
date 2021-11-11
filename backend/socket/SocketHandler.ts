@@ -6,8 +6,10 @@ interface userList {
 }
 
 interface socketInfo {
-  title: string;
+  id: number;
+  name: string;
   socketId: string[];
+  description: string;
 }
 
 const userHash: userList = {};
@@ -45,7 +47,7 @@ const socketHandler = (io: Server) => {
       );
 
       if (targetRoom !== undefined) {
-        socket.to(targetRoom.title).emit('chatMessage', { id: userHash[socket.id], msg: message });
+        socket.to(targetRoom.name).emit('chatMessage', { id: userHash[socket.id], msg: message });
       }
     });
 
@@ -57,7 +59,7 @@ const socketHandler = (io: Server) => {
       const targetRoom = socketData.find(val => val.socketId[0] === socket.id);
 
       if (targetRoom !== undefined) {
-        socket.to(targetRoom.title).emit('clientPause', '멈춰!');
+        socket.to(targetRoom.name).emit('clientPause', '멈춰!');
       }
     });
 
@@ -65,7 +67,7 @@ const socketHandler = (io: Server) => {
       const targetRoom = socketData.find(val => val.socketId[0] === socket.id);
 
       if (targetRoom !== undefined) {
-        socket.to(targetRoom.title).emit('clientPlay', '시작해!');
+        socket.to(targetRoom.name).emit('clientPlay', '시작해!');
       }
     });
 
@@ -73,7 +75,7 @@ const socketHandler = (io: Server) => {
       const targetRoom = socketData.find(val => val.socketId[0] === socket.id);
 
       if (targetRoom !== undefined) {
-        socket.to(targetRoom.title).emit('clientMoving', data);
+        socket.to(targetRoom.name).emit('clientMoving', data);
       }
     });
 
@@ -89,7 +91,7 @@ const socketHandler = (io: Server) => {
       if (socket.id !== targetRoom?.socketId[0]) return;
 
       // namespace.to(socket.id).emit('nextMusicRes', PlayList.getNextMusic());
-      socket.to(targetRoom.title).emit('clientPlay', src);
+      socket.to(targetRoom.name).emit('clientPlay', src);
     });
 
     socket.on('currentMusicReq', () => {
@@ -103,27 +105,32 @@ const socketHandler = (io: Server) => {
     socket.on('createRoom', data => {
       console.log(data);
       socket.join(data.name);
-      socketData.push({ title: data.name, socketId: [socket.id] });
+      socketData.push({
+        id: data.id,
+        name: data.name,
+        socketId: [socket.id],
+        description: data.description,
+      });
     });
 
-    socket.on('joinRoom', roomTitle => {
-      console.log('테스트용', roomTitle);
-      socket.join(roomTitle);
+    socket.on('joinRoom', roomname => {
+      console.log('테스트용', roomname);
+      socket.join(roomname);
       if (
         !socketData.some(val => {
-          return val.title === roomTitle;
+          return val.name === roomname;
         })
       ) {
-        socketData.push({ title: roomTitle, socketId: [socket.id] });
+        socketData.push({ id: 3, name: roomname, socketId: [socket.id], description: 'des' });
       } else {
-        const target = socketData.find(val => val.title === roomTitle);
+        const target = socketData.find(val => val.name === roomname);
         target?.socketId.push(socket.id);
         if (!!target?.socketId.length) {
           socket.broadcast.to([target.socketId[0]]).emit('requestTime', 'time');
         }
       }
 
-      namespace.to(roomTitle).emit('joinRoomClient', `${roomTitle} 입니다. 누군가가 입장했습니다.`);
+      namespace.to(roomname).emit('joinRoomClient', `${roomname} 입니다. 누군가가 입장했습니다.`);
     });
   });
 };
