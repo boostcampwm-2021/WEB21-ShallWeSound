@@ -1,4 +1,4 @@
-import styles from './style.module.scss';
+import styles from '../stylesheets/style.module.scss';
 import {useState} from 'react';
 
 function UploadModalInner(){

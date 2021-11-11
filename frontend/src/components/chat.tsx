@@ -1,10 +1,10 @@
 import React, { HtmlHTMLAttributes } from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
-import styles from './style.module.scss';
+import styles from '../stylesheets/style.module.scss';
 import * as _ from 'lodash';
 // const socket = io();
-import { useSocket } from '../pages/Room';
+import { useSocket } from '../context/MyContext';
 interface chatType {
   id: number;
   msg: string;
@@ -29,14 +29,14 @@ function ChatComponent() {
       if (chat.id !== -1) {
         const writer = `by user${chat.id}`;
         return (
-          <div className={styles.msgBallon}>
+          <div className={styles.msgBallon} key={idx}>
             <div className={styles.writer}>{writer}</div>
             <div className={styles.othersChat}>{chat.msg}</div>
           </div>
         );
       } else {
         return (
-          <div className={styles.msgBallon}>
+          <div className={styles.msgBallon} key={idx}>
             <div className={styles.myChat}>{chat.msg}</div>
           </div>
         );

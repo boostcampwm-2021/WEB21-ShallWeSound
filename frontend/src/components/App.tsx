@@ -1,8 +1,10 @@
 import React, {useState}from 'react';
 import { Room } from '../pages/Room';
+import '../stylesheets/reset.css';
+import styles from '../stylesheets/style.module.scss';
 import UploadModal from './UploadModal'
 import '../stylesheet/reset.css';
-import styles from './style.module.scss';
+
 
 function App() {
   
