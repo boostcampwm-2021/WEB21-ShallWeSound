@@ -1,8 +1,9 @@
-import React, { useState, useContext, createContext } from 'react';
+import React, { useState } from 'react';
 import MusicPlayer from '../components/MusicPlayer';
 import io from 'socket.io-client';
 import PlayList from '../components/PlayList';
 import ChatComponent from '../components/chat';
+import styled from 'styled-components';
 
 const Room = () => {
   interface musicInfo {
@@ -66,8 +67,8 @@ const Room = () => {
 };
 
 const StyledDiv = styled.div`
-  /* width: 100vw; */
-  /* height: 100vh; */
+  /* width: 100vw; 
+  height: 100vh; */
 `;
 
 export { Room };

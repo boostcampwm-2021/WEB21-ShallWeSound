@@ -7,7 +7,6 @@ import Modal from './Modal';
 import MusicSearch from './MusicSearch';
 import { useSocket } from '../context/MyContext';
 
-
 const PlayList = () => {
   const socket: any = useSocket();
   const [modalVisible, setModalVisible] = useState<boolean>(false);

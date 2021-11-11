@@ -12,6 +12,7 @@ interface socketInfo {
   name: string;
   socketId: string[];
   description: string;
+  playList: PlayList;
 }
 
 const userHash: userList = {};
@@ -19,7 +20,7 @@ let userNum: number = 0;
 
 let socketData: socketInfo[] = [];
 
-const playList = new PlayList();
+// const playList = new PlayList();
 
 const socketHandler = (io: Server) => {
   const namespace = io.of('/music');
@@ -93,7 +94,11 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('requestPlayList', page => {
-      const res = playList.getPlayListByPage(page);
+      const targetRoom = socketData.find(
+        val => val.socketId.some(client => client === socket.id) === true,
+      );
+
+      const res = targetRoom?.playList.getPlayListByPage(page);
       namespace.to(socket.id).emit('responsePlayList', res);
     });
 
@@ -109,17 +114,25 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('currentMusicReq', () => {
-      socket.emit('currentMusicRes', playList.getCurrentMusic());
+      const targetRoom = socketData.find(
+        val => val.socketId.some(client => client === socket.id) === true,
+      );
+
+      socket.emit('currentMusicRes', targetRoom?.playList.getCurrentMusic());
 
       // if (socketData.length > 1) {
       //   socket.broadcast.to([socketData[0]]).emit('requestTime', 'time');
       // }
     });
 
-
     socket.on('addMusicInPlayListReq', async (MIDS: number[]) => {
+      const targetRoom = socketData.find(
+        val => val.socketId.some(client => client === socket.id) === true,
+      );
+
       const musics: Music[] = await musicService.findMusicsBy(MIDS);
-      playList.addMusics(musics);
+      targetRoom?.playList.addMusics(musics);
+    });
 
     socket.on('createRoom', data => {
       console.log(data);
@@ -129,6 +142,7 @@ const socketHandler = (io: Server) => {
         name: data.name,
         socketId: [socket.id],
         description: data.description,
+        playList: new PlayList(),
       });
 
       const roomList = socketData.map(val => {
@@ -146,16 +160,16 @@ const socketHandler = (io: Server) => {
           return val.name === roomname;
         })
       ) {
-        socketData.push({ id: 3, name: roomname, socketId: [socket.id], description: 'des' });
       } else {
         const target = socketData.find(val => val.name === roomname);
         target?.socketId.push(socket.id);
-        if (!!target?.socketId.length) {
+        if (target?.socketId.length) {
           socket.broadcast.to([target.socketId[0]]).emit('requestTime', 'time');
+          namespace
+            .to(roomname)
+            .emit('joinRoomClient', `${roomname} 입니다. 누군가가 입장했습니다.`);
         }
       }
-
-      namespace.to(roomname).emit('joinRoomClient', `${roomname} 입니다. 누군가가 입장했습니다.`);
     });
   });
 };

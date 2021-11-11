@@ -32,6 +32,11 @@ export const MainPage = ({ history }: { history: any }) => {
     socket.on('updateRoomList', data => {
       setRoomList(data.list);
     });
+
+    return () => {
+      socket.off('joinRoomClient');
+      socket.off('updateRoomList');
+    };
   });
 
   function Room({ id, name, description }: { id: number; name: string; description: string }) {

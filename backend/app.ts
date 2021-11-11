@@ -3,13 +3,12 @@ import cors from 'cors';
 import path from 'path';
 import http from 'http';
 import dotenv from 'dotenv';
-dotenv.config({path:__dirname+'/config/.env'});
+dotenv.config({ path: __dirname + '/config/.env' });
 
 import socket from './socket';
 import roomRouter from './routes/room';
 import audioRouter from './routes/audio';
-import apiRouter from './routes/api/index.ts';
-import apiRouter2 from './routes/api';
+import apiRouter from './routes/api/';
 import uploadRouter from './routes/upload';
 
 const models = require('./models/index.js');
@@ -31,7 +30,6 @@ app.use(
 );
 
 app.use('/api', apiRouter);
-app.use('/api', apiRouter2);
 
 app.get('/', (req, res) => {
   res.send('hello');

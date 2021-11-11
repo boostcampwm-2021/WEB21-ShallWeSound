@@ -4,7 +4,7 @@ import config from '../config.host.json';
 import SearchBar from './SearchBar';
 import MusicSearchItem from './MusicSearchItem';
 import CircleButton from './CircleButton';
-import { useSocket } from '../pages/Room';
+import { useSocket } from '../context/MyContext';
 
 interface Music {
   MID: number;
