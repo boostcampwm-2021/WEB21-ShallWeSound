@@ -30,17 +30,28 @@ export const MainPage = ({ history }: { history: any }) => {
     });
   });
 
+  useEffect(() => {
+    fetch('http://localhost:3000/api/room') // session 쓸때 credentials : 'include' 설정해주기
+      .then(res => res.json())
+      .then(data => {
+        console.log(data.list);
+        console.log('여기로 오나?');
+      });
+  }, []);
+
   return (
     <>
-      <div>메인 인데요</div>
-      <div className={'roomList'}>
-        {roomList.map(val => (
-          <div className={'room'} onClick={fff}>
-            {val}
-          </div>
-        ))}
+      <div className={'ssd'}>
+        <div>메인 인데요</div>
+        <div className={'roomList'}>
+          {roomList.map((val, idx) => (
+            <div className={'room'} onClick={fff} key={idx}>
+              {val}
+            </div>
+          ))}
+        </div>
+        <input type={'button'} value={'방 추가'} onClick={리액트너무재밌는데}></input>
       </div>
-      <input type={'button'} value={'방 추가'} onClick={리액트너무재밌는데}></input>
     </>
   );
 };
