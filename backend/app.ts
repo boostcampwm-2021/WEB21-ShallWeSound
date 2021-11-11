@@ -18,12 +18,11 @@ const server: http.Server = http.createServer(app);
 
 const sequelize = require('sequelize');
 const SequelizeAuto = require('sequelize-auto');
-
-
-
-console.log(process.env.DB_HOST, process.env.DB_ID, process.env.DB_PW);
-
-
+models.MUSIC.findAll({
+  where: { singer: 'IU' },
+}).then((result: any) => {
+  console.log(result[0].singer);
+});
 app.use(
   cors({
     origin: '*',

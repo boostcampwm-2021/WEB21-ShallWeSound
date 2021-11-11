@@ -9,11 +9,14 @@ function UploadModalInner(){
     const [musicFile, setMusicFile] = useState<FileList>();
     const [thumbnailFile, setThumbnailFile] = useState<FileList>();
     const isFileUpload = (e: React.ChangeEvent<HTMLInputElement>)=>{
-        const f = e.target.files![0];
+        console.log(e);
+        setMusicFile(undefined);
         setMusicFile(e.target.files!);
         setMusicName(e.target.files![0].name);
     }
     const isThumbUpload = (e: React.ChangeEvent<HTMLInputElement>)=>{
+        console.log(e);
+        setThumbnailFile(undefined);
         setThumbnailFile(e.target.files!);
         setThumbnailName(e.target.files![0].name);
     }
@@ -63,7 +66,7 @@ function UploadModalInner(){
                     <div className={styles.title}>음악파일</div>
                     <input className={styles.musicName} value={musicName} placeholder='음악파일' disabled={true}/>
                     <label htmlFor="musicFile">첨부</label>
-                    <input className={styles.input} id="musicFile" type="file" name='userFile1' 
+                    <input className={styles.input} id="musicFile"  type="file" name='userFile1' 
                     onChange={isFileUpload} />
                 </div>
                 <div className={styles.thumbnailForm}>
