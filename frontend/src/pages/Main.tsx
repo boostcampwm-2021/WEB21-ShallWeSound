@@ -65,7 +65,7 @@ export const MainPage = ({ history }: { history: any }) => {
         console.log('여기로 오나?');
       });
     } else {
-      // error
+      console.log("입력 칸이 비어있습니다");
     }
   }
 
