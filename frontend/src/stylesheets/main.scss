@@ -7,7 +7,7 @@
 }
 
 .roomList {
-  // position: absolute;
+  position: absolute;
   display: flex;
   flex-direction: column;
   left: 50%;
@@ -31,7 +31,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .dialog {
@@ -63,11 +62,10 @@
       border: 4px solid gray;
       border-radius: 1rem;
       cursor: pointer;
-    
+
       & + & {
         margin-right: 1rem;
       }
-
     }
   }
-}  
+}

@@ -100,7 +100,14 @@ const socketHandler = (io: Server) => {
       // }
     });
 
+    socket.on('createRoom', data => {
+      console.log(data);
+      socket.join(data.name);
+      socketData.push({ title: data.name, socketId: [socket.id] });
+    });
+
     socket.on('joinRoom', roomTitle => {
+      console.log('테스트용', roomTitle);
       socket.join(roomTitle);
       if (
         !socketData.some(val => {
