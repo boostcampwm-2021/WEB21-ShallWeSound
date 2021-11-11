@@ -4,31 +4,22 @@ import styled, { css, keyframes } from 'styled-components';
 import { Socket } from 'socket.io-client';
 import { useSocket } from '../context/MyContext';
 import '../stylesheets/main.scss';
-import { Room } from './Room';
 import { next } from 'cheerio/lib/api/traversing';
+
+interface Room {
+  id: number,
+  name: string,
+  description: string,
+}
 
 export const MainPage = ({ history }: { history: any }) => {
   const socket: Socket = useSocket()!;
 
-  const [roomList, setRoomList] = useState([
-    {
-      id: 0,
-      name: '$$최고다 아이유 너만 오면고$$',
-      description: '$$최고다 아이유 너만 오면고$$',
-    }, {
-      id: 1,
-      name: '$$최고다 이순신 입장시 불멸!$$',
-      description: '$$최고다 이순신 입장시 불멸!$$',
-    }, {
-      id: 2,
-      name: '$$최고다 김윈터 ㄷㄷㄷㄷㄷㄷ$$',
-      description: '$$최고다 김윈터 ㄷㄷㄷㄷㄷㄷ$$',
-    }
-  ]);
+  const [roomList, setRoomList] = useState<Room[]>([]);
   const [visible, setVisible] = useState(false);
   const [appear, setAppear] = useState(false);
   const [nextRoomIndex, setNextRoomIndex] = useState(3);
-  const [dialogInput, setDialogInput] = useState({
+  const [dialogInput, setDialogInput] = useState<Room>({
     id: nextRoomIndex,
     name: "",
     description: "",
@@ -67,37 +58,34 @@ export const MainPage = ({ history }: { history: any }) => {
 
   function createRoom() {
     if (dialogInput.name && dialogInput.description) {
-      fetch('http://localhost:3000/api/room') // session 쓸때 credentials : 'include' 설정해주기
-      .then(res => res.json())
-      .then(data => {
-        setRoomList([...roomList, dialogInput]);
-        setNextRoomIndex(nextRoomIndex + 1);
-      });
+      setRoomList([...roomList, dialogInput]);
+      setNextRoomIndex(nextRoomIndex + 1);
+
     } else {
       console.log("입력 칸이 비어있습니다");
     }
   }
   
-  useEffect(() => {
-    fetch('http://localhost:3000/api/room') // session 쓸때 credentials : 'include' 설정해주기
-      .then(res => res.json())
-      .then(data => {
-        console.log(data.list);
-        console.log('여기로 오나?');
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch('http://localhost:3000/api/room') // session 쓸때 credentials : 'include' 설정해주기
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       console.log(data.list);
+  //       console.log('여기로 오나?');
+  //     });
+  // }, []);
   
   return (
-    <>
+    <div className="body">
       {visible && 
         <div className="dark-background">
           <div className="dialog">
             <p>방 생성</p>
             <form className="input-wrap" action="submit">
               <label htmlFor="room-id">방 제목</label>
-              <input type="text" id="room-id" onChange={changeDialogRoomName}/>
+              <input type="text" id="room-id" placeholder="방 제목" onChange={changeDialogRoomName}/>
               <label htmlFor="room-detail">방 설명</label>
-              <input type="text" id="room-detail" onChange={changeDialogRoomDescription}/>
+              <textarea name="text1" cols={40} rows={5} className="input-description" id="room-detail" placeholder="방 설명" onChange={changeDialogRoomDescription}/>
             </form>
             <div className="button-wrap">
               <div className="button" onClick={createRoom}>생성</div>
@@ -107,14 +95,14 @@ export const MainPage = ({ history }: { history: any }) => {
         </div>
       }
       <div className={'roomList'}>
-        {roomList.map((val) => (
+        {roomList.length ? roomList.map((val) => (
           <div className={'room'} onClick={fff} key={val.id}>
-            <p>{val.name}</p>
-            <p>{val.description}</p>
+            <p className="room-name">{val.name}</p>
+            <p className="room-description">{val.description}</p>
           </div>
-        ))}
+        )) : null}
+        <input type={'button'} value={'방 추가'} onClick={toggleCreateRoomDialog}></input>
       </div>
-      <input type={'button'} value={'방 추가'} onClick={toggleCreateRoomDialog}></input>
-    </>
+    </div>
   );
 };
