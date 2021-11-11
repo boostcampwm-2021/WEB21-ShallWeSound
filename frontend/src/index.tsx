@@ -10,10 +10,10 @@ ReactDOM.render(
   <Router>
     <React.StrictMode>
       <ContextProvider>
-        <div>
+        <>
           <Route path="/room" component={App} />
           <Route exact path="/" component={MainPage} />
-        </div>
+        </>
       </ContextProvider>
     </React.StrictMode>
   </Router>,

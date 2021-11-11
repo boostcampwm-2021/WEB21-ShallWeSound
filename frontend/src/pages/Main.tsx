@@ -115,21 +115,19 @@ export const MainPage = ({ history }: { history: any }) => {
               />
             </form>
             <div className="button-wrap">
-              <div className="button" onClick={createRoom}>
-                생성
-              </div>
-              <div className="button" onClick={toggleCreateRoomDialog}>
-                취소
-              </div>
+              <button className="button" onClick={createRoom}>생성</button>
+              <button className="button" onClick={toggleCreateRoomDialog}>취소</button>
             </div>
           </div>
         </div>
       )}
-      <div className={'roomList'}>
-        {roomList.length
-          ? roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)
-          : null}
-        <input type={'button'} value={'방 추가'} onClick={toggleCreateRoomDialog}></input>
+      <div className="main-wrap">
+        <div className={'roomList'}>
+          {roomList.length
+            ? roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)
+            : <p className="room-empty-notice">열려 있는 방이 존재하지 않습니다!</p>}
+        </div>
+        <button className="button" onClick={toggleCreateRoomDialog}>방 추가</button>
       </div>
     </div>
   );
