@@ -37,7 +37,16 @@ const socketHandler = (io: Server) => {
         val => val.socketId.some(client => client === socket.id) === true,
       )!;
 
-      targetRoom.socketId = targetRoom.socketId.filter(val => val !== socket.id);
+      if (targetRoom !== undefined) {
+        targetRoom.socketId = targetRoom.socketId.filter(val => val !== socket.id);
+        if (!targetRoom.socketId.length) {
+          socketData.splice(socketData.indexOf(targetRoom), 1);
+          const data = socketData.map(val => {
+            return { id: val.id, name: val.name, description: val.description };
+          }); // utils로 기능 빼기
+          socket.broadcast.emit('updateRoomList', { list: data });
+        }
+      }
 
       // targetRoom이 존재하지 않을 경우도 고려해서 try, catch 적용해보기.
     });
@@ -111,6 +120,12 @@ const socketHandler = (io: Server) => {
         socketId: [socket.id],
         description: data.description,
       });
+
+      const roomList = socketData.map(val => {
+        return { id: val.id, name: val.name, description: val.description };
+      }); // utils로 기능 빼기
+
+      socket.broadcast.emit('updateRoomList', { list: roomList });
     });
 
     socket.on('joinRoom', roomname => {

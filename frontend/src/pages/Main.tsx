@@ -28,9 +28,13 @@ export const MainPage = ({ history }: { history: any }) => {
     socket.on('joinRoomClient', data => {
       console.log(data);
     });
+
+    socket.on('updateRoomList', data => {
+      setRoomList(data.list);
+    });
   });
 
-  function Room({ id, name, description } : { id: number, name: string, description: string }) {
+  function Room({ id, name, description }: { id: number; name: string; description: string }) {
     const joinRoom = (e: React.MouseEvent<HTMLElement>) => {
       socket.emit('joinRoom', name);
       console.log('joinRoom 이벤트 발생');
@@ -42,9 +46,8 @@ export const MainPage = ({ history }: { history: any }) => {
         <p className="room-name">{name}</p>
         <p className="room-description">{description}</p>
       </div>
-    )
+    );
   }
-
 
   function changeDialogRoomName(e: React.BaseSyntheticEvent) {
     setDialogInput({
@@ -124,7 +127,7 @@ export const MainPage = ({ history }: { history: any }) => {
       )}
       <div className={'roomList'}>
         {roomList.length
-          ? roomList.map(val => <Room id={val.id} name={val.name} description={val.description}/>)
+          ? roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)
           : null}
         <input type={'button'} value={'방 추가'} onClick={toggleCreateRoomDialog}></input>
       </div>
