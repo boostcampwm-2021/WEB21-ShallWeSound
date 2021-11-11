@@ -24,17 +24,27 @@ export const MainPage = ({ history }: { history: any }) => {
     description: '',
   });
 
-  const fff = (e: React.MouseEvent<HTMLElement>) => {
-    socket.emit('joinRoom', e.currentTarget.innerHTML);
-    console.log('joinRoom 이벤트 발생');
-    history.push('/room');
-  };
-
   useEffect(() => {
     socket.on('joinRoomClient', data => {
       console.log(data);
     });
   });
+
+  function Room({ id, name, description } : { id: number, name: string, description: string }) {
+    const joinRoom = (e: React.MouseEvent<HTMLElement>) => {
+      socket.emit('joinRoom', name);
+      console.log('joinRoom 이벤트 발생');
+      history.push('/room');
+    };
+
+    return (
+      <div className={'room'} onClick={joinRoom} key={id}>
+        <p className="room-name">{name}</p>
+        <p className="room-description">{description}</p>
+      </div>
+    )
+  }
+
 
   function changeDialogRoomName(e: React.BaseSyntheticEvent) {
     setDialogInput({
@@ -114,12 +124,7 @@ export const MainPage = ({ history }: { history: any }) => {
       )}
       <div className={'roomList'}>
         {roomList.length
-          ? roomList.map(val => (
-              <div className={'room'} onClick={fff} key={val.id}>
-                <p className="room-name">{val.name}</p>
-                <p className="room-description">{val.description}</p>
-              </div>
-            ))
+          ? roomList.map(val => <Room id={val.id} name={val.name} description={val.description}/>)
           : null}
         <input type={'button'} value={'방 추가'} onClick={toggleCreateRoomDialog}></input>
       </div>
