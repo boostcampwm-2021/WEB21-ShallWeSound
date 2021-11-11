@@ -19,11 +19,11 @@ models.sequelize.sync().then(() => {
   console.log('연결 성공');
 });
 
-models.MUSIC.findAll({
-  where: { singer: 'IU' },
-}).then((result: any) => {
-  console.log(result[0].singer);
-});
+// models.MUSIC.findAll({
+//   where: { singer: 'IU' },
+// }).then((result: any) => {
+//   console.log(result[0].singer);
+// });
 
 console.log(process.env.DB_HOST, process.env.DB_ID, process.env.DB_PW);
 

@@ -1,7 +1,6 @@
 type Music = {
-  // name: string;
+  MID: number;
   title: string;
-  // thumbnail: string;
   src: string;
   isPlayed: boolean;
   singer: string;

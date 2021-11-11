@@ -30,7 +30,7 @@ const MusicSearch = () => {
   }, []);
 
   const submitMusic = () => {
-    socket.emit('addMusicInPlayList', seletedMusics);
+    socket.emit('addMusicInPlayListReq', seletedMusics);
     setSeletedMusics([]);
   };
 

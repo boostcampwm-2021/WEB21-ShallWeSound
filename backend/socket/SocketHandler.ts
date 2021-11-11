@@ -1,5 +1,7 @@
 import { Server, Socket } from 'socket.io';
 import { PlayList } from './music';
+import musicService from '../services/music';
+import type { Music } from '../types';
 
 interface userList {
   [socketid: string]: number;
@@ -77,6 +79,11 @@ const socketHandler = (io: Server) => {
       // if (socketData.length > 1) {
       //   socket.broadcast.to([socketData[0]]).emit('requestTime', 'time');
       // }
+    });
+
+    socket.on('addMusicInPlayListReq', async (MIDS: number[]) => {
+      const musics: Music[] = await musicService.findMusicsBy(MIDS);
+      PlayList.addMusics(musics);
     });
   });
 };
