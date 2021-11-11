@@ -68,7 +68,16 @@ export const MainPage = ({ history }: { history: any }) => {
       console.log("입력 칸이 비어있습니다");
     }
   }
-
+  
+  useEffect(() => {
+    fetch('http://localhost:3000/api/room') // session 쓸때 credentials : 'include' 설정해주기
+      .then(res => res.json())
+      .then(data => {
+        console.log(data.list);
+        console.log('여기로 오나?');
+      });
+  }, []);
+  
   return (
     <>
       {visible && 
@@ -90,7 +99,7 @@ export const MainPage = ({ history }: { history: any }) => {
       }
       <div className={'roomList'}>
         {roomList.map(val => (
-          <div className={'room'} onClick={fff}>
+          <div className={'room'} onClick={fff} key={idx}>
             {val}
           </div>
         ))}
