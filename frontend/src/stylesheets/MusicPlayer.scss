@@ -83,6 +83,12 @@
     }
   }
 
+  .no-thumbnail {
+    border: 10px solid $white;
+    border-radius: 999px;
+    box-sizing: border-box;
+  }
+
   &-cover {
     position: relative;
     box-sizing: border-box;
