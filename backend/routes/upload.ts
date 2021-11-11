@@ -34,28 +34,35 @@ router.post('/', cpUpload,(req, res, next)=>{
         partSize: 5 * 1024 * 1024
     };
     const contentHash = makeHash(files.userFile1[0].buffer.toString());
+    const thumbnailName = object_name.split('.')[0]+'.'+files.userFile2[0].originalname.split('.')[1];
+    
     (async () => {
-        let folder_name = `${contentHash}/`;
-        // 해쉬값을 이름으로 하는 폴더를 생성하고, 그 안에 파일 업로드
-        await S3.putObject({
-            Bucket: bucket_name,
-            Key: folder_name
-        }).promise();
-        await S3.upload({
-            Bucket: bucket_name,
-            Key: folder_name+object_name,
-            Body: Readable.from(files.userFile1[0].buffer)
-        }, options).promise();
-        const thumbnailName = object_name.split('.')[0]+'.'+files.userFile2[0].originalname.split('.')[1];
-        await S3.upload({
-            Bucket: bucket_name,
-            Key: folder_name+thumbnailName,
-            Body: Readable.from(files.userFile2[0].buffer)
-        }, options).promise();
-        db.query(
+        await db.query(
             'INSERT INTO MUSIC (name, singer, description, thumbnail, path, content_hash) values (?,?,?,?,?,?)',
-            [object_name, req.body.singer, req.body.description, thumbnailName, '경로경로', contentHash]
-        )
+            [object_name, req.body.singer, req.body.description, thumbnailName, '경로경로', contentHash],
+            async function(err, rows, fields){
+                if(!err){
+                    let folder_name = `${contentHash}/`;
+                    // 해쉬값을 이름으로 하는 폴더를 생성하고, 그 안에 파일 업로드
+                    await S3.putObject({
+                        Bucket: bucket_name,
+                        Key: folder_name
+                    }).promise();
+                    await Promise.all([
+                        S3.upload({
+                            Bucket: bucket_name,
+                            Key: folder_name+object_name,
+                            Body: Readable.from(files.userFile1[0].buffer)
+                        }, options).promise(),
+                        S3.upload({
+                            Bucket: bucket_name,
+                            Key: folder_name+thumbnailName,
+                            Body: Readable.from(files.userFile2[0].buffer)
+                        }, options).promise()
+                    ])
+                }
+            }
+        );
     })();
     res.send(200);
     
