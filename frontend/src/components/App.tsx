@@ -1,12 +1,17 @@
-import React from 'react';
+import React, {useState}from 'react';
 import { Room } from '../pages/Room';
-import '../stylesheet/reset.css';
-import styles from './style.module.scss';
+import '../stylesheets/reset.css';
+import styles from '../stylesheets/style.module.scss';
+import UploadModal from './UploadModal'
 
 function App() {
+  
   return (
-    <div className={styles.App}>
-      <Room></Room>
+    <div className={styles.root}>
+      <UploadModal/>
+      <div className={styles.App}>
+        <Room></Room>
+      </div>
     </div>
   );
 }

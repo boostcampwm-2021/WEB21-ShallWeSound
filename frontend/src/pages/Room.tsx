@@ -3,19 +3,15 @@ import MusicPlayer from '../components/MusicPlayer';
 import io from 'socket.io-client';
 import PlayList from '../components/PlayList';
 import ChatComponent from '../components/chat';
-import { localhost } from '../config.host.json';
-
-const socket: any = io(`${localhost}/music`);
-const SocketContext = createContext(null);
-
-interface musicInfo {
-  name: string;
-  singer: string;
-  thumbnail: string;
-  src: string;
-}
 
 const Room = () => {
+  interface musicInfo {
+    name: string;
+    singer: string;
+    thumbnail: string;
+    src: string;
+  }
+
   const [musicList, setMusicList] = useState<musicInfo[]>([
     {
       name: 'Harley Bird - Home',
@@ -57,17 +53,21 @@ const Room = () => {
 
   return (
     <>
-      <SocketContext.Provider value={socket}>
-        <div>
-          <MusicPlayer musicList={musicList} />
-          <ChatComponent />
-        </div>
-        <PlayList />
-      </SocketContext.Provider>
+      <div>
+        <MusicPlayer musicList={musicList}></MusicPlayer>
+        <ChatComponent />
+      </div>
+      <StyledDiv>
+        <PlayList></PlayList>
+        {/* <Video /> */}
+      </StyledDiv>
     </>
   );
 };
 
-const useSocket = () => useContext(SocketContext);
+const StyledDiv = styled.div`
+  /* width: 100vw; */
+  /* height: 100vh; */
+`;
 
-export { Room, useSocket };
+export { Room };

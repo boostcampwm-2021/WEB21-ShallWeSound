@@ -5,7 +5,8 @@ import PlayListItem from './PlayListItem';
 import CircleButton from './CircleButton';
 import Modal from './Modal';
 import MusicSearch from './MusicSearch';
-import { useSocket } from '../pages/Room';
+import { useSocket } from '../context/MyContext';
+
 
 const PlayList = () => {
   const socket: any = useSocket();

@@ -6,10 +6,18 @@ import type { Music } from '../types';
 interface userList {
   [socketid: string]: number;
 }
+
+interface socketInfo {
+  id: number;
+  name: string;
+  socketId: string[];
+  description: string;
+}
+
 const userHash: userList = {};
 let userNum: number = 0;
 
-let socketData: string[] = [];
+let socketData: socketInfo[] = [];
 
 const playList = new PlayList();
 
@@ -17,27 +25,43 @@ const socketHandler = (io: Server) => {
   const namespace = io.of('/music');
 
   namespace.on('connection', socket => {
-    console.log(socket.id);
+    console.log('아이디: ', socket.id);
 
     userHash[socket.id] = userNum;
     userNum += 1;
 
-    socketData.push(socket.id);
-
-    if (!!socketData.length) {
-      socket.broadcast.to([socketData[0]]).emit('requestTime', 'time');
-    }
-
     socket.broadcast.emit('enterRoom', 'new user connected');
     socket.on('disconnect', () => {
       socket.broadcast.emit('leaveRoom', 'user disconnected');
-      socketData = socketData.filter(socketID => {
-        return socketID !== socket.id;
-      });
+
+      console.log(socketData);
+      console.log(socket.id);
+
+      const targetRoom: socketInfo = socketData.find(
+        val => val.socketId.some(client => client === socket.id) === true,
+      )!;
+
+      if (targetRoom !== undefined) {
+        targetRoom.socketId = targetRoom.socketId.filter(val => val !== socket.id);
+        if (!targetRoom.socketId.length) {
+          socketData.splice(socketData.indexOf(targetRoom), 1);
+          const data = socketData.map(val => {
+            return { id: val.id, name: val.name, description: val.description };
+          }); // utils로 기능 빼기
+          socket.broadcast.emit('updateRoomList', { list: data });
+        }
+      }
+
+      // targetRoom이 존재하지 않을 경우도 고려해서 try, catch 적용해보기.
     });
     socket.on('chatMessage', (message: string) => {
-      // console.log(userHash[socket.id]);
-      socket.broadcast.emit('chatMessage', { id: userHash[socket.id], msg: message });
+      const targetRoom = socketData.find(
+        val => val.socketId.some(client => client === socket.id) === true,
+      );
+
+      if (targetRoom !== undefined) {
+        socket.to(targetRoom.name).emit('chatMessage', { id: userHash[socket.id], msg: message });
+      }
     });
 
     socket.on('responseTime', (data: string) => {
@@ -45,21 +69,26 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('pause', (data: string) => {
-      if (socket.id === socketData[0]) {
-        socket.broadcast.emit('clientPause', '멈춰!');
+      const targetRoom = socketData.find(val => val.socketId[0] === socket.id);
+
+      if (targetRoom !== undefined) {
+        socket.to(targetRoom.name).emit('clientPause', '멈춰!');
       }
     });
 
     socket.on('play', (data: string) => {
-      if (socket.id === socketData[0]) {
-        socket.broadcast.emit('clientPlay', '시작해!');
+      const targetRoom = socketData.find(val => val.socketId[0] === socket.id);
+
+      if (targetRoom !== undefined) {
+        socket.to(targetRoom.name).emit('clientPlay', '시작해!');
       }
     });
 
     socket.on('moving', (data: string) => {
-      if (socket.id === socketData[0]) {
-        console.log('모두들 시작하세요');
-        socket.broadcast.emit('clientMoving', data);
+      const targetRoom = socketData.find(val => val.socketId[0] === socket.id);
+
+      if (targetRoom !== undefined) {
+        socket.to(targetRoom.name).emit('clientMoving', data);
       }
     });
 
@@ -69,10 +98,14 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('nextMusicReq', ({ src }) => {
-      if (socket.id !== socketData[0]) return;
+      const targetRoom = socketData.find(
+        val => val.socketId.some(client => client === socket.id) === true,
+      );
+
+      if (socket.id !== targetRoom?.socketId[0]) return;
 
       // namespace.to(socket.id).emit('nextMusicRes', PlayList.getNextMusic());
-      namespace.emit('nextMusicRes', src);
+      socket.to(targetRoom.name).emit('clientPlay', src);
     });
 
     socket.on('currentMusicReq', () => {
@@ -83,11 +116,48 @@ const socketHandler = (io: Server) => {
       // }
     });
 
+
     socket.on('addMusicInPlayListReq', async (MIDS: number[]) => {
       const musics: Music[] = await musicService.findMusicsBy(MIDS);
       playList.addMusics(musics);
+
+    socket.on('createRoom', data => {
+      console.log(data);
+      socket.join(data.name);
+      socketData.push({
+        id: data.id,
+        name: data.name,
+        socketId: [socket.id],
+        description: data.description,
+      });
+
+      const roomList = socketData.map(val => {
+        return { id: val.id, name: val.name, description: val.description };
+      }); // utils로 기능 빼기
+
+      socket.broadcast.emit('updateRoomList', { list: roomList });
+    });
+
+    socket.on('joinRoom', roomname => {
+      console.log('테스트용', roomname);
+      socket.join(roomname);
+      if (
+        !socketData.some(val => {
+          return val.name === roomname;
+        })
+      ) {
+        socketData.push({ id: 3, name: roomname, socketId: [socket.id], description: 'des' });
+      } else {
+        const target = socketData.find(val => val.name === roomname);
+        target?.socketId.push(socket.id);
+        if (!!target?.socketId.length) {
+          socket.broadcast.to([target.socketId[0]]).emit('requestTime', 'time');
+        }
+      }
+
+      namespace.to(roomname).emit('joinRoomClient', `${roomname} 입니다. 누군가가 입장했습니다.`);
     });
   });
 };
 
-export { socketHandler };
+export { socketHandler, socketData };
