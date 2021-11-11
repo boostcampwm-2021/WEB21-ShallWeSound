@@ -33,7 +33,7 @@ function MusicThumbnail({
   return (
     <div className="musicplayer-cover" onClick={onClick}>
       <div className="cover-hover" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-        {thumbnail && <img src={thumbnail} alt={name} />}
+        {thumbnail ? <img src={thumbnail} alt={name} /> : <img className="no-thumbnail" src="/icons/music-note.svg" alt="no-thumbnail" />}
         {isHover && (
           <>
             <div className="only-hover"></div>
@@ -79,7 +79,8 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
 
     socket.on('requestTime', (data: string) => {
       console.log('방장이다.');
-      socket.emit('responseTime', aud.currentTime);
+      console.log(musicInfo);
+      socket.emit('responseTime', aud.currentTime, musicInfo);
     });
 
     socket.on('sync', (data: string) => {
@@ -120,6 +121,7 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
       thumbnail: musicList[musicIndex].thumbnail,
       src: musicList[musicIndex].src,
     });
+    console.log(musicInfo)
     socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
   }, []);
 

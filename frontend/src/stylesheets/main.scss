@@ -9,12 +9,33 @@
   align-items: center;
 }
 
-.roomList {
+.main-wrap {
+  width: 80%;
+  height: 80%;
   border: 4px double $white;
   padding: 4rem;
   border-radius: 3rem;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .room-empty-notice {
+    color: $white;
+    font-size: 4rem;
+    font-style: italic;
+  }
+}
+
+.roomList {
+  width: 100%;
+  height: 90%;
+  padding: 2rem;
+  margin: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   * + * {
     margin-top: 1.5rem;
@@ -22,6 +43,7 @@
   }
 
   .room {
+    width: 50%;
     border: 4px solid $white;
     border-radius: 1rem;
     color: $white;
@@ -45,6 +67,12 @@
     .room-descripton {
       font-size: 0.875rem;
     }
+  }
+
+  .button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
   }
 }
 
@@ -94,15 +122,21 @@
 
   .button-wrap {
     display: flex;
-
-    .button {
-      padding: 0.75rem 1rem;
-      color: gray;
-      font-weight: 700;
-      border: 4px solid gray;
-      border-radius: 1rem;
-      cursor: pointer;
-      margin: 0 0.5rem;
-    }
+    justify-content: center;
   }
+}
+
+.button {
+  min-width: fit-content;
+  max-width: fit-content;
+  height: 50px;
+  box-sizing: border-box;
+  padding: 0.75rem 1rem;
+  color: gray;
+  background-color: $white;
+  font-weight: 700;
+  border: 4px solid gray;
+  border-radius: 1rem;
+  cursor: pointer;
+  margin: 0 0.5rem;
 }
