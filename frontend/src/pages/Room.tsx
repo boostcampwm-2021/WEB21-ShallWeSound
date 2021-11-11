@@ -1,10 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, createContext } from 'react';
 import MusicPlayer from '../components/MusicPlayer';
-import styled from 'styled-components';
 import io from 'socket.io-client';
 import PlayList from '../components/PlayList';
-import Video from '../components/video';
 import ChatComponent from '../components/chat';
+
 const Room = () => {
   interface musicInfo {
     name: string;

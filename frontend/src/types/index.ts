@@ -1,4 +1,5 @@
 type Music = {
+  MID: number;
   title: string;
   src: string;
   isPlayed: boolean;

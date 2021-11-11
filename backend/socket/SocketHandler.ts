@@ -1,5 +1,7 @@
 import { Server, Socket } from 'socket.io';
 import { PlayList } from './music';
+import musicService from '../services/music';
+import type { Music } from '../types';
 
 interface userList {
   [socketid: string]: number;
@@ -16,6 +18,8 @@ const userHash: userList = {};
 let userNum: number = 0;
 
 let socketData: socketInfo[] = [];
+
+const playList = new PlayList();
 
 const socketHandler = (io: Server) => {
   const namespace = io.of('/music');
@@ -88,8 +92,9 @@ const socketHandler = (io: Server) => {
       }
     });
 
-    socket.on('request', ([page, count]) => {
-      namespace.to(socket.id).emit('response', PlayList.getPlayListByPage(page, count));
+    socket.on('requestPlayList', page => {
+      const res = playList.getPlayListByPage(page);
+      namespace.to(socket.id).emit('responsePlayList', res);
     });
 
     socket.on('nextMusicReq', ({ src }) => {
@@ -104,12 +109,17 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('currentMusicReq', () => {
-      socket.emit('currentMusicRes', PlayList.getCurrentMusic());
+      socket.emit('currentMusicRes', playList.getCurrentMusic());
 
       // if (socketData.length > 1) {
       //   socket.broadcast.to([socketData[0]]).emit('requestTime', 'time');
       // }
     });
+
+
+    socket.on('addMusicInPlayListReq', async (MIDS: number[]) => {
+      const musics: Music[] = await musicService.findMusicsBy(MIDS);
+      playList.addMusics(musics);
 
     socket.on('createRoom', data => {
       console.log(data);
