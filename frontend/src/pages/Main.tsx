@@ -5,18 +5,31 @@ import { Socket } from 'socket.io-client';
 import { useSocket } from '../context/MyContext';
 import '../stylesheets/main.scss';
 import { Room } from './Room';
+import { next } from 'cheerio/lib/api/traversing';
 
 export const MainPage = ({ history }: { history: any }) => {
   const socket: Socket = useSocket()!;
 
   const [roomList, setRoomList] = useState([
-    '$$최고다 아이유 너만 오면고$$',
-    '$$최고다 이순신 입장시 불멸!$$',
-    '$$최고다 김윈터 ㄷㄷㄷㄷㄷㄷ$$',
+    {
+      id: 0,
+      name: '$$최고다 아이유 너만 오면고$$',
+      description: '$$최고다 아이유 너만 오면고$$',
+    }, {
+      id: 1,
+      name: '$$최고다 이순신 입장시 불멸!$$',
+      description: '$$최고다 이순신 입장시 불멸!$$',
+    }, {
+      id: 2,
+      name: '$$최고다 김윈터 ㄷㄷㄷㄷㄷㄷ$$',
+      description: '$$최고다 김윈터 ㄷㄷㄷㄷㄷㄷ$$',
+    }
   ]);
   const [visible, setVisible] = useState(false);
   const [appear, setAppear] = useState(false);
+  const [nextRoomIndex, setNextRoomIndex] = useState(3);
   const [dialogInput, setDialogInput] = useState({
+    id: nextRoomIndex,
     name: "",
     description: "",
   })
@@ -27,10 +40,6 @@ export const MainPage = ({ history }: { history: any }) => {
     console.log('joinRoom 이벤트 발생');
     history.push('/room');
   };
-
-  // const 리액트너무재밌는데 = () => {
-  //   setRoomList([...roomList, '방을 추가해보자']);
-  // };
 
   useEffect(() => {
     socket.on('joinRoomClient', data => {
@@ -61,8 +70,8 @@ export const MainPage = ({ history }: { history: any }) => {
       fetch('http://localhost:3000/api/room') // session 쓸때 credentials : 'include' 설정해주기
       .then(res => res.json())
       .then(data => {
-        console.log(data.list);
-        console.log('여기로 오나?');
+        setRoomList([...roomList, dialogInput]);
+        setNextRoomIndex(nextRoomIndex + 1);
       });
     } else {
       console.log("입력 칸이 비어있습니다");
@@ -98,9 +107,10 @@ export const MainPage = ({ history }: { history: any }) => {
         </div>
       }
       <div className={'roomList'}>
-        {roomList.map(val => (
-          <div className={'room'} onClick={fff} key={idx}>
-            {val}
+        {roomList.map((val) => (
+          <div className={'room'} onClick={fff} key={val.id}>
+            <p>{val.name}</p>
+            <p>{val.description}</p>
           </div>
         ))}
       </div>
