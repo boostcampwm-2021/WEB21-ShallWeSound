@@ -35,15 +35,21 @@ router.post('/', cpUpload,(req, res, next)=>{
     };
     const contentHash = makeHash(files.userFile1[0].buffer.toString());
     (async () => {
+        let folder_name = `${contentHash}/`;
+        // 해쉬값을 이름으로 하는 폴더를 생성하고, 그 안에 파일 업로드
+        await S3.putObject({
+            Bucket: bucket_name,
+            Key: folder_name
+        }).promise();
         await S3.upload({
             Bucket: bucket_name,
-            Key: object_name,
+            Key: folder_name+object_name,
             Body: Readable.from(files.userFile1[0].buffer)
         }, options).promise();
         const thumbnailName = object_name.split('.')[0]+'.'+files.userFile2[0].originalname.split('.')[1];
         await S3.upload({
             Bucket: bucket_name,
-            Key: thumbnailName,
+            Key: folder_name+thumbnailName,
             Body: Readable.from(files.userFile2[0].buffer)
         }, options).promise();
         db.query(
