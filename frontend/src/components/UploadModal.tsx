@@ -87,7 +87,7 @@ function UploadModal(){
     }
     return(
         <div className={styles.modalContainer}>
-            <button onClick={modalVisibleChange}>음악 업로드</button>
+            <button className={styles.headerUploadButton} onClick={modalVisibleChange}>음악 업로드</button>
             {isModalVisible && <UploadModalInner/>}
         </div> 
     )

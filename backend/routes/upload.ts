@@ -4,7 +4,6 @@ import * as AWS from 'aws-sdk';
 import {Readable} from 'stream';
 import {initDB, connect} from '../config/db';
 import crypto from 'crypto';
-import bodyParser from 'body-parser';
 const db = initDB();
 connect(db);
 const upload = multer({

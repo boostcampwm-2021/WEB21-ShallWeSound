@@ -112,6 +112,19 @@
 
 .modalContainer{
     padding-left: 1em;
+    
+    
+}
+.headerUploadButton{
+    border: 0;
+    background-color: white ;
+    color: #337ab7;
+    width: 5.5em;
+    height: 2em;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: large;
+    cursor: pointer;
 }
 .UploadModalInner{
     position: absolute;
@@ -128,9 +141,15 @@
             display: none;
         }
         .submitButton{
+            border: 0;
+            height: 35px;
+            width: 52px;
+            background-color: #337ab7;
+            color: white;
             float: right;
             margin-right: 42px;
             display: block;
+            border-radius: .25em;
         }
         .musicForm{
             margin-bottom: 2em;
