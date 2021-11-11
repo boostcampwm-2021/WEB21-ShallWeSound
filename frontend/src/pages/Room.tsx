@@ -5,7 +5,6 @@ import io from 'socket.io-client';
 import PlayList from '../components/PlayList';
 import Video from '../components/video';
 import ChatComponent from '../components/chat';
-
 const Room = () => {
   interface musicInfo {
     name: string;

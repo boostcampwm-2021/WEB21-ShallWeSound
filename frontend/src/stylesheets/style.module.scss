@@ -1,10 +1,15 @@
 @import "../stylesheets/global.scss";
 
-.App {
+.root{
     background: $background;//$background;//$white;//$background; //#e9ecef;
+    position: relative;
+
+}
+.App {
+    position: relative;
     background-size: cover;
-    min-height: 100vh;//calc(100vw - (100vw - 100%));
     display: flex;
+    min-height: 100vh;//calc(100vw - (100vw - 100%));
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
@@ -104,3 +109,90 @@
     
 }
 
+
+.modalContainer{
+    padding-left: 1em;
+    
+    
+}
+.headerUploadButton{
+    border: 0;
+    background-color: white ;
+    color: #337ab7;
+    width: 5.5em;
+    height: 2em;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: large;
+    cursor: pointer;
+}
+.UploadModalInner{
+    position: absolute;
+    width: 300px;
+    height: 530px;
+    background-color: white;
+    z-index: 100;
+    border-radius: 10px;
+    .uploadForm{
+        position: relative;
+        margin-top: 13%;
+        margin-left: 2.5em;
+        .input{
+            display: none;
+        }
+        .submitButton{
+            border: 0;
+            height: 35px;
+            width: 52px;
+            background-color: #337ab7;
+            color: white;
+            float: right;
+            margin-right: 42px;
+            display: block;
+            border-radius: .25em;
+            cursor: pointer;
+        }
+        .musicForm{
+            margin-bottom: 2em;
+        }
+        .thumbnailForm{
+            margin-bottom: 2em;
+        }
+        .musicName{
+            height: 30px;
+            width: 150px;
+        }
+        .thumbnailName{
+            height: 30px;
+            width: 150px;
+        }
+        .title{
+            margin-bottom: 0.5em;
+            font-weight: bold;
+        }
+        .singer{
+            height: 30px;
+            width: 210px;
+            margin-bottom: 2em;
+        }
+        .descript{
+            height: 100px;
+            width: 212px;
+            margin-bottom: 2em;
+        }
+
+        label{
+
+            padding: 8px 12px;
+            margin-left: 0.5em;
+            color: white;
+            vertical-align: middle;
+            background-color: #337ab7; 
+            cursor: pointer; 
+            border-radius: .25em;
+        
+        }
+    }
+    
+    
+}
