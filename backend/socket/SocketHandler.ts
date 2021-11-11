@@ -11,6 +11,8 @@ let userNum: number = 0;
 
 let socketData: string[] = [];
 
+const playList = new PlayList();
+
 const socketHandler = (io: Server) => {
   const namespace = io.of('/music');
 
@@ -62,7 +64,7 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('requestPlayList', page => {
-      const res = PlayList.getPlayListByPage(page);
+      const res = playList.getPlayListByPage(page);
       namespace.to(socket.id).emit('responsePlayList', res);
     });
 
@@ -74,7 +76,7 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('currentMusicReq', () => {
-      socket.emit('currentMusicRes', PlayList.getCurrentMusic());
+      socket.emit('currentMusicRes', playList.getCurrentMusic());
 
       // if (socketData.length > 1) {
       //   socket.broadcast.to([socketData[0]]).emit('requestTime', 'time');
@@ -83,7 +85,7 @@ const socketHandler = (io: Server) => {
 
     socket.on('addMusicInPlayListReq', async (MIDS: number[]) => {
       const musics: Music[] = await musicService.findMusicsBy(MIDS);
-      PlayList.addMusics(musics);
+      playList.addMusics(musics);
     });
   });
 };
