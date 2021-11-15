@@ -7,18 +7,27 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@types/jest": "^27.0.2",
+    "@types/lodash": "^4.14.176",
     "@types/node": "^16.11.6",
-    "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
+    "@types/react-router-dom": "^5.3.2",
+    "@types/socket.io-client": "^3.0.0",
+    "lodash": "^4.17.21",
+    "@types/styled-components": "^5.1.15",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
     "sass": "^1.43.4",
+    "socket-client": "^1.0.0",
+    "socket.io-client": "^4.3.2",
+    "styled-components": "^5.3.3",
     "typescript": "^4.4.4",
     "web-vitals": "^1.0.1"
   },
+  "proxy": "http://localhost:3000",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "(set PORT=3001 || export PORT=3001) && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -40,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.33"
   }
 }
