@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import searchIcon from '../images/search.png';
+import searchIcon from '../../images/search.png';
 
 interface Props {
   doFetch: (keyword: string) => void;

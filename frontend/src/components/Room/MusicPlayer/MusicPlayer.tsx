@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, MouseEventHandler } from 'react';
-import { useSocket } from '../context/MyContext';
-import '../stylesheets/MusicPlayer.scss';
+import { useSocket } from '../../../context/MyContext';
+import '../../../stylesheets/MusicPlayer.scss';
 
 function Title({ name, singer }: { name: string; singer: string }) {
   return (
@@ -33,7 +33,11 @@ function MusicThumbnail({
   return (
     <div className="musicplayer-cover" onClick={onClick}>
       <div className="cover-hover" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-        {thumbnail ? <img src={thumbnail} alt={name} /> : <img className="no-thumbnail" src="/icons/music-note.svg" alt="no-thumbnail" />}
+        {thumbnail ? (
+          <img src={thumbnail} alt={name} />
+        ) : (
+          <img className="no-thumbnail" src="/icons/music-note.svg" alt="no-thumbnail" />
+        )}
         {isHover && (
           <>
             <div className="only-hover"></div>
@@ -121,7 +125,7 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
       thumbnail: musicList[musicIndex].thumbnail,
       src: musicList[musicIndex].src,
     });
-    console.log(musicInfo)
+    console.log(musicInfo);
     socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
   }, []);
 
@@ -249,7 +253,16 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   return (
     <>
       <div className="musicplayer">
-        <video id="video" src={musicInfo.src} muted autoPlay ref={musicControl} onTimeUpdate={updateCurrentTime} onLoadedMetadata={updateMusic} onEnded={goNextMusic} ></video>
+        <video
+          id="video"
+          src={musicInfo.src}
+          muted
+          autoPlay
+          ref={musicControl}
+          onTimeUpdate={updateCurrentTime}
+          onLoadedMetadata={updateMusic}
+          onEnded={goNextMusic}
+        ></video>
         <Title name={musicInfo.name} singer={musicInfo.singer} />
         <div className="musicplayer-body">
           <img

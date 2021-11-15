@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import type { Music } from '../types';
+import type { Music } from '../../../types';
 import PlayListItem from './PlayListItem';
-import CircleButton from './CircleButton';
-import Modal from './Modal';
-import MusicSearch from './MusicSearch';
-import { useSocket } from '../context/MyContext';
+import CircleButton from '../../Util/CircleButton';
+import Modal from '../Modal';
+import MusicSearch from '../MusicSearch';
+import { useSocket } from '../../../context/MyContext';
 
 const PlayList = () => {
   const socket: any = useSocket();

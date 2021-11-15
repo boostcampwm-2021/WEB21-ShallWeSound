@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
-import config from '../config.host.json';
-import SearchBar from './SearchBar';
+import config from '../../config.host.json';
+import SearchBar from '../Util/SearchBar';
 import MusicSearchItem from './MusicSearchItem';
-import CircleButton from './CircleButton';
-import { useSocket } from '../context/MyContext';
+import CircleButton from '../Util/CircleButton';
+import { useSocket } from '../../context/MyContext';
 
 interface Music {
   MID: number;

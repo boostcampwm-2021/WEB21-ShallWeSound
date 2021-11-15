@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import MusicPlayer from '../components/MusicPlayer';
-import io from 'socket.io-client';
-import PlayList from '../components/PlayList';
-import ChatComponent from '../components/chat';
+import MusicPlayer from '../components/Room/MusicPlayer/MusicPlayer';
+import PlayList from '../components/Room/PlayList/PlayList';
+import ChatComponent from '../components/Room/Chat/chat';
 import styled from 'styled-components';
 
 const Room = () => {
