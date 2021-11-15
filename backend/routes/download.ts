@@ -1,10 +1,5 @@
 import express from 'express';
-import multer from 'multer';
 import * as AWS from 'aws-sdk';
-const models = require('../models/index.js');
-const upload = multer({
-    storage: multer.memoryStorage()
-});
 const router = express.Router();
 router.use(express.json());
 const region = 'kr-standard';
