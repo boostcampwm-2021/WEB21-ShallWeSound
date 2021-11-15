@@ -16,6 +16,20 @@ export default {
 
     return result;
   },
+  async searchByPage(keyword: string, page: number) {
+    const result = await MusicModel.findAll({
+      where: {
+        [Op.or]: {
+          name: { [Op.like]: '%' + keyword + '%' },
+          singer: { [Op.like]: '%' + keyword + '%' },
+        },
+      },
+      limit: 10,
+      offset: page,
+    });
+
+    return result;
+  },
   async findMusicsBy(MIDS: number[]) {
     const result = await MusicModel.findAll({
       attribute: ['MID', 'name', 'singer', 'path'],
