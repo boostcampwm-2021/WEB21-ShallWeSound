@@ -13,7 +13,6 @@ const socketHandler = (io: Server) => {
 
   namespace.on('connection', socket => {
     console.log('접속 중: ', socket.id);
-
     userHash[socket.id] = userNum;
     userNum += 1;
 
