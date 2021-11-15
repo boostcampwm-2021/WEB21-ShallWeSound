@@ -64,9 +64,7 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   const musicControl = useRef<HTMLVideoElement | null>(null);
   const [musicIndex, setmusicIndex] = useState(0);
   const [musicInfo, setMusicInfo] = useState<musicInfo>();
-  const [currentTime, setCurrentTime] = useState(0);
   const [progressWidth, setProgressWidth] = useState(0);
-  const [musicVolume, setMusicVolume] = useState(1);
   const [backupMusicVolume, setBackupMusicVolume] = useState(0);
   const [progressVolumeWidth, setProgressVolumeWidth] = useState(100);
   const socket: any = useSocket();
@@ -169,7 +167,6 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   function updateMusic() {
     const playingMusic = musicControl.current;
     if (playingMusic) {
-      setCurrentTime(0);
       playingMusic.play();
     }
   }
@@ -177,10 +174,8 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   function updateCurrentTime() {
     const playingMusic = musicControl.current;
     if (playingMusic) {
-      setCurrentTime(playingMusic.currentTime);
       setProgressWidth((playingMusic.currentTime / playingMusic.duration) * 100);
       playingMusic.onseeked = () => {
-        console.log(playingMusic.currentTime);
         socket.emit('moving', playingMusic.currentTime);
       };
     }
@@ -199,7 +194,6 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
       playingMusic.onseeked = () => {
         socket.emit('moving', playingMusic.currentTime);
       };
-      setCurrentTime((playingMusic.duration * e.nativeEvent.offsetX) / 352);
     }
   }
 
@@ -216,7 +210,6 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
       playingMusic.volume = offsetX; // 88: progressBar total width
     }
     setProgressVolumeWidth(offsetX * 100);
-    setMusicVolume(offsetX);
   }
 
   function toggleVolume() {
@@ -225,11 +218,9 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
       if (playingMusic.volume > 0) {
         setBackupMusicVolume(playingMusic.volume);
         playingMusic.volume = 0;
-        setMusicVolume(0);
         setProgressVolumeWidth(0);
       } else {
         playingMusic.volume = backupMusicVolume;
-        setMusicVolume(backupMusicVolume);
         setProgressVolumeWidth(backupMusicVolume * 100);
       }
     }
@@ -278,7 +269,7 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
         </div>
         <div className="serveral-icons">
           <div className="volume-wrap width-half">
-            {musicVolume === 0 ? (
+            {musicControl.current?.volume === 0 ? (
               <img
                 className="icon"
                 src="/icons/volume-off.svg"
