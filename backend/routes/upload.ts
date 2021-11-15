@@ -1,27 +1,13 @@
 import express from 'express';
 import multer from 'multer';
-import * as AWS from 'aws-sdk';
+import {S3} from '../utils/cloudConfig'
 import {Readable} from 'stream';
-import crypto from 'crypto';
+import {makeHash} from '../utils/util'
 const models = require('../models/index.js');
 const upload = multer({
     storage: multer.memoryStorage()
 });
 const router = express.Router();
-const region = 'kr-standard';
-const access_key = `${process.env.ACCESS_KEY}`;
-const secret_key = `${process.env.SECRET_KEY}`;
-const S3 = new AWS.S3({
-    endpoint:'https://kr.object.ncloudstorage.com',
-    region,
-    credentials: {
-        accessKeyId : access_key,
-        secretAccessKey: secret_key
-    }
-});
-function makeHash(fileBuffer:string):string{
-    return crypto.createHash('sha512').update(fileBuffer + `${process.env.SALT}`).digest('hex');
-}
 const cpUpload = upload.fields([{name:'userFile1'}, {name:'userFile2'}])
 router.post('/', cpUpload,(req, res, next)=>{
     const bucket_name = 'sws';
@@ -62,17 +48,6 @@ router.post('/', cpUpload,(req, res, next)=>{
             }).catch((err:Error)=>{
                 console.log(err);
             })
-            
-        
-        // await db.query(
-        //     'INSERT INTO MUSIC (name, singer, description, thumbnail, path, content_hash) values (?,?,?,?,?,?)',
-        //     [object_name, req.body.singer, req.body.description, thumbnailName, '경로경로', contentHash],
-        //     async function(err, rows, fields){
-        //         if(!err){
-        //       
-        //         }
-        //     }
-        // );
     })();
     res.send(200);
     

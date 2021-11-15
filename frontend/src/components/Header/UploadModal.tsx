@@ -14,14 +14,14 @@ function UploadModalInner() {
   });
 
   const isFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let curObj = _.cloneDeep(uploadedFile);
+    const curObj = _.cloneDeep(uploadedFile);
     curObj.musicFile = e.target.files!;
     curObj.musicName = e.target.files![0].name;
     setUploadedFile(curObj);
   };
 
   const isThumbUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let curObj = _.cloneDeep(uploadedFile);
+    const curObj = _.cloneDeep(uploadedFile);
     curObj.thumbnailFile = e.target.files!;
     curObj.thumbnailName = e.target.files![0].name;
     setUploadedFile(curObj);
@@ -41,7 +41,7 @@ function UploadModalInner() {
       method: 'POST',
       body: formData,
     });
-    let curObj = resetFileState(_.cloneDeep(uploadedFile));
+    const curObj = resetFileState(_.cloneDeep(uploadedFile));
     setUploadedFile(curObj);
   };
 
@@ -56,13 +56,13 @@ function UploadModalInner() {
   }
 
   const writeSingerName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let curObj = _.cloneDeep(uploadedFile);
+    const curObj = _.cloneDeep(uploadedFile);
     curObj.singer=e.target.value;
     setUploadedFile(curObj);
   };
 
   const writeDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    let curObj = _.cloneDeep(uploadedFile);
+    const curObj = _.cloneDeep(uploadedFile);
     curObj.descript=e.target.value;
     setUploadedFile(curObj);
   };
@@ -138,7 +138,7 @@ function UploadModal() {
   const modalVisibleChange = () => {
     setVisible(!isModalVisible);
   };
-  
+
   return (
     <div className={styles.modalContainer}>
       <button className={styles.headerUploadButton} onClick={modalVisibleChange}>
