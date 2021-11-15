@@ -1,10 +1,23 @@
+import { PlayList } from '../socket/music';
+
 type Music = {
-  // name: string;
+  MID: number;
   title: string;
-  // thumbnail: string;
   src: string;
   isPlayed: boolean;
   singer: string;
 };
 
-export type { Music };
+type socketInfo = {
+  id: number;
+  name: string;
+  socketId: string[];
+  description: string;
+  playList: PlayList;
+};
+
+type userList = {
+  [socketid: string]: number;
+};
+
+export type { Music, socketInfo, userList };

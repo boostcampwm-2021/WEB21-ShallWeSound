@@ -15,14 +15,14 @@ type TextProps = {
 const PlayListItem = ({ title, singer }: Props) => {
   return (
     <Item>
-      <div>
+      <Wrapper>
         <Text color="#ffffff" weight="500" size="20px">
           {title}
         </Text>
         <Text color="#FAFAFA" weight="0" size="14px">
           {singer}
         </Text>
-      </div>
+      </Wrapper>
       <Detail></Detail>
     </Item>
   );
@@ -41,11 +41,19 @@ const Item = styled.div`
   }
 `;
 
+const Wrapper = styled.div`
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+`;
+
 const Text = styled.div<TextProps>`
   color: ${props => props.color};
   font-weight: ${props => props.weight};
   font-size: ${props => props.size};
-  margin: 0px 5px;
+  margin: 0px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const Detail = styled.div`

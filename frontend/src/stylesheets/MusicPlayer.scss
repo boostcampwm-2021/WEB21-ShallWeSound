@@ -1,4 +1,4 @@
-@import '../stylesheet/global.scss';
+@import './global.scss';
 
 .musicplayer {
   box-sizing: border-box;
@@ -12,7 +12,7 @@
   margin-right: 2rem;
   margin-bottom: 1rem;
   width: 400px;
-  height: 400px;
+  height: 420px;
   background: none;//linear-gradient(#4b6cb7, #182848);//$white;
   border-radius: 0.25rem;
 
@@ -83,6 +83,12 @@
     }
   }
 
+  .no-thumbnail {
+    border: 10px solid $white;
+    border-radius: 999px;
+    box-sizing: border-box;
+  }
+
   &-cover {
     position: relative;
     box-sizing: border-box;
@@ -147,26 +153,65 @@
     cursor: pointer;
     position: relative;
 
+
+
     &-bar {
       height: inherit;
       width: 0%;
       position: relative;
-      border: 0.5px solid $background;
+      border: 0.5px solid $white;
       border-radius: inherit;
-      background: linear-gradient(90deg, #4b6cb7, #182848);
+      background-color: $white;
       
       &::before {
         content: "";
         position: absolute;
         height: 18px;
         width: 18px;
+        box-sizing: border-box;
         border-radius: 50%;
         top: -6px;
         right: -5px;
         z-index: 2;
-        background: linear-gradient(270deg, #4b6cb7, #182848);
+        background-color: $white;
       }
     }
+  }
 
+
+  .width-half {
+    width: 50%;
+    box-sizing: border-box;
+  }
+
+  .width-quarter {
+    width: 25%;
+    box-sizing: border-box;
+  }
+
+  .serveral-icons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .icon {
+      cursor: pointer;
+    }
+
+    .volume-wrap {
+      display: flex;
+    }
+
+    .progress-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: 1rem;
+    }
+
+    .icon + .icon {
+      margin-left: 1rem;
+    }
   }
 }

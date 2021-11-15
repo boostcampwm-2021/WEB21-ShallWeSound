@@ -1,13 +1,8 @@
-import React, { useState, useContext } from 'react';
-import MusicPlayer from '../components/MusicPlayer';
+import React, { useState } from 'react';
+import MusicPlayer from '../components/Room/MusicPlayer/MusicPlayer';
+import PlayList from '../components/Room/PlayList/PlayList';
+import ChatComponent from '../components/Room/Chat/chat';
 import styled from 'styled-components';
-import io from 'socket.io-client';
-import PlayList from '../components/PlayList';
-import Video from '../components/video';
-import ChatComponent from '../components/chat';
-
-const socket: any = io('http://101.101.209.122:3000/music');
-const SocketProvider = React.createContext(null);
 
 const Room = () => {
   interface musicInfo {
@@ -58,7 +53,6 @@ const Room = () => {
 
   return (
     <>
-    <SocketProvider.Provider value={socket}>
       <div>
         <MusicPlayer musicList={musicList}></MusicPlayer>
         <ChatComponent />
@@ -67,16 +61,13 @@ const Room = () => {
         <PlayList></PlayList>
         {/* <Video /> */}
       </StyledDiv>
-    </SocketProvider.Provider>
     </>
   );
 };
 
 const StyledDiv = styled.div`
-  /* width: 100vw; */
-  /* height: 100vh; */
+  /* width: 100vw; 
+  height: 100vh; */
 `;
 
-const useSocket = () => useContext(SocketProvider);
-
-export { Room, useSocket };
+export { Room };
