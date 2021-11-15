@@ -6,4 +6,12 @@ type Music = {
   singer: string;
 };
 
-export type { Music };
+type FileType={
+  musicName: string,
+  thumbnailName: string,
+  singer: string,
+  descript: string,
+  musicFile: FileList|null,
+  thumbnailFile: FileList|null
+}
+export type { Music, FileType };
