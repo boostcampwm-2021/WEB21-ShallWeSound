@@ -79,33 +79,36 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   const socket: any = useSocket();
 
   useEffect(() => {
-    const aud: any = document.getElementById('video')!;
-
     socket.on('requestTime', (data: string) => {
       console.log('방장이다.');
       console.log(musicInfo);
-      socket.emit('responseTime', aud.currentTime, musicInfo);
+      socket.emit('responseTime', musicControl.current?.currentTime, musicInfo);
     });
 
     socket.on('sync', (data: string) => {
-      console.log(data);
-      aud.currentTime = data;
+      if (musicControl.current) {
+        musicControl.current.currentTime = parseInt(data);
+      }
     });
 
     socket.on('clientPause', (data: string) => {
-      aud.pause();
+      musicControl.current?.pause();
     });
 
     socket.on('clientPlay', (data: string) => {
-      aud.play();
+      musicControl.current?.play();
     });
 
     socket.on('clientMoving', (data: number) => {
-      aud.currentTime = data;
+      if (musicControl.current) {
+        musicControl.current.currentTime = data;
+      }
     });
 
     setTimeout(() => {
-      aud.muted = false;
+      if (musicControl.current) {
+        musicControl.current.muted = false;
+      }
     }, 200);
   }, []);
 
