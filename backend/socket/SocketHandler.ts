@@ -74,12 +74,12 @@ const socketHandler = (io: Server) => {
       }
     });
 
-    socket.on('requestPlayList', page => {
+    socket.on('requestPlayList', () => {
       const targetRoom = socketData.find(
         val => val.socketId.some(client => client === socket.id) === true,
       );
 
-      const res = targetRoom?.playList.getPlayListByPage(page);
+      const res = targetRoom?.playList.getPlayList() ?? [];
       namespace.to(socket.id).emit('responsePlayList', res);
     });
 
@@ -110,9 +110,13 @@ const socketHandler = (io: Server) => {
       const targetRoom = socketData.find(
         val => val.socketId.some(client => client === socket.id) === true,
       );
+      if (!targetRoom) return;
 
       const musics: Music[] = await musicService.findMusicsBy(MIDS);
-      targetRoom?.playList.addMusics(musics);
+      targetRoom.playList.addMusics(musics);
+
+      const res = targetRoom?.playList.getPlayList();
+      namespace.to(targetRoom.name).emit('responsePlayList', res);
     });
 
     socket.on('createRoom', data => {

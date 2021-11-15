@@ -1,14 +1,5 @@
 import type { Music } from '../types';
 
-// interface PlayList {
-//   playlist: Music[];
-//   getPlayList: () => Music[];
-//   getPlayListByPage: (page: number) => Music[];
-//   getNextMusic: () => Music;
-//   getCurrentMusic: () => Music;
-//   addMusics: (musics: Music[]) => void;
-// }
-
 export class PlayList {
   playlist: Music[];
 
@@ -165,11 +156,6 @@ export class PlayList {
   }
   getPlayList(): Music[] {
     return this.playlist;
-  }
-
-  getPlayListByPage(page: number): Music[] {
-    const bloc = 15;
-    return this.playlist.slice(page, page + bloc);
   }
 
   getNextMusic(): Music {

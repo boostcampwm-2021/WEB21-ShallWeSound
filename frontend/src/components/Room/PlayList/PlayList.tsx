@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import type { Music } from '../../../types';
 import PlayListItem from './PlayListItem';
@@ -11,38 +11,27 @@ const PlayList = () => {
   const socket: any = useSocket();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [playList, setPlayList] = useState<Music[]>([]);
-  const page = useRef(0);
 
   useEffect(() => {
     socket.on('responsePlayList', (data: Music[]) => {
-      setPlayList([...playList, ...data]);
-      page.current += data.length;
+      setPlayList([...data]);
     });
 
     return () => {
       socket.off('responsePlayList');
     };
-  }, [playList, socket]);
+  }, [socket]);
 
   useEffect(() => {
-    socket.emit('requestPlayList', page.current);
+    socket.emit('requestPlayList');
   }, [socket]);
 
   const toggleModal = () => setModalVisible(!modalVisible);
 
-  const isEndOfScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>): boolean =>
-    e.currentTarget.scrollTop + e.currentTarget.clientHeight >= e.currentTarget.scrollHeight;
-
-  const onScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>): void => {
-    if (isEndOfScroll(e)) {
-      socket.emit('requestPlayList', page.current);
-    }
-  };
-
   return (
     <Container>
       <Title>P L A Y &nbsp; L I S T</Title>
-      <PlayListWrapper onScroll={onScroll}>
+      <PlayListWrapper>
         {playList.map((music: Music, i: number) => (
           <PlayListItem key={i} title={music.title} singer={music.singer} />
         ))}
