@@ -16,4 +16,8 @@ type socketInfo = {
   playList: PlayList;
 };
 
-export type { Music, socketInfo };
+type userList = {
+  [socketid: string]: number;
+};
+
+export type { Music, socketInfo, userList };

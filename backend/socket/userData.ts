@@ -1,16 +1,5 @@
 import { PlayList } from './music';
-
-interface userList {
-  [socketid: string]: number;
-}
-
-interface socketInfo {
-  id: number;
-  name: string;
-  socketId: string[];
-  description: string;
-  playList: PlayList;
-}
+import { socketInfo, userList } from '../types';
 
 const userHash: userList = {};
 
