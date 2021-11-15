@@ -65,7 +65,6 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   const [musicIndex, setmusicIndex] = useState(0);
   const [musicInfo, setMusicInfo] = useState<musicInfo>();
   const [currentTime, setCurrentTime] = useState(0);
-  const [totalTime, setTotalTime] = useState(0);
   const [progressWidth, setProgressWidth] = useState(0);
   const [musicVolume, setMusicVolume] = useState(1);
   const [backupMusicVolume, setBackupMusicVolume] = useState(0);
@@ -171,7 +170,6 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
     const playingMusic = musicControl.current;
     if (playingMusic) {
       setCurrentTime(0);
-      setTotalTime(playingMusic.duration);
       playingMusic.play();
     }
   }
@@ -197,13 +195,12 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   function mousePositionRelativeToProgressBar(e: React.MouseEvent) {
     const playingMusic = musicControl.current;
     if (playingMusic) {
-      playingMusic.currentTime = (totalTime * e.nativeEvent.offsetX) / 352; // 352: progressBar total width
+      playingMusic.currentTime = (playingMusic.duration * e.nativeEvent.offsetX) / 352; // 352: progressBar total width: ;
       playingMusic.onseeked = () => {
-        console.log(playingMusic.currentTime);
         socket.emit('moving', playingMusic.currentTime);
       };
+      setCurrentTime((playingMusic.duration * e.nativeEvent.offsetX) / 352);
     }
-    setCurrentTime((totalTime * e.nativeEvent.offsetX) / 352);
   }
 
   const progressVolumeStyle = {
@@ -273,8 +270,8 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
           />
         </div>
         <div className="musicplayer-timer">
-          <span className="current-time">{changeFormatToTime(currentTime)}</span>
-          <span className="max-duration">{changeFormatToTime(totalTime)}</span>
+          <span className="current-time">{changeFormatToTime(musicControl.current?.currentTime || 0)}</span>
+          <span className="max-duration">{changeFormatToTime(musicControl.current?.duration || 0)}</span>
         </div>
         <div className="progress" onClick={mousePositionRelativeToProgressBar}>
           <div className="progress-bar" style={progressStyle}></div>
