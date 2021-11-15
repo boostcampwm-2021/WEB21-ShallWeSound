@@ -1,3 +1,5 @@
+import { PlayList } from '../socket/music';
+
 type Music = {
   MID: number;
   title: string;
@@ -6,4 +8,12 @@ type Music = {
   singer: string;
 };
 
-export type { Music };
+type socketInfo = {
+  id: number;
+  name: string;
+  socketId: string[];
+  description: string;
+  playList: PlayList;
+};
+
+export type { Music, socketInfo };
