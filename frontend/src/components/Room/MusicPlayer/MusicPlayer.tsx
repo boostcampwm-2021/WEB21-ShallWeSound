@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, MouseEventHandler } from 'react';
+import React, { useState, useEffect, useRef, MouseEventHandler, RefObject } from 'react';
 import { useSocket } from '../../../context/MyContext';
 import '../../../stylesheets/MusicPlayer.scss';
 
-function Title({ name, singer }: { name: string; singer: string }) {
+function Title({ name, singer }: { name: string | undefined; singer: string | undefined }) {
   return (
     <div className="musicplayer-title-area">
       <span className="musicplayer-title">{name}</span>
@@ -14,12 +14,12 @@ function Title({ name, singer }: { name: string; singer: string }) {
 function MusicThumbnail({
   name,
   thumbnail,
-  nowPlaying,
+  musicControl,
   onClick,
 }: {
-  name: string;
-  thumbnail: string;
-  nowPlaying: boolean;
+  name: string | undefined;
+  thumbnail: string | undefined;
+  musicControl: React.MutableRefObject<HTMLVideoElement | null>;
   onClick: MouseEventHandler;
 }) {
   const [isHover, setIsHover] = useState(false);
@@ -41,10 +41,10 @@ function MusicThumbnail({
         {isHover && (
           <>
             <div className="only-hover"></div>
-            {nowPlaying ? (
-              <img className="icon" src="/icons/pause.svg" alt="pause" />
-            ) : (
+            {musicControl.current?.paused ? (
               <img className="icon" src="/icons/play.svg" alt="play" />
+              ) : (
+              <img className="icon" src="/icons/pause.svg" alt="pause" />
             )}
           </>
         )}
@@ -61,15 +61,9 @@ interface musicInfo {
 }
 
 function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
+  const musicControl = useRef<HTMLVideoElement | null>(null);
   const [musicIndex, setmusicIndex] = useState(0);
-  const [musicInfo, setMusicInfo] = useState<musicInfo>({
-    name: 'noname',
-    singer: 'noname',
-    thumbnail: '',
-    src: '',
-  });
-  const musicControl = useRef<HTMLVideoElement>(null);
-  const [nowPlaying, setNowPlaying] = useState(true);
+  const [musicInfo, setMusicInfo] = useState<musicInfo>();
   const [currentTime, setCurrentTime] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
   const [progressWidth, setProgressWidth] = useState(0);
@@ -144,14 +138,8 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   }, [musicIndex]);
 
   useEffect(() => {
-    console.log(musicInfo);
-    console.log(musicControl.current);
-    if (nowPlaying && musicInfo.src && musicControl.current) {
+    if (musicControl.current?.paused && musicInfo?.src && musicControl.current) {
       musicControl.current.play();
-      // socket.on('requestTime', (data: string) => {
-      //   console.log('방장이다.');
-      //   socket.emit('responseTime', currentTime);
-      // });
     }
   }, [musicControl]);
 
@@ -164,21 +152,18 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   }
 
   function playOrPauseMusic() {
-    const playingMusic = musicControl && musicControl.current;
-    if (playingMusic) {
-      if (nowPlaying) {
-        playingMusic.pause();
-        setNowPlaying(false);
-        playingMusic.onpause = () => {
-          socket.emit('pause', '멈추시오');
-        };
-      } else {
-        playingMusic.play();
-        setNowPlaying(true);
-        playingMusic.onplay = () => {
-          socket.emit('play', '사작하시오');
-        };
-      }
+    const playingMusic = musicControl?.current;
+    if (playingMusic?.paused) {
+      playingMusic.play();
+      playingMusic.onplay = () => {
+        socket.emit('play', '사작하시오');
+      };
+    }
+    else if (playingMusic?.paused === false) {
+      playingMusic.pause();
+      playingMusic.onpause = () => {
+        socket.emit('pause', '멈추시오');
+      };
     }
   }
 
@@ -187,7 +172,7 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
     if (playingMusic) {
       setCurrentTime(0);
       setTotalTime(playingMusic.duration);
-      if (nowPlaying) playingMusic.play();
+      playingMusic.play();
     }
   }
 
@@ -258,7 +243,7 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
       <div className="musicplayer">
         <video
           id="video"
-          src={musicInfo.src}
+          src={musicInfo?.src}
           muted
           autoPlay
           ref={musicControl}
@@ -266,7 +251,7 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
           onLoadedMetadata={updateMusic}
           onEnded={goNextMusic}
         ></video>
-        <Title name={musicInfo.name} singer={musicInfo.singer} />
+        <Title name={musicInfo?.name} singer={musicInfo?.singer} />
         <div className="musicplayer-body">
           <img
             className="icon"
@@ -275,9 +260,9 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
             onClick={goPrevMusic}
           />
           <MusicThumbnail
-            name={musicInfo.name}
-            thumbnail={musicInfo.thumbnail}
-            nowPlaying={nowPlaying}
+            name={musicInfo?.name}
+            thumbnail={musicInfo?.thumbnail}
+            musicControl={musicControl}
             onClick={playOrPauseMusic}
           />
           <img
