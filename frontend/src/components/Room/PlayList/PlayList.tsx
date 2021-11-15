@@ -15,8 +15,10 @@ const PlayList = () => {
 
   useEffect(() => {
     socket.on('responsePlayList', (data: Music[]) => {
-      setPlayList([...playList, ...data]);
-      page.current += data.length;
+      if (data) {
+        setPlayList([...playList, ...data]);
+        page.current += data.length;
+      }
     });
 
     return () => {
