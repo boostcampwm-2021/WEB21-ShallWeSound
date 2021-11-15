@@ -10,3 +10,9 @@ export const S3 = new AWS.S3({
         secretAccessKey: secret_key
     }
 });
+
+export const makeSignedURL = (S3:AWS.S3, contentHash:String, musicName:String):string =>{
+    const params = {Bucket: 'sws', Key: `${contentHash}/${musicName}`};
+    const url = S3.getSignedUrl('getObject', params);
+    return url;
+}
