@@ -10,6 +10,7 @@ import roomRouter from './routes/room';
 import audioRouter from './routes/audio';
 import apiRouter from './routes/api/';
 import uploadRouter from './routes/upload';
+import downloadRouter from './routes/download'
 
 const models = require('./models/index.js');
 const app: express.Application = express();
@@ -38,6 +39,7 @@ app.get('/', (req, res) => {
 app.use('/room', roomRouter);
 app.use('/audio', audioRouter);
 app.use('/upload', uploadRouter);
+app.use('/download', downloadRouter);
 
 app.use(express.static(path.join(__dirname, 'videos')));
 
