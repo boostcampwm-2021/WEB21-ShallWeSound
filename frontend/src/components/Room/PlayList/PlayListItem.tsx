@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSocket } from '../../../context/MyContext';
 
 type Props = {
   title: string;
@@ -13,8 +14,14 @@ type TextProps = {
 };
 
 const PlayListItem = ({ title, singer }: Props) => {
+  const socket: any = useSocket();
+
+  const clickPlay = () => {
+    socket.emit('clickAndPlayMusic', title);
+  };
+
   return (
-    <Item>
+    <Item onClick={clickPlay}>
       <Wrapper>
         <Text color="#ffffff" weight="500" size="20px">
           {title}
