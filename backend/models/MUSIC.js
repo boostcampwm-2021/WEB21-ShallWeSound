@@ -24,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     path: {
-      type: DataTypes.STRING(200),
+      type: DataTypes.STRING(500),
       allowNull: false
     },
     content_hash: {
