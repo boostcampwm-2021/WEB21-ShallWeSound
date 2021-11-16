@@ -12,6 +12,7 @@ type FileType={
   singer: string,
   descript: string,
   musicFile: FileList|null,
-  thumbnailFile: FileList|null
+  thumbnailFile: FileList|null,
+  dragging: boolean
 }
 export type { Music, FileType };

@@ -1,17 +1,19 @@
 import styles from '../../stylesheets/style.module.scss';
-import { useState, useCallback} from 'react';
+import React, { useState, useCallback} from 'react';
 import {useDropzone} from 'react-dropzone'
 import * as _ from 'lodash';
 import {FileType} from '../../types'
 
 function UploadModalInner() {
+
   const [uploadedFile, setUploadedFile] = useState<FileType>({
     musicName:'파일선택',
     thumbnailName: '파일선택',
     singer:'',
     descript:'',
     musicFile:null,
-    thumbnailFile:null
+    thumbnailFile:null,
+    dragging: false
   });
 
   const isFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,6 +72,63 @@ function UploadModalInner() {
     setUploadedFile(curObj);
   };
 
+  const fileDropHandler = (e: React.DragEvent<HTMLDivElement>)=>{
+    console.log(e.dataTransfer.files[0]);
+  }
+  let dragEventCounter = 0;
+  const dragenterListener = (event: React.DragEvent<HTMLDivElement>) => {
+    overrideEventDefaults(event);
+    dragEventCounter++;
+    if (event.dataTransfer.items && event.dataTransfer.items[0]) {
+      const curObj = _.cloneDeep(uploadedFile);
+      curObj.dragging = true;
+      setUploadedFile(curObj);
+    } else if (
+      event.dataTransfer.types &&
+      event.dataTransfer.types[0] === "Files"
+    ) {
+      // This block handles support for IE - if you're not worried about
+      // that, you can omit this
+      const curObj = _.cloneDeep(uploadedFile);
+      curObj.dragging = true;
+      setUploadedFile(curObj);
+    }
+  };
+
+  const dragleaveListener = (event: React.DragEvent<HTMLDivElement>) => {
+    overrideEventDefaults(event);
+    dragEventCounter--;
+
+    if (dragEventCounter === 0) {
+      const curObj = _.cloneDeep(uploadedFile);
+      curObj.dragging = false;
+      setUploadedFile(curObj);
+    }
+  };
+
+  const dropListener = (event: React.DragEvent<HTMLDivElement>) => {
+    overrideEventDefaults(event);
+    dragEventCounter = 0;
+    const curObj = _.cloneDeep(uploadedFile);
+    curObj.dragging = false;
+    console.log(event.dataTransfer.files[0].type)
+    if (event.dataTransfer.files && event.dataTransfer.files[0]) {
+      if(event.dataTransfer.files[0].type == 'image/jpeg'){
+        curObj.thumbnailFile = event.dataTransfer.files;
+        curObj.thumbnailName = event.dataTransfer.files[0].name;
+      }else{
+        curObj.musicFile = event.dataTransfer.files;
+        curObj.musicName = event.dataTransfer.files[0].name;
+      }
+    }
+    setUploadedFile(curObj);
+  };
+
+  const overrideEventDefaults = (event: Event | React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
   return (
     <div className={styles.UploadModalInner}>
       <div className={styles.uploadForm}>
@@ -93,7 +152,15 @@ function UploadModalInner() {
           />
         </div>
         {/* {...getRootProps({onDrop: event => event.stopPropagation()})} */}
-        <div className={styles.musicForm}>
+        <div className={styles.musicForm}
+        onDrag={overrideEventDefaults}
+        onDragStart={overrideEventDefaults}
+        onDragEnd={overrideEventDefaults}
+        onDragOver={overrideEventDefaults}
+        onDragEnter={dragenterListener}
+        onDragLeave={dragleaveListener}
+        onDrop={dropListener}
+        >
           <div className={styles.title}>음악파일</div>
           <input
             className={styles.musicName}
@@ -104,6 +171,7 @@ function UploadModalInner() {
           
           <label htmlFor="musicFile">첨부</label>
           <input
+            {...uploadedFile.musicFile}
             className={styles.input}
             id="musicFile"
             type="file"
@@ -111,7 +179,15 @@ function UploadModalInner() {
             onChange={isFileUpload}
           />
         </div>
-        <div className={styles.thumbnailForm}>
+        <div className={styles.thumbnailForm}
+        onDrag={overrideEventDefaults}
+        onDragStart={overrideEventDefaults}
+        onDragEnd={overrideEventDefaults}
+        onDragOver={overrideEventDefaults}
+        onDragEnter={dragenterListener}
+        onDragLeave={dragleaveListener}
+        onDrop={dropListener}
+        >
           <div className={styles.title}>썸네일 이미지</div>
           <input
             className={styles.thumbnailName}
@@ -121,6 +197,7 @@ function UploadModalInner() {
           />
           <label htmlFor="thumbnailFile">첨부</label>
           <input
+            {...uploadedFile.thumbnailFile}
             className={styles.input}
             id="thumbnailFile"
             type="file"
