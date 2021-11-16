@@ -1,6 +1,5 @@
 import styles from '../../stylesheets/style.module.scss';
-import React, { useState, useCallback} from 'react';
-import {useDropzone} from 'react-dropzone'
+import React, { useState} from 'react';
 import * as _ from 'lodash';
 import {FileType} from '../../types'
 
