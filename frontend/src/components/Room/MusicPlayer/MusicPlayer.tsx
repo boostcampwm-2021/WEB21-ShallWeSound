@@ -12,8 +12,9 @@ interface musicInfo {
   src: string;
 }
 
-function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
+function MusicPlayer() {
   const musicControl = useRef<HTMLVideoElement | null>(null);
+  const [musicList, setMusicList] = useState<musicInfo[] | null>(null);
   const [musicIndex, setmusicIndex] = useState(0);
   const [musicInfo, setMusicInfo] = useState<musicInfo>();
   const [progressWidth, setProgressWidth] = useState(0);
@@ -24,8 +25,7 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   useEffect(() => {
     socket.on('requestTime', (data: string) => {
       console.log('방장이다.');
-      console.log(musicInfo);
-      socket.emit('responseTime', musicControl.current?.currentTime, musicInfo);
+      socket.emit('responseTime', musicControl.current?.currentTime);
     });
 
     socket.on('sync', (data: string) => {
