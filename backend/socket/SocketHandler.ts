@@ -32,6 +32,7 @@ const socketHandler = (io: Server) => {
     socket.on('responseTime', (data: number) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       socket.broadcast.to(targetRoom.name).emit('sync', data);
+      namespace.to(targetRoom.name).emit('changeMusicInfo', targetRoom.playList.getPlayList().filter(music => music.isPlayed === true)[0]);
     });
 
     socket.on('pause', (data: string) => {
@@ -55,12 +56,12 @@ const socketHandler = (io: Server) => {
       namespace.to(socket.id).emit('responsePlayList', res);
     });
 
-    socket.on('nextMusicReq', ({ src }) => {
+    socket.on('nextMusicReq', () => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       if (socket.id !== targetRoom?.socketId[0]) return;
-
-      // namespace.to(socket.id).emit('nextMusicRes', PlayList.getNextMusic());
-      socket.to(targetRoom.name).emit('clientPlay', src);
+      // next Music Response
+      namespace.to(targetRoom.name).emit('changeMusicInfo', targetRoom.playList.getNextMusic());
+      // socket.to(targetRoom.name).emit('clientPlay', src);
     });
 
     socket.on('currentMusicReq', () => {
@@ -77,9 +78,12 @@ const socketHandler = (io: Server) => {
       if (!targetRoom) return;
       const musics: Music[] = await musicService.findMusicsBy(MIDS);
       targetRoom.playList.addMusics(musics);
+      if (targetRoom.playList.getPlayList().length === musics.length) {
+        targetRoom.playList.getPlayList()[0].isPlayed = true;
+        namespace.to(targetRoom.name).emit('changeMusicInfo', targetRoom.playList.getPlayList()[0]);
+      }
       const res = targetRoom?.playList.getPlayList();
       namespace.to(targetRoom.name).emit('responsePlayList', res);
-      namespace.to(targetRoom.name).emit('check', res);
     });
 
     socket.on('createRoom', data => {
