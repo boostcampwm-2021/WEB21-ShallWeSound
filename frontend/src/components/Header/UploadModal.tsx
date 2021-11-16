@@ -13,7 +13,6 @@ function UploadModalInner() {
     descript:'',
     musicFile:null,
     thumbnailFile:null,
-    dragging: false
   });
 
   const isFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,8 +52,8 @@ function UploadModalInner() {
     curObj.thumbnailName='파일선택';
     curObj.musicFile=null;
     curObj.thumbnailFile=null;
-    curObj.singer='reset';
-    curObj.descript='reset';
+    curObj.singer='';
+    curObj.descript='';
     return curObj;
   }
 
@@ -72,46 +71,9 @@ function UploadModalInner() {
     setUploadedFile(curObj);
   };
 
-  const fileDropHandler = (e: React.DragEvent<HTMLDivElement>)=>{
-    console.log(e.dataTransfer.files[0]);
-  }
-  let dragEventCounter = 0;
-  const dragenterListener = (event: React.DragEvent<HTMLDivElement>) => {
-    overrideEventDefaults(event);
-    dragEventCounter++;
-    if (event.dataTransfer.items && event.dataTransfer.items[0]) {
-      const curObj = _.cloneDeep(uploadedFile);
-      curObj.dragging = true;
-      setUploadedFile(curObj);
-    } else if (
-      event.dataTransfer.types &&
-      event.dataTransfer.types[0] === "Files"
-    ) {
-      // This block handles support for IE - if you're not worried about
-      // that, you can omit this
-      const curObj = _.cloneDeep(uploadedFile);
-      curObj.dragging = true;
-      setUploadedFile(curObj);
-    }
-  };
-
-  const dragleaveListener = (event: React.DragEvent<HTMLDivElement>) => {
-    overrideEventDefaults(event);
-    dragEventCounter--;
-
-    if (dragEventCounter === 0) {
-      const curObj = _.cloneDeep(uploadedFile);
-      curObj.dragging = false;
-      setUploadedFile(curObj);
-    }
-  };
-
   const dropListener = (event: React.DragEvent<HTMLDivElement>) => {
     overrideEventDefaults(event);
-    dragEventCounter = 0;
     const curObj = _.cloneDeep(uploadedFile);
-    curObj.dragging = false;
-    console.log(event.dataTransfer.files[0].type)
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
       if(event.dataTransfer.files[0].type == 'image/jpeg'){
         curObj.thumbnailFile = event.dataTransfer.files;
@@ -157,8 +119,8 @@ function UploadModalInner() {
         onDragStart={overrideEventDefaults}
         onDragEnd={overrideEventDefaults}
         onDragOver={overrideEventDefaults}
-        onDragEnter={dragenterListener}
-        onDragLeave={dragleaveListener}
+        onDragEnter={overrideEventDefaults}
+        onDragLeave={overrideEventDefaults}
         onDrop={dropListener}
         >
           <div className={styles.title}>음악파일</div>
@@ -184,8 +146,8 @@ function UploadModalInner() {
         onDragStart={overrideEventDefaults}
         onDragEnd={overrideEventDefaults}
         onDragOver={overrideEventDefaults}
-        onDragEnter={dragenterListener}
-        onDragLeave={dragleaveListener}
+        onDragEnter={overrideEventDefaults}
+        onDragLeave={overrideEventDefaults}
         onDrop={dropListener}
         >
           <div className={styles.title}>썸네일 이미지</div>
