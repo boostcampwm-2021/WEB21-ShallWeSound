@@ -52,7 +52,9 @@ export const uploadLogic = async (bucket_name:string,
                 content_hash:contentHash});
             await uploadToStorage(S3, object_name, bucket_name, files, contentHash, thumbnailName);
             const path = makeSignedURL(S3, contentHash, object_name);
-            await queryReuslt.update({path:path});
+            const thumbnailPath = makeSignedURL(S3, contentHash, thumbnailName);
+            await queryReuslt.update({path:path, thumbnail:thumbnailPath});
+
         }catch(e){
             console.log(e);
         }

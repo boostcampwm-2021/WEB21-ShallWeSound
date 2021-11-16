@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     thumbnail: {
-      type: DataTypes.STRING(200),
+      type: DataTypes.STRING(500),
       allowNull: true
     },
     path: {

@@ -1,5 +1,6 @@
 import styles from '../../stylesheets/style.module.scss';
-import { useState } from 'react';
+import { useState, useCallback} from 'react';
+import {useDropzone} from 'react-dropzone'
 import * as _ from 'lodash';
 import {FileType} from '../../types'
 
@@ -50,20 +51,22 @@ function UploadModalInner() {
     curObj.thumbnailName='파일선택';
     curObj.musicFile=null;
     curObj.thumbnailFile=null;
-    curObj.singer='';
-    curObj.descript='';
+    curObj.singer='reset';
+    curObj.descript='reset';
     return curObj;
   }
 
   const writeSingerName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const curObj = _.cloneDeep(uploadedFile);
     curObj.singer=e.target.value;
+    console.log(curObj)
     setUploadedFile(curObj);
   };
 
   const writeDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const curObj = _.cloneDeep(uploadedFile);
     curObj.descript=e.target.value;
+    console.log(curObj)
     setUploadedFile(curObj);
   };
 
@@ -89,6 +92,7 @@ function UploadModalInner() {
             onChange={writeDescription}
           />
         </div>
+        {/* {...getRootProps({onDrop: event => event.stopPropagation()})} */}
         <div className={styles.musicForm}>
           <div className={styles.title}>음악파일</div>
           <input
@@ -97,6 +101,7 @@ function UploadModalInner() {
             placeholder="음악파일"
             disabled={true}
           />
+          
           <label htmlFor="musicFile">첨부</label>
           <input
             className={styles.input}

@@ -12,7 +12,7 @@ export const S3 = new AWS.S3({
 });
 
 export const makeSignedURL = (S3:AWS.S3, contentHash:String, musicName:String):string =>{
-    const params = {Bucket: 'sws', Key: `${contentHash}/${musicName}`};
+    const params = {Bucket: 'sws', Key: `${contentHash}/${musicName}`, Expires: 5000000};
     const url = S3.getSignedUrl('getObject', params);
     return url;
 }
