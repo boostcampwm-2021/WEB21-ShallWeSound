@@ -2,10 +2,12 @@ import { PlayList } from '../socket/music';
 
 type Music = {
   MID: number;
-  title: string;
-  src: string;
-  isPlayed: boolean;
+  name: string;
   singer: string;
+  description: string;
+  thumbnail: string;
+  path: string;
+  isPlayed: boolean;
 };
 
 type socketInfo = {

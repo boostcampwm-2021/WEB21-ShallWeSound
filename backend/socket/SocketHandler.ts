@@ -29,7 +29,7 @@ const socketHandler = (io: Server) => {
         socket.to(targetRoom.name).emit('chatMessage', { id: userHash[socket.id], msg: message });
     });
 
-    socket.on('responseTime', (data: string) => {
+    socket.on('responseTime', (data: number) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       socket.broadcast.to(targetRoom.name).emit('sync', data);
     });
