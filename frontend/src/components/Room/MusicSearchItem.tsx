@@ -9,9 +9,8 @@ interface Props {
   selected: boolean;
 }
 
-const [detail, setDetail] = useState(false);
 const MusicSearchItem = ({ name, singer, thumbnail, description, selected }: Props) => {
-
+  const [detail, setDetail] = useState(false);
   const onDetail = () => {
     setDetail(true);
   };

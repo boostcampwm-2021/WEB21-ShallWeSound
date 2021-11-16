@@ -4,7 +4,6 @@ import '../../../stylesheets/MusicPlayer.scss';
 import Title from './Title';
 import ThumbnailPlayer from './ThumbnailPlayer';
 
-
 interface musicInfo {
   name: string;
   singer: string;
@@ -14,14 +13,14 @@ interface musicInfo {
 
 function MusicPlayer() {
   const musicControl = useRef<HTMLVideoElement | null>(null);
-  const [musicList, setMusicList] = useState<musicInfo[] | null>(null);
+  const [musicList, setMusicList] = useState<musicInfo[] | any>(null);
   const [musicIndex, setmusicIndex] = useState(0);
   const [musicInfo, setMusicInfo] = useState<musicInfo>();
   const [progressWidth, setProgressWidth] = useState(0);
   const [backupMusicVolume, setBackupMusicVolume] = useState(0);
   const [progressVolumeWidth, setProgressVolumeWidth] = useState(100);
   const socket: any = useSocket();
-
+  const [test, setTest] = useState({ path: '', thumbnail: '' });
   useEffect(() => {
     socket.on('requestTime', (data: string) => {
       console.log('방장이다.');
@@ -32,6 +31,11 @@ function MusicPlayer() {
       if (musicControl.current) {
         musicControl.current.currentTime = parseInt(data);
       }
+    });
+
+    socket.on('check', (data: any) => {
+      console.log(data);
+      setTest({ path: data[0].path, thumbnail: data[0].thumbnail });
     });
 
     socket.on('clientPause', (data: string) => {
@@ -63,27 +67,27 @@ function MusicPlayer() {
     setmusicIndex((musicIndex + 1) % musicList.length);
   }
 
-  useEffect(() => {
-    setMusicInfo({
-      ...musicInfo,
-      name: musicList[musicIndex].name,
-      singer: musicList[musicIndex].singer,
-      thumbnail: musicList[musicIndex].thumbnail,
-      src: musicList[musicIndex].src,
-    });
-    socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
-  }, []);
+  // useEffect(() => {
+  //   setMusicInfo({
+  //     ...musicInfo,
+  //     name: musicList[musicIndex].name,
+  //     singer: musicList[musicIndex].singer,
+  //     thumbnail: musicList[musicIndex].thumbnail,
+  //     src: musicList[musicIndex].src,
+  //   });
+  //   socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
+  // }, []);
 
-  useEffect(() => {
-    setMusicInfo({
-      ...musicInfo,
-      name: musicList[musicIndex].name,
-      singer: musicList[musicIndex].singer,
-      thumbnail: musicList[musicIndex].thumbnail,
-      src: musicList[musicIndex].src,
-    });
-    socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
-  }, [musicIndex]);
+  // useEffect(() => {
+  //   setMusicInfo({
+  //     ...musicInfo,
+  //     name: musicList[musicIndex].name,
+  //     singer: musicList[musicIndex].singer,
+  //     thumbnail: musicList[musicIndex].thumbnail,
+  //     src: musicList[musicIndex].src,
+  //   });
+  //   socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
+  // }, [musicIndex]);
 
   useEffect(() => {
     if (musicControl.current?.paused && musicInfo?.src && musicControl.current) {
@@ -106,8 +110,7 @@ function MusicPlayer() {
       playingMusic.onplay = () => {
         socket.emit('play', '사작하시오');
       };
-    }
-    else if (playingMusic?.paused === false) {
+    } else if (playingMusic?.paused === false) {
       playingMusic.pause();
       playingMusic.onpause = () => {
         socket.emit('pause', '멈추시오');
@@ -182,7 +185,7 @@ function MusicPlayer() {
       <div className="musicplayer">
         <video
           id="video"
-          src={musicInfo?.src}
+          src={test.path}
           muted
           autoPlay
           ref={musicControl}
@@ -192,24 +195,14 @@ function MusicPlayer() {
         ></video>
         <Title name={musicInfo?.name} singer={musicInfo?.singer} />
         <div className="musicplayer-body">
-          <img
-            className="icon"
-            src="/icons/chevron-left.svg"
-            alt="chevron-left"
-            onClick={goPrevMusic}
-          />
+          <img className="icon" src="/icons/chevron-left.svg" alt="chevron-left" onClick={goPrevMusic} />
           <ThumbnailPlayer
             name={musicInfo?.name}
-            thumbnail={musicInfo?.thumbnail}
+            thumbnail={test.thumbnail}
             musicControl={musicControl}
             onClick={playOrPauseMusic}
           />
-          <img
-            className="icon"
-            src="/icons/chevron-right.svg"
-            alt="chevron-right"
-            onClick={goNextMusic}
-          />
+          <img className="icon" src="/icons/chevron-right.svg" alt="chevron-right" onClick={goNextMusic} />
         </div>
         <div className="musicplayer-timer">
           <span className="current-time">{changeFormatToTime(musicControl.current?.currentTime || 0)}</span>
@@ -221,19 +214,9 @@ function MusicPlayer() {
         <div className="serveral-icons">
           <div className="volume-wrap width-half">
             {musicControl.current?.volume === 0 ? (
-              <img
-                className="icon"
-                src="/icons/volume-off.svg"
-                alt="volume-off"
-                onClick={toggleVolume}
-              />
+              <img className="icon" src="/icons/volume-off.svg" alt="volume-off" onClick={toggleVolume} />
             ) : (
-              <img
-                className="icon"
-                src="/icons/volume-up.svg"
-                alt="volume-up"
-                onClick={toggleVolume}
-              />
+              <img className="icon" src="/icons/volume-up.svg" alt="volume-up" onClick={toggleVolume} />
             )}
             <div className="progress-wrap width-half">
               <div className="progress" onClick={mousePositionRelativeToVolumeProgressBar}>
@@ -241,7 +224,7 @@ function MusicPlayer() {
               </div>
             </div>
           </div>
-          <input type="range" min="0"/>
+          <input type="range" min="0" />
           <div className="icons-wrap">
             <img className="icon" src="/icons/thumbs-up.svg" alt="thumbs-up" />
             <img className="icon" src="/icons/playlist-add.svg" alt="playlist-add" />
