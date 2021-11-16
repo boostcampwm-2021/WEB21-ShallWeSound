@@ -49,9 +49,10 @@ const socketHandler = (io: Server) => {
       if (targetRoom !== undefined) socket.to(targetRoom.name).emit('clientMoving', data);
     });
 
-    socket.on('requestPlayList', page => {
+
+    socket.on('requestPlayList', () => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
-      const res = targetRoom?.playList.getPlayListByPage(page);
+      const res = targetRoom?.playList.getPlayList() ?? [];
       namespace.to(socket.id).emit('responsePlayList', res);
     });
 
@@ -73,9 +74,12 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('addMusicInPlayListReq', async (MIDS: number[]) => {
-      const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
+     const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
+      if (!targetRoom) return;
       const musics: Music[] = await musicService.findMusicsBy(MIDS);
-      targetRoom?.playList.addMusics(musics);
+      targetRoom.playList.addMusics(musics);
+      const res = targetRoom?.playList.getPlayList();
+      namespace.to(targetRoom.name).emit('responsePlayList', res);
     });
 
     socket.on('createRoom', data => {
