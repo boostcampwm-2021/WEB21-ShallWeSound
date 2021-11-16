@@ -73,6 +73,14 @@ export const MainPage = ({ history }: { history: any }) => {
   }
 
   function createRoom() {
+    if (
+      dialogInput.name.split('').every(val => val === ' ') ||
+      dialogInput.description.split('').every(val => val === ' ')
+    ) {
+      alert('공백만 입력할 수 없습니다. 다시 입력해주세요');
+      return;
+    }
+
     if (dialogInput.name && dialogInput.description) {
       socket.emit('createRoom', {
         id: nextRoomIndex,
@@ -81,7 +89,7 @@ export const MainPage = ({ history }: { history: any }) => {
       });
       history.push('/room');
     } else {
-      console.log('입력 칸이 비어있습니다');
+      alert('입력칸을 다 채워주세요');
     }
   }
 
@@ -120,19 +128,27 @@ export const MainPage = ({ history }: { history: any }) => {
               />
             </form>
             <div className="button-wrap">
-              <button className="button" onClick={createRoom}>생성</button>
-              <button className="button" onClick={toggleCreateRoomDialog}>취소</button>
+              <button className="button" onClick={createRoom}>
+                생성
+              </button>
+              <button className="button" onClick={toggleCreateRoomDialog}>
+                취소
+              </button>
             </div>
           </div>
         </div>
       )}
       <div className="main-wrap">
         <div className={'roomList'}>
-          {roomList.length
-            ? roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)
-            : <p className="room-empty-notice">열려 있는 방이 존재하지 않습니다!</p>}
+          {roomList.length ? (
+            roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)
+          ) : (
+            <p className="room-empty-notice">열려 있는 방이 존재하지 않습니다!</p>
+          )}
         </div>
-        <button className="button" onClick={toggleCreateRoomDialog}>방 추가</button>
+        <button className="button" onClick={toggleCreateRoomDialog}>
+          방 추가
+        </button>
       </div>
     </div>
   );

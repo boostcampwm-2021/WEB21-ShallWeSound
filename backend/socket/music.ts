@@ -1,10 +1,9 @@
 import type { Music } from '../types';
 
 export class PlayList {
-  playlist: Music[];
+  playlist: Music[] = [];
 
   constructor() {
-    this.playlist = [];
   }
   getPlayList(): Music[] {
     return this.playlist;

@@ -13,6 +13,7 @@ const PlayList = () => {
   const [playList, setPlayList] = useState<Music[]>([]);
 
   useEffect(() => {
+    
     socket.on('responsePlayList', (data: Music[]) => {
       setPlayList([...data]);
     });

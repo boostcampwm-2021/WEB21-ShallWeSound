@@ -9,10 +9,11 @@ import { useSocket } from '../../context/MyContext';
 interface Music {
   MID: number;
   name: string;
-  thumnail: string;
   singer: string;
   description: string;
+  thumbnail: string;
   path: string;
+  isPlayed: boolean;
 }
 
 interface State {
@@ -106,7 +107,7 @@ const MusicSearch = () => {
               <MusicSearchItem
                 name={k.name}
                 singer={k.singer}
-                thumnail={k.thumnail}
+                thumbnail={k.thumbnail}
                 description={k.description}
                 selected={isSelected(+k.MID)}
               />
