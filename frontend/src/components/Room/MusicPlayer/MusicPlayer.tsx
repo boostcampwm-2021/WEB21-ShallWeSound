@@ -1,57 +1,9 @@
-import React, { useState, useEffect, useRef, MouseEventHandler, RefObject } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSocket } from '../../../context/MyContext';
 import '../../../stylesheets/MusicPlayer.scss';
+import Title from './Title';
+import ThumbnailPlayer from './ThumbnailPlayer';
 
-function Title({ name, singer }: { name: string | undefined; singer: string | undefined }) {
-  return (
-    <div className="musicplayer-title-area">
-      <span className="musicplayer-title">{name}</span>
-      <span className="musicplayer-subtitle">{singer}</span>
-    </div>
-  );
-}
-
-function MusicThumbnail({
-  name,
-  thumbnail,
-  musicControl,
-  onClick,
-}: {
-  name: string | undefined;
-  thumbnail: string | undefined;
-  musicControl: React.MutableRefObject<HTMLVideoElement | null>;
-  onClick: MouseEventHandler;
-}) {
-  const [isHover, setIsHover] = useState(false);
-  function onMouseEnter() {
-    setIsHover(true);
-  }
-  function onMouseLeave() {
-    setIsHover(false);
-  }
-
-  return (
-    <div className="musicplayer-cover" onClick={onClick}>
-      <div className="cover-hover" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-        {thumbnail ? (
-          <img src={thumbnail} alt={name} />
-        ) : (
-          <img className="no-thumbnail" src="/icons/music-note.svg" alt="no-thumbnail" />
-        )}
-        {isHover && (
-          <>
-            <div className="only-hover"></div>
-            {musicControl.current?.paused ? (
-              <img className="icon" src="/icons/play.svg" alt="play" />
-              ) : (
-              <img className="icon" src="/icons/pause.svg" alt="pause" />
-            )}
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
 
 interface musicInfo {
   name: string;
@@ -119,7 +71,6 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
       thumbnail: musicList[musicIndex].thumbnail,
       src: musicList[musicIndex].src,
     });
-    console.log(musicInfo);
     socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
   }, []);
 
@@ -247,7 +198,7 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
             alt="chevron-left"
             onClick={goPrevMusic}
           />
-          <MusicThumbnail
+          <ThumbnailPlayer
             name={musicInfo?.name}
             thumbnail={musicInfo?.thumbnail}
             musicControl={musicControl}
@@ -290,6 +241,7 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
               </div>
             </div>
           </div>
+          <input type="range" min="0"/>
           <div className="icons-wrap">
             <img className="icon" src="/icons/thumbs-up.svg" alt="thumbs-up" />
             <img className="icon" src="/icons/playlist-add.svg" alt="playlist-add" />
