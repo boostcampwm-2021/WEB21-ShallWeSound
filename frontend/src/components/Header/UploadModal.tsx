@@ -1,54 +1,75 @@
 import styles from '../../stylesheets/style.module.scss';
-import { useState } from 'react';
+import { useState, useCallback} from 'react';
+import {useDropzone} from 'react-dropzone'
+import * as _ from 'lodash';
+import {FileType} from '../../types'
 
 function UploadModalInner() {
-  const [musicName, setMusicName] = useState<string>('파일선택');
-  const [thumbnailName, setThumbnailName] = useState<string>('파일선택');
-  const [singer, setSinger] = useState<string>();
-  const [descript, setDescript] = useState<string>();
-  const [musicFile, setMusicFile] = useState<FileList>();
-  const [thumbnailFile, setThumbnailFile] = useState<FileList>();
+  const [uploadedFile, setUploadedFile] = useState<FileType>({
+    musicName:'파일선택',
+    thumbnailName: '파일선택',
+    singer:'',
+    descript:'',
+    musicFile:null,
+    thumbnailFile:null
+  });
+
   const isFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e);
-    setMusicFile(undefined);
-    setMusicFile(e.target.files!);
-    setMusicName(e.target.files![0].name);
+    const curObj = _.cloneDeep(uploadedFile);
+    curObj.musicFile = e.target.files!;
+    curObj.musicName = e.target.files![0].name;
+    setUploadedFile(curObj);
   };
+
   const isThumbUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e);
-    setThumbnailFile(undefined);
-    setThumbnailFile(e.target.files!);
-    setThumbnailName(e.target.files![0].name);
+    const curObj = _.cloneDeep(uploadedFile);
+    curObj.thumbnailFile = e.target.files!;
+    curObj.thumbnailName = e.target.files![0].name;
+    setUploadedFile(curObj);
   };
-  const fileUploadMethod = () => {
+
+  const fileUploadMethod = async () => {
     const formData = new FormData();
-    Object.values(musicFile!).forEach(el => {
+    Object.values(uploadedFile.musicFile!).forEach(el => {
       formData.append('userFile1', el);
     });
-    Object.values(thumbnailFile!).forEach(el => {
+    Object.values(uploadedFile.thumbnailFile!).forEach(el => {
       formData.append('userFile2', el);
     });
-    formData.append('singer', singer!);
-    formData.append('description', descript!);
-    fetch('/upload', {
+    formData.append('singer', uploadedFile.singer!);
+    formData.append('description', uploadedFile.descript!);
+    await fetch('/upload', {
       method: 'POST',
       body: formData,
-    }).then(res => {
-      console.log(res);
-      setMusicName('파일선택');
-      setThumbnailName('파일선택');
-      setMusicFile(undefined);
-      setThumbnailFile(undefined);
-      setSinger('');
-      setDescript('');
     });
+    const curObj = resetFileState(_.cloneDeep(uploadedFile));
+    setUploadedFile(curObj);
   };
+
+  const resetFileState = (curObj:FileType):FileType => {
+    curObj.musicName='파일선택';
+    curObj.thumbnailName='파일선택';
+    curObj.musicFile=null;
+    curObj.thumbnailFile=null;
+    curObj.singer='reset';
+    curObj.descript='reset';
+    return curObj;
+  }
+
   const writeSingerName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSinger(e.target.value);
+    const curObj = _.cloneDeep(uploadedFile);
+    curObj.singer=e.target.value;
+    console.log(curObj)
+    setUploadedFile(curObj);
   };
+
   const writeDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescript(e.target.value);
+    const curObj = _.cloneDeep(uploadedFile);
+    curObj.descript=e.target.value;
+    console.log(curObj)
+    setUploadedFile(curObj);
   };
+
   return (
     <div className={styles.UploadModalInner}>
       <div className={styles.uploadForm}>
@@ -56,7 +77,7 @@ function UploadModalInner() {
           <div className={styles.title}>아티스트</div>
           <input
             className={styles.singer}
-            value={singer}
+            value={uploadedFile.singer}
             type="text"
             placeholder="아티스트 이름"
             onChange={writeSingerName}
@@ -66,19 +87,21 @@ function UploadModalInner() {
           <div className={styles.title}>곡 설명</div>
           <textarea
             className={styles.descript}
-            value={descript}
+            value={uploadedFile.descript}
             placeholder="곡 설명을 입력하세요"
             onChange={writeDescription}
           />
         </div>
+        {/* {...getRootProps({onDrop: event => event.stopPropagation()})} */}
         <div className={styles.musicForm}>
           <div className={styles.title}>음악파일</div>
           <input
             className={styles.musicName}
-            value={musicName}
+            value={uploadedFile.musicName}
             placeholder="음악파일"
             disabled={true}
           />
+          
           <label htmlFor="musicFile">첨부</label>
           <input
             className={styles.input}
@@ -92,7 +115,7 @@ function UploadModalInner() {
           <div className={styles.title}>썸네일 이미지</div>
           <input
             className={styles.thumbnailName}
-            value={thumbnailName}
+            value={uploadedFile.thumbnailName}
             placeholder="썸네일"
             disabled={true}
           />
@@ -113,11 +136,14 @@ function UploadModalInner() {
     </div>
   );
 }
+
 function UploadModal() {
   const [isModalVisible, setVisible] = useState<boolean>(false);
+
   const modalVisibleChange = () => {
     setVisible(!isModalVisible);
   };
+
   return (
     <div className={styles.modalContainer}>
       <button className={styles.headerUploadButton} onClick={modalVisibleChange}>

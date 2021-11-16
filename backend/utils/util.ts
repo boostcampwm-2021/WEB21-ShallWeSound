@@ -2,6 +2,11 @@ import { Socket } from 'socket.io';
 import { socketInfo } from '../types';
 import { PlayList } from '../socket/music';
 import { Server } from 'http';
+import crypto from 'crypto';
+
+export function makeHash(fileBuffer:string):string{
+  return crypto.createHash('sha512').update(fileBuffer + `${process.env.SALT}`).digest('hex');
+}
 
 export const utils = {
   findRoom: function (socketData: socketInfo[], socketID: string) {
