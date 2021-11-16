@@ -1,4 +1,4 @@
-function Title({ name, singer }: { name: string | undefined; singer: string | undefined }) {
+function Title({ name = "Title", singer = "Singer" }: { name: string | undefined; singer: string | undefined }) {
   return (
     <div className="musicplayer-title-area">
       <span className="musicplayer-title">{name}</span>

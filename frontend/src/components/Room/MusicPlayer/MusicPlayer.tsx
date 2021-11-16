@@ -4,38 +4,45 @@ import '../../../stylesheets/MusicPlayer.scss';
 import Title from './Title';
 import ThumbnailPlayer from './ThumbnailPlayer';
 
-interface musicInfo {
+interface music {
+  MID: number;
   name: string;
   singer: string;
+  description: string;
   thumbnail: string;
-  src: string;
+  path: string;
+  isPlayed: boolean;
 }
 
 function MusicPlayer() {
   const musicControl = useRef<HTMLVideoElement | null>(null);
-  const [musicList, setMusicList] = useState<musicInfo[] | any>(null);
-  const [musicIndex, setmusicIndex] = useState(0);
-  const [musicInfo, setMusicInfo] = useState<musicInfo>();
+  // const [musicList, setMusicList] = useState<music[] | any>(null);
+  // const [musicIndex, setmusicIndex] = useState(0);
+  const [musicInfo, setMusicInfo] = useState<music>();
   const [progressWidth, setProgressWidth] = useState(0);
   const [backupMusicVolume, setBackupMusicVolume] = useState(0);
   const [progressVolumeWidth, setProgressVolumeWidth] = useState(100);
   const socket: any = useSocket();
-  const [test, setTest] = useState({ path: '', thumbnail: '' });
+
   useEffect(() => {
-    socket.on('requestTime', (data: string) => {
+    socket.on('requestTime', () => {
       console.log('방장이다.');
       socket.emit('responseTime', musicControl.current?.currentTime);
     });
 
-    socket.on('sync', (data: string) => {
+    socket.on('sync', (data: number) => {
       if (musicControl.current) {
-        musicControl.current.currentTime = parseInt(data);
+        musicControl.current.currentTime = data;
       }
     });
 
-    socket.on('check', (data: any) => {
+    socket.on('changeMusicInfo', (data: music) => {
+      console.log("music Info changing");
       console.log(data);
-      setTest({ path: data[0].path, thumbnail: data[0].thumbnail });
+      setMusicInfo({
+        ...musicInfo,
+        ...data
+      })
     });
 
     socket.on('clientPause', (data: string) => {
@@ -60,11 +67,13 @@ function MusicPlayer() {
   }, []);
 
   function goPrevMusic() {
-    setmusicIndex((musicIndex - 1 + musicList.length) % musicList.length);
+    // setmusicIndex((musicIndex - 1 + musicList.length) % musicList.length);
   }
 
   function goNextMusic() {
-    setmusicIndex((musicIndex + 1) % musicList.length);
+    console.log("music ended");
+    socket.emit('nextMusicReq')
+    // setmusicIndex((musicIndex + 1) % musicList.length);
   }
 
   // useEffect(() => {
@@ -89,11 +98,11 @@ function MusicPlayer() {
   //   socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
   // }, [musicIndex]);
 
-  useEffect(() => {
-    if (musicControl.current?.paused && musicInfo?.src && musicControl.current) {
-      musicControl.current.play();
-    }
-  }, [musicControl]);
+  // useEffect(() => {
+  //   if (musicControl.current?.paused && musicInfo?.path && musicControl.current) {
+  //     musicControl.current.play();
+  //   }
+  // }, [musicControl]);
 
   function changeFormatToTime(number: number) {
     const minute = Math.floor(number / 60);
@@ -108,12 +117,12 @@ function MusicPlayer() {
     if (playingMusic?.paused) {
       playingMusic.play();
       playingMusic.onplay = () => {
-        socket.emit('play', '사작하시오');
+        socket.emit('play');
       };
     } else if (playingMusic?.paused === false) {
       playingMusic.pause();
       playingMusic.onpause = () => {
-        socket.emit('pause', '멈추시오');
+        socket.emit('pause');
       };
     }
   }
@@ -185,9 +194,9 @@ function MusicPlayer() {
       <div className="musicplayer">
         <video
           id="video"
-          src={test.path}
+          src={musicInfo?.path}
           muted
-          autoPlay
+          // autoPlay
           ref={musicControl}
           onTimeUpdate={updateCurrentTime}
           onLoadedMetadata={updateMusic}
@@ -198,7 +207,7 @@ function MusicPlayer() {
           <img className="icon" src="/icons/chevron-left.svg" alt="chevron-left" onClick={goPrevMusic} />
           <ThumbnailPlayer
             name={musicInfo?.name}
-            thumbnail={test.thumbnail}
+            thumbnail={musicInfo?.thumbnail}
             musicControl={musicControl}
             onClick={playOrPauseMusic}
           />
