@@ -33,9 +33,18 @@ export const MainPage = ({ history }: { history: any }) => {
       setRoomList(data.list);
     });
 
+    socket.on('destroy', () => {
+      fetch('http://localhost:3000/api/room/destroy', {
+        credentials: 'include',
+      })
+        .then(res => res.json())
+        .then(data => console.log(data));
+    });
+
     return () => {
       socket.off('joinRoomClient');
       socket.off('updateRoomList');
+      socket.off('destroy');
     };
   });
 
@@ -87,6 +96,15 @@ export const MainPage = ({ history }: { history: any }) => {
         name: dialogInput.name,
         description: dialogInput.description,
       });
+
+      fetch(`http://localhost:3000/api/room/entering?title=${dialogInput.name}`, {
+        credentials: 'include',
+      }) // session 쓸때 credentials : 'include' 설정해주기
+        .then(res => res.json())
+        .then(data => {
+          console.log(data.list);
+        });
+
       history.push('/room');
     } else {
       alert('입력칸을 다 채워주세요');
@@ -94,7 +112,9 @@ export const MainPage = ({ history }: { history: any }) => {
   }
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/room') // session 쓸때 credentials : 'include' 설정해주기
+    fetch('http://localhost:3000/api/room', {
+      credentials: 'include',
+    }) // session 쓸때 credentials : 'include' 설정해주기
       .then(res => res.json())
       .then(data => {
         console.log(data.list);
@@ -110,12 +130,7 @@ export const MainPage = ({ history }: { history: any }) => {
             <p>방 생성</p>
             <form className="input-wrap" action="submit">
               <label htmlFor="room-id">방 제목</label>
-              <input
-                type="text"
-                id="room-id"
-                placeholder="방 제목"
-                onChange={changeDialogRoomName}
-              />
+              <input type="text" id="room-id" placeholder="방 제목" onChange={changeDialogRoomName} />
               <label htmlFor="room-detail">방 설명</label>
               <textarea
                 name="text1"

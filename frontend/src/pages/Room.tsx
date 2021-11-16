@@ -11,7 +11,15 @@ const Room = () => {
 
   useEffect(() => {
     window.onpopstate = event => {
-      socket.emit('leaveRoom', 'data');
+      socket.emit('leaveRoom');
+    };
+
+    window.onload = event => {
+      fetch('http://localhost:3000/api/room/entered', {
+        credentials: 'include',
+      })
+        .then(res => res.json())
+        .then(data => console.log(data));
     };
 
     return () => {

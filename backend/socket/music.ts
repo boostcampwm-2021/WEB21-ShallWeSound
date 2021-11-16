@@ -3,8 +3,7 @@ import type { Music } from '../types';
 export class PlayList {
   playlist: Music[] = [];
 
-  constructor() {
-  }
+  constructor() {}
   getPlayList(): Music[] {
     return this.playlist;
   }
@@ -30,5 +29,14 @@ export class PlayList {
 
   addMusics(musics: Music[]): void {
     this.playlist.push(...musics);
+  }
+
+  getMusicByName(musicName: string) {
+    return this.playlist.find(val => val.name === musicName);
+  }
+
+  setIsPlayed(state: boolean, musicName: string) {
+    const music: Music = this.getMusicByName(musicName)!;
+    music.isPlayed = state;
   }
 }

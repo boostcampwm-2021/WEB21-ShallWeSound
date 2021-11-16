@@ -12,13 +12,10 @@ function Video() {
   }, []);
 
   useEffect(() => {
-    socket.on('nextMusicRes', (data: Music) => {
-      setMusic(data.src);
-    });
+    socket.on('nextMusicRes', (data: Music) => {});
 
     socket.on('currentMusicRes', (data: Music) => {
       console.log(data);
-      setMusic(data.src);
     });
 
     return () => {

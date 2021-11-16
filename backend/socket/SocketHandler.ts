@@ -32,7 +32,7 @@ const socketHandler = (io: Server) => {
     socket.on('responseTime', (data: number) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       socket.broadcast.to(targetRoom.name).emit('sync', data);
-      namespace.to(targetRoom.name).emit('changeMusicInfo', targetRoom.playList.getPlayList().filter(music => music.isPlayed === true)[0]);
+      namespace.to(targetRoom.name).emit('changeMusicInfo', targetRoom.playList.getCurrentMusic());
     });
 
     socket.on('pause', (data: string) => {
@@ -104,6 +104,15 @@ const socketHandler = (io: Server) => {
     socket.on('leaveRoom', data => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       utils.updateDisconnectData(targetRoom, socketData, socket);
+      namespace.to(socket.id).emit('destroy');
+    });
+
+    socket.on('clickAndPlayMusic', (clickedMusic: string) => {
+      const targetRoom = utils.findRoom(socketData, socket.id);
+      const targetPlayList = targetRoom.playList;
+      targetPlayList.setIsPlayed(false, targetPlayList.getCurrentMusic().name);
+      targetPlayList.setIsPlayed(true, clickedMusic);
+      namespace.to(targetRoom.name).emit('changeMusicInfo', targetPlayList.getMusicByName(clickedMusic));
     });
   });
 };
