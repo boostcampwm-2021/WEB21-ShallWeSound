@@ -1,8 +1,7 @@
 type Music = {
   MID: number;
   name: string;
-  path: string;
-  description: string;
+  src: string;
   isPlayed: boolean;
   singer: string;
   thumbnail: string;

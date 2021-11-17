@@ -31,7 +31,6 @@ const MusicSearch = () => {
   });
 
   const { result, selectedInResult } = searchResult;
-
   const fetchMusic = async () => {
     const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}&page=${page.current}`);
     const musics = await res.json();
@@ -92,7 +91,6 @@ const MusicSearch = () => {
     });
   };
 
-  console.log(keyword);
   return (
     <Layout>
       <SearchBar keyword={keyword} onKeywordChange={onKeywordChange} />

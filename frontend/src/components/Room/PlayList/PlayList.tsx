@@ -33,7 +33,7 @@ const PlayList = () => {
       <Title>P L A Y &nbsp; L I S T</Title>
       <PlayListWrapper>
         {playList.map((music: Music, i: number) => (
-          <PlayListItem key={i} title={music.name} singer={music.singer} />
+          <PlayListItem key={i} MID={music.MID} title={music.name} singer={music.singer} isPlayed={music.isPlayed} />
         ))}
       </PlayListWrapper>
       <ButtonWrapper>
