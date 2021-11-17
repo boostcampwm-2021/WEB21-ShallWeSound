@@ -17,8 +17,13 @@ const PlayList = () => {
       setPlayList([...data]);
     });
 
+    socket.on('changeMusicInfo', () => {
+      socket.emit('requestPlayList');
+    });
+
     return () => {
       socket.off('responsePlayList');
+      socket.off('changeMusicInfo');
     };
   }, [socket]);
 

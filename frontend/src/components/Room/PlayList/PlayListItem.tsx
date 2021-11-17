@@ -31,9 +31,9 @@ const PlayListItem = ({ MID, title, singer, isPlayed }: Props) => {
   };
 
   return (
-    <Item onMouseEnter={hoverHandler} onMouseLeave={hoverHandler} onClick={clickPlay}>
+    <Item isPlayed={isPlayed} onMouseEnter={hoverHandler} onMouseLeave={hoverHandler} onClick={clickPlay}>
       <Layout>
-        <TextWrapper isPlayed={isPlayed}>
+        <TextWrapper>
           <Text color="#ffffff" weight="500" size="18px">
             {title}
           </Text>
@@ -47,11 +47,12 @@ const PlayListItem = ({ MID, title, singer, isPlayed }: Props) => {
   );
 };
 
-const Item = styled.div`
+const Item = styled.div<{ isPlayed: boolean }>`
   height: 50px;
   margin: 0px 20px;
-  padding: 6px 0px;
+  padding: 4px 0px;
   line-height: 25px;
+  background: ${props => (props.isPlayed ? '#ffffff1a' : 'transparent')};
 
   &:not(:last-child) {
     border-bottom: 1px solid #ecdff5;
@@ -69,11 +70,10 @@ const Layout = styled.div`
   }
 `;
 
-const TextWrapper = styled.div<{ isPlayed: boolean }>`
+const TextWrapper = styled.div`
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
-  background: ${props => (props.isPlayed ? '#000000' : 'transparent')};
 `;
 
 const Text = styled.div<TextProps>`
