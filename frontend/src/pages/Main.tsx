@@ -33,20 +33,11 @@ export const MainPage = ({ history }: { history: any }) => {
       setRoomList(data.list);
     });
 
-    socket.on('destroy', () => {
-      fetch('http://localhost:3000/api/room/destroy', {
-        credentials: 'include',
-      })
-        .then(res => res.json())
-        .then(data => console.log(data));
-    });
-
     return () => {
       socket.off('joinRoomClient');
       socket.off('updateRoomList');
-      socket.off('destroy');
     };
-  });
+  }, []);
 
   function Room({ id, name, description }: { id: number; name: string; description: string }) {
     const joinRoom = (e: React.MouseEvent<HTMLElement>) => {
@@ -112,6 +103,17 @@ export const MainPage = ({ history }: { history: any }) => {
   }
 
   useEffect(() => {
+    fetch('http://localhost:3000/api/room/entered', {
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.test) {
+          socket.emit('joinRoom', data.roomTitle);
+          history.push('/room');
+        }
+      });
+
     fetch('http://localhost:3000/api/room', {
       credentials: 'include',
     }) // session 쓸때 credentials : 'include' 설정해주기

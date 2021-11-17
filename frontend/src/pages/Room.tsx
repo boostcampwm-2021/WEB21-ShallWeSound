@@ -19,8 +19,20 @@ const Room = () => {
         credentials: 'include',
       })
         .then(res => res.json())
-        .then(data => console.log(data));
+        .then(data => {
+          if (data.test) {
+            socket.emit('joinRoom', { id: 5, name: data.roomTitle, description: 'test' });
+          }
+        });
     };
+
+    socket.on('destroy', () => {
+      fetch('http://localhost:3000/api/room/destroy', {
+        credentials: 'include',
+      })
+        .then(res => res.json())
+        .then(data => console.log(data));
+    });
 
     return () => {
       socket.off('leaveRoom');
