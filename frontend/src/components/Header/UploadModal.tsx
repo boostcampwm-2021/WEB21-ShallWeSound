@@ -18,6 +18,7 @@ function UploadModalInner() {
     const curObj = _.cloneDeep(uploadedFile);
     curObj.musicFile = e.target.files!;
     curObj.musicName = e.target.files![0].name;
+    e.target.value='';
     setUploadedFile(curObj);
   };
 
@@ -25,6 +26,7 @@ function UploadModalInner() {
     const curObj = _.cloneDeep(uploadedFile);
     curObj.thumbnailFile = e.target.files!;
     curObj.thumbnailName = e.target.files![0].name;
+    e.target.value='';
     setUploadedFile(curObj);
   };
 
