@@ -25,7 +25,7 @@ const SequelizeAuto = require('sequelize-auto');
 
 app.use(
   cors({
-    origin: 'http://localhost:3001',
+    origin: 'http://49.50.166.128:3001',
     credentials: true,
   }),
 );

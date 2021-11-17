@@ -88,7 +88,7 @@ export const MainPage = ({ history }: { history: any }) => {
         description: dialogInput.description,
       });
 
-      fetch(`http://localhost:3000/api/room/entering?title=${dialogInput.name}`, {
+      fetch(`/api/room/entering?title=${dialogInput.name}`, {
         credentials: 'include',
       }) // session 쓸때 credentials : 'include' 설정해주기
         .then(res => res.json())
@@ -103,7 +103,7 @@ export const MainPage = ({ history }: { history: any }) => {
   }
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/room/entered', {
+    fetch('/api/room/entered', {
       credentials: 'include',
     })
       .then(res => res.json())
@@ -114,7 +114,7 @@ export const MainPage = ({ history }: { history: any }) => {
         }
       });
 
-    fetch('http://localhost:3000/api/room', {
+    fetch('/api/room', {
       credentials: 'include',
     }) // session 쓸때 credentials : 'include' 설정해주기
       .then(res => res.json())

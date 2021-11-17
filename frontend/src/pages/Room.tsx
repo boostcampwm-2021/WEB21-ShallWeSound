@@ -15,7 +15,7 @@ const Room = () => {
     };
 
     window.onload = event => {
-      fetch('http://localhost:3000/api/room/entered', {
+      fetch('/api/room/entered', {
         credentials: 'include',
       })
         .then(res => res.json())
@@ -27,7 +27,7 @@ const Room = () => {
     };
 
     socket.on('destroy', () => {
-      fetch('http://localhost:3000/api/room/destroy', {
+      fetch('/api/room/destroy', {
         credentials: 'include',
       })
         .then(res => res.json())
