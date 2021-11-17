@@ -1,3 +1,4 @@
+import { Sequelize } from 'sequelize';
 import { Music } from '../types';
 
 const MusicModel = require('../models').MUSIC;
@@ -18,11 +19,9 @@ export default {
   },
   async searchByPage(keyword: string, page: number) {
     const result = await MusicModel.findAll({
-      where: {
-        [Op.or]: {
-          name: { [Op.like]: '%' + keyword + '%' },
-          singer: { [Op.like]: '%' + keyword + '%' },
-        },
+      where: Sequelize.literal(`MATCH (name, singer) AGAINST ('*':keyword'*' in boolean mode)`),
+      replacements: {
+        keyword: keyword,
       },
       limit: 10,
       offset: page,
@@ -41,7 +40,14 @@ export default {
     });
 
     return result.map(
-      (res: { MID: number; name: string; singer: string; description: string; thumbnail: string; path: string }): Music => ({
+      (res: {
+        MID: number;
+        name: string;
+        singer: string;
+        description: string;
+        thumbnail: string;
+        path: string;
+      }): Music => ({
         MID: res.MID,
         name: res.name,
         singer: res.singer,
