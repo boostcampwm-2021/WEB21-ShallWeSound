@@ -131,9 +131,11 @@ function MusicPlayer() {
     if (playingMusic && musicVolume) {
       if (playingMusic.volume > 0) {
         setBackupMusicVolume(playingMusic.volume);
+        musicVolume.value = '0';
         playingMusic.volume = 0;
-        musicVolume.style.backgroundSize = '0% 100%';
+        musicVolume.style.backgroundSize = playingMusic.volume * 100 + '% 100%';
       } else {
+        musicVolume.value = (backupMusicVolume * 100).toString();
         playingMusic.volume = backupMusicVolume;
         musicVolume.style.backgroundSize = playingMusic.volume * 100 + '% 100%';
       }
