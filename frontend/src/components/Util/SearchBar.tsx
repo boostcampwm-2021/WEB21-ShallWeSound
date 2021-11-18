@@ -1,35 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import searchIcon from '../../images/search.png';
 
 interface Props {
-  doFetch: (keyword: string) => void;
+  onKeywordChange: (value: string) => void;
 }
 
-const SearchBar = ({ doFetch }: Props) => {
-  const [keyword, setKeyword] = useState('');
-
-  useEffect(() => {
-    doFetch(keyword);
-  }, [doFetch, keyword]);
-
+const SearchBar = ({ onKeywordChange }: Props) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
+    onKeywordChange(e.target.value);
   };
 
   return (
-    <Container>
-      <img src={searchIcon} alt="검색"></img>
-      <label htmlFor="keyword"></label>
-      <StyledInput
-        type="text"
-        id="keyword"
-        value={keyword}
-        onChange={onChange}
-        placeholder="가수, 제목"
-        autoComplete="off"
-      />
-    </Container>
+    <>
+      <Container>
+        <img src={searchIcon} alt="검색"></img>
+        <label htmlFor="keyword"></label>
+        <StyledInput type="text" id="keyword" onChange={onChange} placeholder="가수, 제목" autoComplete="off" />
+      </Container>
+    </>
   );
 };
 
@@ -38,6 +27,7 @@ const Container = styled.div`
   align-items: center;
   border: 2px solid #000000;
   padding: 0.1rem 0.4rem;
+  margin: 1rem 0;
 
   &:focus-within {
     border: 2px solid;

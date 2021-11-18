@@ -1,156 +1,108 @@
-import React, { useState, useEffect, useRef, MouseEventHandler } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSocket } from '../../../context/MyContext';
 import '../../../stylesheets/MusicPlayer.scss';
+import Title from './Title';
+import ThumbnailPlayer from './ThumbnailPlayer';
 
-function Title({ name, singer }: { name: string; singer: string }) {
-  return (
-    <div className="musicplayer-title-area">
-      <span className="musicplayer-title">{name}</span>
-      <span className="musicplayer-subtitle">{singer}</span>
-    </div>
-  );
-}
-
-function MusicThumbnail({
-  name,
-  thumbnail,
-  nowPlaying,
-  onClick,
-}: {
-  name: string;
-  thumbnail: string;
-  nowPlaying: boolean;
-  onClick: MouseEventHandler;
-}) {
-  const [isHover, setIsHover] = useState(false);
-  function onMouseEnter() {
-    setIsHover(true);
-  }
-  function onMouseLeave() {
-    setIsHover(false);
-  }
-
-  return (
-    <div className="musicplayer-cover" onClick={onClick}>
-      <div className="cover-hover" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-        {thumbnail ? (
-          <img src={thumbnail} alt={name} />
-        ) : (
-          <img className="no-thumbnail" src="/icons/music-note.svg" alt="no-thumbnail" />
-        )}
-        {isHover && (
-          <>
-            <div className="only-hover"></div>
-            {nowPlaying ? (
-              <img className="icon" src="/icons/pause.svg" alt="pause" />
-            ) : (
-              <img className="icon" src="/icons/play.svg" alt="play" />
-            )}
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
-
-interface musicInfo {
+interface music {
+  MID: number;
   name: string;
   singer: string;
+  description: string;
   thumbnail: string;
-  src: string;
+  path: string;
+  isPlayed: boolean;
 }
 
-function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
-  const [musicIndex, setmusicIndex] = useState(0);
-  const [musicInfo, setMusicInfo] = useState<musicInfo>({
-    name: 'noname',
-    singer: 'noname',
-    thumbnail: '',
-    src: '',
-  });
-  const musicControl = useRef<HTMLVideoElement>(null);
-  const [nowPlaying, setNowPlaying] = useState(true);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [totalTime, setTotalTime] = useState(0);
+function MusicPlayer() {
+  const musicControl = useRef<HTMLVideoElement | null>(null);
+  // const [musicList, setMusicList] = useState<music[] | any>(null);
+  // const [musicIndex, setmusicIndex] = useState(0);
+  const [musicInfo, setMusicInfo] = useState<music>();
   const [progressWidth, setProgressWidth] = useState(0);
-  const [musicVolume, setMusicVolume] = useState(1);
   const [backupMusicVolume, setBackupMusicVolume] = useState(0);
   const [progressVolumeWidth, setProgressVolumeWidth] = useState(100);
   const socket: any = useSocket();
 
   useEffect(() => {
-    const aud: any = document.getElementById('video')!;
-
-    socket.on('requestTime', (data: string) => {
+    socket.on('requestTime', () => {
       console.log('방장이다.');
-      console.log(musicInfo);
-      socket.emit('responseTime', aud.currentTime, musicInfo);
+      socket.emit('responseTime', musicControl.current?.currentTime);
     });
 
-    socket.on('sync', (data: string) => {
+    socket.on('sync', (data: number) => {
+      if (musicControl.current) {
+        musicControl.current.currentTime = data;
+      }
+    });
+
+    socket.on('changeMusicInfo', (data: music) => {
+      console.log("music Info changing");
       console.log(data);
-      aud.currentTime = data;
+      setMusicInfo({
+        ...musicInfo,
+        ...data
+      })
     });
 
     socket.on('clientPause', (data: string) => {
-      aud.pause();
+      musicControl.current?.pause();
     });
 
     socket.on('clientPlay', (data: string) => {
-      aud.play();
+      musicControl.current?.play();
     });
 
     socket.on('clientMoving', (data: number) => {
-      aud.currentTime = data;
+      if (musicControl.current) {
+        musicControl.current.currentTime = data;
+      }
     });
 
     setTimeout(() => {
-      aud.muted = false;
+      if (musicControl.current) {
+        musicControl.current.muted = false;
+      }
     }, 200);
   }, []);
 
   function goPrevMusic() {
-    setmusicIndex((musicIndex - 1 + musicList.length) % musicList.length);
+    // setmusicIndex((musicIndex - 1 + musicList.length) % musicList.length);
   }
 
   function goNextMusic() {
-    setmusicIndex((musicIndex + 1) % musicList.length);
+    console.log("music ended");
+    socket.emit('nextMusicReq')
+    // setmusicIndex((musicIndex + 1) % musicList.length);
   }
 
-  useEffect(() => {
-    setMusicInfo({
-      ...musicInfo,
-      name: musicList[musicIndex].name,
-      singer: musicList[musicIndex].singer,
-      thumbnail: musicList[musicIndex].thumbnail,
-      src: musicList[musicIndex].src,
-    });
-    console.log(musicInfo);
-    socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
-  }, []);
+  // useEffect(() => {
+  //   setMusicInfo({
+  //     ...musicInfo,
+  //     name: musicList[musicIndex].name,
+  //     singer: musicList[musicIndex].singer,
+  //     thumbnail: musicList[musicIndex].thumbnail,
+  //     src: musicList[musicIndex].src,
+  //   });
+  //   socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
+  // }, []);
 
-  useEffect(() => {
-    setMusicInfo({
-      ...musicInfo,
-      name: musicList[musicIndex].name,
-      singer: musicList[musicIndex].singer,
-      thumbnail: musicList[musicIndex].thumbnail,
-      src: musicList[musicIndex].src,
-    });
-    socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
-  }, [musicIndex]);
+  // useEffect(() => {
+  //   setMusicInfo({
+  //     ...musicInfo,
+  //     name: musicList[musicIndex].name,
+  //     singer: musicList[musicIndex].singer,
+  //     thumbnail: musicList[musicIndex].thumbnail,
+  //     src: musicList[musicIndex].src,
+  //   });
+  //   socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
+  // }, [musicIndex]);
 
-  useEffect(() => {
-    console.log(musicInfo);
-    console.log(musicControl.current);
-    if (nowPlaying && musicInfo.src && musicControl.current) {
-      musicControl.current.play();
-      // socket.on('requestTime', (data: string) => {
-      //   console.log('방장이다.');
-      //   socket.emit('responseTime', currentTime);
-      // });
-    }
-  }, [musicControl]);
+  // useEffect(() => {
+  //   if (musicControl.current?.paused && musicInfo?.path && musicControl.current) {
+  //     musicControl.current.play();
+  //   }
+  // }, [musicControl]);
 
   function changeFormatToTime(number: number) {
     const minute = Math.floor(number / 60);
@@ -161,40 +113,32 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   }
 
   function playOrPauseMusic() {
-    const playingMusic = musicControl && musicControl.current;
-    if (playingMusic) {
-      if (nowPlaying) {
-        playingMusic.pause();
-        setNowPlaying(false);
-        playingMusic.onpause = () => {
-          socket.emit('pause', '멈추시오');
-        };
-      } else {
-        playingMusic.play();
-        setNowPlaying(true);
-        playingMusic.onplay = () => {
-          socket.emit('play', '사작하시오');
-        };
-      }
+    const playingMusic = musicControl?.current;
+    if (playingMusic?.paused) {
+      playingMusic.play();
+      playingMusic.onplay = () => {
+        socket.emit('play');
+      };
+    } else if (playingMusic?.paused === false) {
+      playingMusic.pause();
+      playingMusic.onpause = () => {
+        socket.emit('pause');
+      };
     }
   }
 
   function updateMusic() {
     const playingMusic = musicControl.current;
     if (playingMusic) {
-      setCurrentTime(0);
-      setTotalTime(playingMusic.duration);
-      if (nowPlaying) playingMusic.play();
+      playingMusic.play();
     }
   }
 
   function updateCurrentTime() {
     const playingMusic = musicControl.current;
     if (playingMusic) {
-      setCurrentTime(playingMusic.currentTime);
       setProgressWidth((playingMusic.currentTime / playingMusic.duration) * 100);
       playingMusic.onseeked = () => {
-        console.log(playingMusic.currentTime);
         socket.emit('moving', playingMusic.currentTime);
       };
     }
@@ -209,13 +153,11 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
   function mousePositionRelativeToProgressBar(e: React.MouseEvent) {
     const playingMusic = musicControl.current;
     if (playingMusic) {
-      playingMusic.currentTime = (totalTime * e.nativeEvent.offsetX) / 352; // 352: progressBar total width
+      playingMusic.currentTime = (playingMusic.duration * e.nativeEvent.offsetX) / 352; // 352: progressBar total width: ;
       playingMusic.onseeked = () => {
-        console.log(playingMusic.currentTime);
         socket.emit('moving', playingMusic.currentTime);
       };
     }
-    setCurrentTime((totalTime * e.nativeEvent.offsetX) / 352);
   }
 
   const progressVolumeStyle = {
@@ -231,7 +173,6 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
       playingMusic.volume = offsetX; // 88: progressBar total width
     }
     setProgressVolumeWidth(offsetX * 100);
-    setMusicVolume(offsetX);
   }
 
   function toggleVolume() {
@@ -240,11 +181,9 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
       if (playingMusic.volume > 0) {
         setBackupMusicVolume(playingMusic.volume);
         playingMusic.volume = 0;
-        setMusicVolume(0);
         setProgressVolumeWidth(0);
       } else {
         playingMusic.volume = backupMusicVolume;
-        setMusicVolume(backupMusicVolume);
         setProgressVolumeWidth(backupMusicVolume * 100);
       }
     }
@@ -255,58 +194,38 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
       <div className="musicplayer">
         <video
           id="video"
-          src={musicInfo.src}
+          src={musicInfo?.path}
           muted
-          autoPlay
+          // autoPlay
           ref={musicControl}
           onTimeUpdate={updateCurrentTime}
           onLoadedMetadata={updateMusic}
           onEnded={goNextMusic}
         ></video>
-        <Title name={musicInfo.name} singer={musicInfo.singer} />
+        <Title name={musicInfo?.name} singer={musicInfo?.singer} />
         <div className="musicplayer-body">
-          <img
-            className="icon"
-            src="/icons/chevron-left.svg"
-            alt="chevron-left"
-            onClick={goPrevMusic}
-          />
-          <MusicThumbnail
-            name={musicInfo.name}
-            thumbnail={musicInfo.thumbnail}
-            nowPlaying={nowPlaying}
+          <img className="icon" src="/icons/chevron-left.svg" alt="chevron-left" onClick={goPrevMusic} />
+          <ThumbnailPlayer
+            name={musicInfo?.name}
+            thumbnail={musicInfo?.thumbnail}
+            musicControl={musicControl}
             onClick={playOrPauseMusic}
           />
-          <img
-            className="icon"
-            src="/icons/chevron-right.svg"
-            alt="chevron-right"
-            onClick={goNextMusic}
-          />
+          <img className="icon" src="/icons/chevron-right.svg" alt="chevron-right" onClick={goNextMusic} />
         </div>
         <div className="musicplayer-timer">
-          <span className="current-time">{changeFormatToTime(currentTime)}</span>
-          <span className="max-duration">{changeFormatToTime(totalTime)}</span>
+          <span className="current-time">{changeFormatToTime(musicControl.current?.currentTime || 0)}</span>
+          <span className="max-duration">{changeFormatToTime(musicControl.current?.duration || 0)}</span>
         </div>
         <div className="progress" onClick={mousePositionRelativeToProgressBar}>
           <div className="progress-bar" style={progressStyle}></div>
         </div>
         <div className="serveral-icons">
           <div className="volume-wrap width-half">
-            {musicVolume === 0 ? (
-              <img
-                className="icon"
-                src="/icons/volume-off.svg"
-                alt="volume-off"
-                onClick={toggleVolume}
-              />
+            {musicControl.current?.volume === 0 ? (
+              <img className="icon" src="/icons/volume-off.svg" alt="volume-off" onClick={toggleVolume} />
             ) : (
-              <img
-                className="icon"
-                src="/icons/volume-up.svg"
-                alt="volume-up"
-                onClick={toggleVolume}
-              />
+              <img className="icon" src="/icons/volume-up.svg" alt="volume-up" onClick={toggleVolume} />
             )}
             <div className="progress-wrap width-half">
               <div className="progress" onClick={mousePositionRelativeToVolumeProgressBar}>
@@ -314,6 +233,7 @@ function MusicPlayer({ musicList }: { musicList: musicInfo[] }) {
               </div>
             </div>
           </div>
+          <input type="range" min="0" />
           <div className="icons-wrap">
             <img className="icon" src="/icons/thumbs-up.svg" alt="thumbs-up" />
             <img className="icon" src="/icons/playlist-add.svg" alt="playlist-add" />

@@ -17,22 +17,30 @@
     "debug": "~2.6.9",
     "dotenv": "^10.0.0",
     "express": "~4.16.1",
+    "express-mysql-session": "^2.1.7",
+    "express-session": "^1.17.2",
     "fluent-ffmpeg": "^2.1.2",
     "global": "^4.4.0",
     "hls-server": "^1.5.0",
     "http": "^0.0.1-security",
     "morgan": "~1.9.1",
+    "multer": "^1.4.3",
+    "mysql": "^2.18.1",
     "mysql2": "^2.3.3-rc.0",
     "sequelize": "^6.9.0",
     "sequelize-auto": "^0.8.5",
     "sequelize-cli": "^6.3.0",
-    "multer": "^1.4.3",
-    "mysql": "^2.18.1",
+    "session-file-store": "^1.5.0",
     "socket.io": "^4.3.1",
     "typescript": "^4.4.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.14",
     "ts-node": "^10.4.0"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "sessions"
+    ]
   }
 }

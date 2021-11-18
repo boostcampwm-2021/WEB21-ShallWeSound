@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import config from '../../config.host.json';
 import SearchBar from '../Util/SearchBar';
@@ -9,54 +9,105 @@ import { useSocket } from '../../context/MyContext';
 interface Music {
   MID: number;
   name: string;
-  thumnail: string;
   singer: string;
   description: string;
+  thumbnail: string;
   path: string;
+  isPlayed: boolean;
 }
 
-const color: string = 'linear-gradient(94.75deg,#918fe7 6.7%,#699eef 85.54%)';
+interface State {
+  keyword: string;
+  result: Music[];
+  selectedMusics: number[];
+  isFetch: boolean;
+}
 
 const MusicSearch = () => {
   const socket: any = useSocket();
-  const [result, setResult] = useState<Music[]>([]);
-  const [seletedMusics, setSeletedMusics] = useState<number[]>([]);
+  const page = useRef(0);
+  const [state, setState] = useState<State>({
+    keyword: '',
+    result: [],
+    selectedMusics: [],
+    isFetch: false,
+  });
 
-  const fetchMusic = useCallback(async (keyword: string) => {
-    setSeletedMusics([]);
+  const fetchMusic = useCallback(async () => {
+    if (!state.isFetch) return;
 
-    const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}`);
-    setResult(await res.json());
-  }, []);
+    const res = await fetch(`${config.localhost}/api/music?keyword=${state.keyword}&page=${page.current}`);
+    const musics = await res.json();
 
-  const submitMusic = () => {
-    socket.emit('addMusicInPlayListReq', seletedMusics);
-    setSeletedMusics([]);
+    setState({ ...state, result: [...state.result, ...musics], isFetch: false });
+  }, [state]);
+
+  useEffect(() => {
+    fetchMusic();
+  }, [fetchMusic]);
+
+  useEffect(() => {
+    page.current = state.result.length;
+  }, [state.result]);
+
+  const addMusicInPlayList = () => {
+    socket.emit('addMusicInPlayListReq', state.selectedMusics);
+
+    setState({
+      ...state,
+      selectedMusics: [],
+    });
   };
 
-  const isSelected = (mid: number): boolean => (seletedMusics.indexOf(mid) >= 0 ? true : false);
+  const onScroll = async (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+    const isEndOfScroll = e.currentTarget.scrollTop + e.currentTarget.clientHeight >= e.currentTarget.scrollHeight;
 
-  const selectMusic = (mid: number) => {
-    const index = seletedMusics.indexOf(mid);
-
-    index >= 0
-      ? setSeletedMusics(seletedMusics.filter(id => id !== mid))
-      : setSeletedMusics([...seletedMusics, mid]);
+    if (isEndOfScroll) {
+      setState({
+        ...state,
+        isFetch: true,
+      });
+    }
   };
+
+  const isSelected = (MID: number): boolean => (state.selectedMusics.indexOf(MID) >= 0 ? true : false);
+
+  const selectMusic = (MID: number) => {
+    if (state.selectedMusics.indexOf(MID) >= 0) {
+      setState({
+        ...state,
+        selectedMusics: state.selectedMusics.filter(id => id !== MID),
+      });
+    } else {
+      setState({
+        ...state,
+        selectedMusics: [...state.selectedMusics, MID],
+      });
+    }
+  };
+
+  const onKeywordChange = (value: string) => {
+    setState({
+      keyword: value,
+      result: [],
+      selectedMusics: [],
+      isFetch: true,
+    });
+  };
+
+  const { result } = state;
 
   return (
     <Layout>
-      <SearchBarWrapper>
-        <SearchBar doFetch={fetchMusic} />
-      </SearchBarWrapper>
-      <ResultWrapper>
+      <SearchBar onKeywordChange={onKeywordChange} />
+      <ResultWrapper onScroll={onScroll}>
         {result.length ? (
-          result.map((k: Music) => (
-            <div key={k.MID} onClick={() => selectMusic(+k.MID)}>
+          result.map((k: Music, i: number) => (
+            <div key={i} onClick={() => selectMusic(+k.MID)}>
               <MusicSearchItem
                 name={k.name}
                 singer={k.singer}
-                thumnail={k.thumnail}
+                thumbnail={k.thumbnail}
                 description={k.description}
                 selected={isSelected(+k.MID)}
               />
@@ -67,7 +118,7 @@ const MusicSearch = () => {
         )}
       </ResultWrapper>
       <ButtonWrapper>
-        <CircleButton size="45px" colorP={color} onClick={submitMusic}>
+        <CircleButton size="45px" colorP={'#b6bac4'} onClick={addMusicInPlayList}>
           +
         </CircleButton>
       </ButtonWrapper>
@@ -80,12 +131,6 @@ const Layout = styled.div`
   flex-direction: column;
   align-items: center;
   height: 100%;
-  /* margin: 1rem 0; */
-`;
-
-const SearchBarWrapper = styled.div`
-  margin: 1rem 0;
-  /* height: calc(100% * 0.1); */
 `;
 
 const ResultWrapper = styled(Layout)`
