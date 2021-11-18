@@ -111,14 +111,14 @@ export const MainPage = ({ history }: { history: any }) => {
     //       history.push('/room');
     //     }
     //   });
-    // fetch('/api/room', {
-    //   credentials: 'include',
-    // }) // session 쓸때 credentials : 'include' 설정해주기
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     console.log(data.list);
-    //     setRoomList(data.list);
-    //   });
+    fetch('/api/room', {
+      credentials: 'include',
+    }) // session 쓸때 credentials : 'include' 설정해주기
+      .then(res => res.json())
+      .then(data => {
+        console.log(data.list);
+        setRoomList(data.list);
+      });
   }, []);
 
   return (

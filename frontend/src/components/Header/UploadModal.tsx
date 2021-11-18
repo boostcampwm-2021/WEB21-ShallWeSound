@@ -1,10 +1,13 @@
 import styles from '../../stylesheets/style.module.scss';
-import React, { useState} from 'react';
+import React, { useState, useRef} from 'react';
 import * as _ from 'lodash';
 import {FileType} from '../../types'
 
 function UploadModalInner() {
-
+  let timer:NodeJS.Timeout|null;
+  console.log('render');
+  const singerRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [uploadedFile, setUploadedFile] = useState<FileType>({
     musicName:'파일선택',
     thumbnailName: '파일선택',
@@ -55,21 +58,34 @@ function UploadModalInner() {
     curObj.thumbnailFile=null;
     curObj.singer='';
     curObj.descript='';
+    descriptionRef.current!.value = '';
+    singerRef.current!.value = '';
     return curObj;
   }
 
   const writeSingerName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const curObj = _.cloneDeep(uploadedFile);
-    curObj.singer=e.target.value;
-    console.log(curObj)
-    setUploadedFile(curObj);
+    if(timer){
+      clearTimeout(timer);
+    }
+    timer = setTimeout(function(){
+      const curObj = _.cloneDeep(uploadedFile);
+      curObj.singer=e.target.value;
+      console.log(curObj)
+      setUploadedFile(curObj);
+    }, 200);
   };
 
   const writeDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const curObj = _.cloneDeep(uploadedFile);
-    curObj.descript=e.target.value;
-    console.log(curObj)
-    setUploadedFile(curObj);
+    if(timer){
+      clearTimeout(timer);
+    }
+    timer = setTimeout(function(){
+      const curObj = _.cloneDeep(uploadedFile);
+      curObj.descript=e.target.value;
+      console.log(curObj)
+      setUploadedFile(curObj);
+    }, 200);
+    
   };
 
   const dropListener = (event: React.DragEvent<HTMLDivElement>) => {
@@ -98,8 +114,9 @@ function UploadModalInner() {
         <div className={styles.singerForm}>
           <div className={styles.title}>아티스트</div>
           <input
+            ref={singerRef}
             className={styles.singer}
-            value={uploadedFile.singer}
+            // value={uploadedFile.singer}
             type="text"
             placeholder="아티스트 이름"
             onChange={writeSingerName}
@@ -108,8 +125,9 @@ function UploadModalInner() {
         <div className={styles.descriptForm}>
           <div className={styles.title}>곡 설명</div>
           <textarea
+            ref={descriptionRef}
             className={styles.descript}
-            value={uploadedFile.descript}
+            // value={uploadedFile.descript}
             placeholder="곡 설명을 입력하세요"
             onChange={writeDescription}
           />
