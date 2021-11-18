@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import MusicPlayer from '../components/Room/MusicPlayer/MusicPlayer';
 import PlayList from '../components/Room/PlayList/PlayList';
 import ChatComponent from '../components/Room/Chat/chat';
 import styled from 'styled-components';
 import { useSocket } from '../context/MyContext';
-import { Socket } from 'socket.io-client';
 
 const Room = () => {
   const socket: any = useSocket();

@@ -76,7 +76,7 @@ function UploadModalInner() {
     overrideEventDefaults(event);
     const curObj = _.cloneDeep(uploadedFile);
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
-      if(event.dataTransfer.files[0].type == 'image/jpeg'){
+      if(event.dataTransfer.files[0].type === 'image/jpeg'){
         curObj.thumbnailFile = event.dataTransfer.files;
         curObj.thumbnailName = event.dataTransfer.files[0].name;
       }else{
