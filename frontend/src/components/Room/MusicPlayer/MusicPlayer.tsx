@@ -23,8 +23,6 @@ function MusicPlayer() {
   const [backupMusicVolume, setBackupMusicVolume] = useState(0);
   const socket: any = useSocket();
 
-  const test = useRef<HTMLInputElement | null>(null);
-
   useEffect(() => {
     socket.on('requestTime', () => {
       console.log('방장이다.');
@@ -170,7 +168,7 @@ function MusicPlayer() {
           <span className="current-time">{changeFormatToTime(musicControl.current?.currentTime || 0)}</span>
           <span className="max-duration">{changeFormatToTime(musicControl.current?.duration || 0)}</span>
         </div>
-        <input className="input-range" name="musicplayer-progress" ref={musicProgress} type="range" min="0" max={musicControl.current?.duration || 100} onInput={changeInputRange} />
+        <input className="input-range" name="musicplayer-progress" ref={musicProgress} type="range" min="0" max={musicControl.current?.duration || 0} onInput={changeInputRange} />
         <div className="serveral-icons">
           <div className="volume-wrap width-half">
             {musicControl.current?.volume === 0 ? (
