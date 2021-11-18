@@ -3,10 +3,11 @@ import styled from 'styled-components';
 import searchIcon from '../../images/search.png';
 
 interface Props {
+  keyword: string;
   onKeywordChange: (value: string) => void;
 }
 
-const SearchBar = ({ onKeywordChange }: Props) => {
+const SearchBar = ({ keyword, onKeywordChange }: Props) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onKeywordChange(e.target.value);
   };
@@ -16,7 +17,14 @@ const SearchBar = ({ onKeywordChange }: Props) => {
       <Container>
         <img src={searchIcon} alt="검색"></img>
         <label htmlFor="keyword"></label>
-        <StyledInput type="text" id="keyword" onChange={onChange} placeholder="가수, 제목" autoComplete="off" />
+        <StyledInput
+          type="text"
+          id="keyword"
+          value={keyword}
+          onChange={onChange}
+          placeholder="가수, 제목"
+          autoComplete="off"
+        />
       </Container>
     </>
   );

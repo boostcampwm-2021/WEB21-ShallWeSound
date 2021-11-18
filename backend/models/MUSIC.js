@@ -52,6 +52,10 @@ module.exports = function (sequelize, DataTypes) {
           using: 'BTREE',
           fields: [{ name: 'content_hash' }],
         },
+        {
+          type: 'FULLTEXT',
+          fields: ['name', 'singer'],
+        },
       ],
     },
   );

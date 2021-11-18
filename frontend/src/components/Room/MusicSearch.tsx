@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import config from '../../config.host.json';
 import SearchBar from '../Util/SearchBar';
@@ -16,46 +16,46 @@ interface Music {
   isPlayed: boolean;
 }
 
-interface State {
-  keyword: string;
+interface SearchResult {
   result: Music[];
-  selectedMusics: number[];
-  isFetch: boolean;
+  selectedInResult: number[];
 }
 
 const MusicSearch = () => {
   const socket: any = useSocket();
   const page = useRef(0);
-  const [state, setState] = useState<State>({
-    keyword: '',
+  const [keyword, setKeyword] = useState('');
+  const [searchResult, setSearchResult] = useState<SearchResult>({
     result: [],
-    selectedMusics: [],
-    isFetch: false,
+    selectedInResult: [],
   });
 
-  const fetchMusic = useCallback(async () => {
-    if (!state.isFetch) return;
-
-    const res = await fetch(`${config.localhost}/api/music?keyword=${state.keyword}&page=${page.current}`);
+  const { result, selectedInResult } = searchResult;
+  const fetchMusic = async () => {
+    const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}&page=${page.current}`);
     const musics = await res.json();
 
-    setState({ ...state, result: [...state.result, ...musics], isFetch: false });
-  }, [state]);
+    setSearchResult({
+      ...searchResult,
+      result: [...result, ...musics],
+    });
+  };
 
   useEffect(() => {
+    page.current = 0;
     fetchMusic();
-  }, [fetchMusic]);
+  }, [keyword]);
 
   useEffect(() => {
-    page.current = state.result.length;
-  }, [state.result]);
+    page.current = result.length;
+  }, [result]);
 
   const addMusicInPlayList = () => {
-    socket.emit('addMusicInPlayListReq', state.selectedMusics);
+    socket.emit('addMusicInPlayListReq', selectedInResult);
 
-    setState({
-      ...state,
-      selectedMusics: [],
+    setSearchResult({
+      ...searchResult,
+      selectedInResult: [],
     });
   };
 
@@ -63,43 +63,37 @@ const MusicSearch = () => {
     const isEndOfScroll = e.currentTarget.scrollTop + e.currentTarget.clientHeight >= e.currentTarget.scrollHeight;
 
     if (isEndOfScroll) {
-      setState({
-        ...state,
-        isFetch: true,
-      });
+      fetchMusic();
     }
   };
 
-  const isSelected = (MID: number): boolean => (state.selectedMusics.indexOf(MID) >= 0 ? true : false);
+  const isSelected = (MID: number): boolean => (selectedInResult.indexOf(MID) >= 0 ? true : false);
 
   const selectMusic = (MID: number) => {
-    if (state.selectedMusics.indexOf(MID) >= 0) {
-      setState({
-        ...state,
-        selectedMusics: state.selectedMusics.filter(id => id !== MID),
+    if (selectedInResult.indexOf(MID) >= 0) {
+      setSearchResult({
+        ...searchResult,
+        selectedInResult: selectedInResult.filter(id => id !== MID),
       });
     } else {
-      setState({
-        ...state,
-        selectedMusics: [...state.selectedMusics, MID],
+      setSearchResult({
+        ...searchResult,
+        selectedInResult: [...selectedInResult, MID],
       });
     }
   };
 
   const onKeywordChange = (value: string) => {
-    setState({
-      keyword: value,
+    setKeyword(value);
+    setSearchResult({
       result: [],
-      selectedMusics: [],
-      isFetch: true,
+      selectedInResult: [],
     });
   };
 
-  const { result } = state;
-
   return (
     <Layout>
-      <SearchBar onKeywordChange={onKeywordChange} />
+      <SearchBar keyword={keyword} onKeywordChange={onKeywordChange} />
       <ResultWrapper onScroll={onScroll}>
         {result.length ? (
           result.map((k: Music, i: number) => (

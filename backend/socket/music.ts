@@ -39,4 +39,8 @@ export class PlayList {
     const music: Music = this.getMusicByName(musicName)!;
     music.isPlayed = state;
   }
+
+  removeMusicByMID(MID: number): void {
+    this.playlist = this.playlist.filter(music => music.MID !== MID);
+  }
 }

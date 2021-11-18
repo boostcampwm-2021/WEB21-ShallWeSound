@@ -86,6 +86,16 @@ const socketHandler = (io: Server) => {
       namespace.to(targetRoom.name).emit('responsePlayList', res);
     });
 
+    socket.on('removeMusicInPlayListReq', (MID: number) => {
+      const targetRoom = socketData.find(val => val.socketId.some(client => client === socket.id) === true);
+      if (!targetRoom) return;
+
+      targetRoom.playList.removeMusicByMID(MID);
+
+      const res = targetRoom.playList.getPlayList();
+      namespace.to(targetRoom.name).emit('responsePlayList', res);
+    });
+
     socket.on('createRoom', data => {
       utils.updateNewRoom(socketData, socket, data);
       const roomList = utils.getRoomListForClient(socketData);
