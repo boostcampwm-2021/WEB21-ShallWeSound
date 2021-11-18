@@ -1,6 +1,5 @@
 import styles from '../../stylesheets/style.module.scss';
 import React, { useState, useRef} from 'react';
-import * as _ from 'lodash';
 import {FileType} from '../../types'
 
 type timeoutRef={
@@ -21,7 +20,7 @@ function UploadModalInner() {
   });
 
   const isFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const curObj = _.cloneDeep(uploadedFile);
+    const curObj = {...uploadedFile};
     curObj.musicFile = e.target.files!;
     curObj.musicName = e.target.files![0].name;
     e.target.value='';
@@ -29,7 +28,7 @@ function UploadModalInner() {
   };
 
   const isThumbUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const curObj = _.cloneDeep(uploadedFile);
+    const curObj = {...uploadedFile};
     curObj.thumbnailFile = e.target.files!;
     curObj.thumbnailName = e.target.files![0].name;
     e.target.value='';
@@ -54,7 +53,7 @@ function UploadModalInner() {
         method: 'POST',
         body: formData,
       });
-      const curObj = resetFileState(_.cloneDeep(uploadedFile));
+      const curObj = resetFileState({...uploadedFile});
       setUploadedFile(curObj);
     }, 200);
     timerRef.current.timer = uploadTimer;
@@ -77,7 +76,7 @@ function UploadModalInner() {
       clearTimeout(timerRef.current.timer!);
     }
     const timer = setTimeout(function(){
-      const curObj = _.cloneDeep(uploadedFile);
+      const curObj = {...uploadedFile};
       curObj.singer=e.target.value;
       console.log(curObj)
       setUploadedFile(curObj);
@@ -90,7 +89,7 @@ function UploadModalInner() {
       clearTimeout(timerRef.current.timer!);
     }
     const timer = setTimeout(function(){
-      const curObj = _.cloneDeep(uploadedFile);
+      const curObj = {...uploadedFile};
       curObj.descript=e.target.value;
       console.log(curObj)
       setUploadedFile(curObj);
@@ -100,7 +99,7 @@ function UploadModalInner() {
 
   const dropListener = (event: React.DragEvent<HTMLDivElement>) => {
     overrideEventDefaults(event);
-    const curObj = _.cloneDeep(uploadedFile);
+    const curObj = {...uploadedFile};
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
       if(event.dataTransfer.files[0].type === 'image/jpeg'){
         curObj.thumbnailFile = event.dataTransfer.files;
