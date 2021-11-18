@@ -1,4 +1,4 @@
-@import "../stylesheets/global.scss";
+@import "./global.scss";
 
 .root{
     background: $background;//$background;//$white;//$background; //#e9ecef;
@@ -9,7 +9,7 @@
     position: relative;
     background-size: cover;
     display: flex;
-    min-height: 100vh;//calc(100vw - (100vw - 100%));
+    min-height: calc(100vh - 40px);//calc(100vw - (100vw - 100%));
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
@@ -117,9 +117,11 @@
 }
 .headerUploadButton{
     border: 0;
-    background-color: white ;
-    color: #337ab7;
-    width: 5.5em;
+    // background-color: white ;
+    // color: #337ab7;
+    background: transparent;
+    color: $white;
+    // width: 5.5em;
     height: 2em;
     border-radius: 10px;
     font-weight: bold;
