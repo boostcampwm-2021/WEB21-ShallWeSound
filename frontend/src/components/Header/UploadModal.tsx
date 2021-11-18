@@ -3,11 +3,14 @@ import React, { useState, useRef} from 'react';
 import * as _ from 'lodash';
 import {FileType} from '../../types'
 
+type timeoutRef={
+  timer:NodeJS.Timeout|null
+}
 function UploadModalInner() {
-  let timer:NodeJS.Timeout|null;
   console.log('render');
   const singerRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const timerRef = useRef<timeoutRef>({timer:setTimeout(() => {})});
   const [uploadedFile, setUploadedFile] = useState<FileType>({
     musicName:'파일선택',
     thumbnailName: '파일선택',
@@ -64,28 +67,29 @@ function UploadModalInner() {
   }
 
   const writeSingerName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if(timer){
-      clearTimeout(timer);
+    if(timerRef.current){
+      clearTimeout(timerRef.current.timer!);
     }
-    timer = setTimeout(function(){
+    const timer = setTimeout(function(){
       const curObj = _.cloneDeep(uploadedFile);
       curObj.singer=e.target.value;
       console.log(curObj)
       setUploadedFile(curObj);
     }, 200);
+    timerRef.current!.timer = timer;
   };
 
   const writeDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if(timer){
-      clearTimeout(timer);
+    if(timerRef.current){
+      clearTimeout(timerRef.current.timer!);
     }
-    timer = setTimeout(function(){
+    const timer = setTimeout(function(){
       const curObj = _.cloneDeep(uploadedFile);
       curObj.descript=e.target.value;
       console.log(curObj)
       setUploadedFile(curObj);
     }, 200);
-    
+    timerRef.current!.timer = timer;
   };
 
   const dropListener = (event: React.DragEvent<HTMLDivElement>) => {
