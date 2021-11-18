@@ -26,6 +26,10 @@ function ChatComponent() {
       setChats(curChat);
     });
     scrollToBottom();
+
+    return () => {
+      socket.off('chatMessage');
+    };
   }, [chats]);
 
   function MakeChatList() {
