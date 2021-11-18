@@ -34,7 +34,8 @@ const uploadToStorage = async(
         ])
 }
 
-export const uploadLogic = async (bucket_name:string, 
+export const uploadLogic = async (
+    bucket_name:string, 
     files:{[fieldname: string]: Express.Multer.File[];}, 
     object_name:string, 
     contentHash:string, 
@@ -43,7 +44,7 @@ export const uploadLogic = async (bucket_name:string,
     description:string
     )=>{
         try{
-            const queryReuslt = await models.MUSIC.create({
+            const queryResult = await models.MUSIC.create({
                 name:object_name, 
                 singer:singer,
                 description:description,
@@ -53,7 +54,7 @@ export const uploadLogic = async (bucket_name:string,
             await uploadToStorage(S3, object_name, bucket_name, files, contentHash, thumbnailName);
             const path = makeSignedURL(S3, contentHash, object_name);
             const thumbnailPath = makeSignedURL(S3, contentHash, thumbnailName);
-            await queryReuslt.update({path:path, thumbnail:thumbnailPath});
+            await queryResult.update({path:path, thumbnail:thumbnailPath});
 
         }catch(e){
             console.log(e);
