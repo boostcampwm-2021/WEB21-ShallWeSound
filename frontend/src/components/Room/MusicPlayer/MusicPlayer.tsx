@@ -16,12 +16,11 @@ interface music {
 
 function MusicPlayer() {
   const musicControl = useRef<HTMLVideoElement | null>(null);
-  // const [musicList, setMusicList] = useState<music[] | any>(null);
-  // const [musicIndex, setmusicIndex] = useState(0);
+  const musicProgress = useRef<HTMLInputElement>(null);
+  const volumeProgress = useRef<HTMLInputElement>(null);
+  const [musicCurrentTime, setMusicCurrentTime] = useState(0);
   const [musicInfo, setMusicInfo] = useState<music>();
-  const [progressWidth, setProgressWidth] = useState(0);
   const [backupMusicVolume, setBackupMusicVolume] = useState(0);
-  const [progressVolumeWidth, setProgressVolumeWidth] = useState(100);
   const socket: any = useSocket();
 
   useEffect(() => {
@@ -66,43 +65,8 @@ function MusicPlayer() {
     }, 200);
   }, []);
 
-  function goPrevMusic() {
-    // setmusicIndex((musicIndex - 1 + musicList.length) % musicList.length);
-  }
-
-  function goNextMusic() {
-    console.log("music ended");
-    socket.emit('nextMusicReq')
-    // setmusicIndex((musicIndex + 1) % musicList.length);
-  }
-
-  // useEffect(() => {
-  //   setMusicInfo({
-  //     ...musicInfo,
-  //     name: musicList[musicIndex].name,
-  //     singer: musicList[musicIndex].singer,
-  //     thumbnail: musicList[musicIndex].thumbnail,
-  //     src: musicList[musicIndex].src,
-  //   });
-  //   socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
-  // }, []);
-
-  // useEffect(() => {
-  //   setMusicInfo({
-  //     ...musicInfo,
-  //     name: musicList[musicIndex].name,
-  //     singer: musicList[musicIndex].singer,
-  //     thumbnail: musicList[musicIndex].thumbnail,
-  //     src: musicList[musicIndex].src,
-  //   });
-  //   socket.emit('nextMusicReq', { src: musicList[musicIndex].src });
-  // }, [musicIndex]);
-
-  // useEffect(() => {
-  //   if (musicControl.current?.paused && musicInfo?.path && musicControl.current) {
-  //     musicControl.current.play();
-  //   }
-  // }, [musicControl]);
+  function goPrevMusic() { socket.emit('prevMusicReq') };
+  function goNextMusic() { socket.emit('nextMusicReq') };
 
   function changeFormatToTime(number: number) {
     const minute = Math.floor(number / 60);
@@ -127,64 +91,51 @@ function MusicPlayer() {
     }
   }
 
-  function updateMusic() {
-    const playingMusic = musicControl.current;
-    if (playingMusic) {
-      playingMusic.play();
-    }
-  }
+  function updateMusic() { musicControl?.current?.play() };
 
   function updateCurrentTime() {
     const playingMusic = musicControl.current;
-    if (playingMusic) {
-      setProgressWidth((playingMusic.currentTime / playingMusic.duration) * 100);
+    const playingMusicProgress = musicProgress.current;
+    if (playingMusic && playingMusicProgress) {
+      setMusicCurrentTime(playingMusic.currentTime)
+      playingMusicProgress.value = playingMusic.currentTime.toString();
+      playingMusicProgress.style.backgroundSize = playingMusic.currentTime * 100 / playingMusic.duration + '% 100%';
       playingMusic.onseeked = () => {
         socket.emit('moving', playingMusic.currentTime);
       };
     }
   }
 
-  const progressStyle = {
-    height: 'inherit',
-    width: progressWidth + '%',
-    borderRadius: 'inherit',
-  };
-
-  function mousePositionRelativeToProgressBar(e: React.MouseEvent) {
-    const playingMusic = musicControl.current;
-    if (playingMusic) {
-      playingMusic.currentTime = (playingMusic.duration * e.nativeEvent.offsetX) / 352; // 352: progressBar total width: ;
-      playingMusic.onseeked = () => {
-        socket.emit('moving', playingMusic.currentTime);
-      };
+  function changeInputRange(e: any) {
+    const playingMusic = musicControl?.current;
+    const playingMusicProgress = musicProgress.current;
+    if (playingMusic && playingMusicProgress) {
+      playingMusic.currentTime = parseFloat(playingMusicProgress.value);
+      playingMusicProgress.style.backgroundSize = e.target.value * 100 / e.target.max + '% 100%';
     }
   }
 
-  const progressVolumeStyle = {
-    height: 'inherit',
-    width: progressVolumeWidth + '%',
-    borderRadius: 'inherit',
-  };
-
-  function mousePositionRelativeToVolumeProgressBar(e: React.MouseEvent) {
+  function changeVolume(e: any) {
     const playingMusic = musicControl.current;
-    const offsetX = Math.max(0, Math.min(e.nativeEvent.offsetX / 88, 1));
     if (playingMusic) {
-      playingMusic.volume = offsetX; // 88: progressBar total width
+      playingMusic.volume = e.target.value / 100;
+      e.target.style.backgroundSize = e.target.value + '% 100%';
     }
-    setProgressVolumeWidth(offsetX * 100);
   }
 
   function toggleVolume() {
     const playingMusic = musicControl.current;
-    if (playingMusic) {
+    const musicVolume = volumeProgress.current;
+    if (playingMusic && musicVolume) {
       if (playingMusic.volume > 0) {
         setBackupMusicVolume(playingMusic.volume);
+        musicVolume.value = '0';
         playingMusic.volume = 0;
-        setProgressVolumeWidth(0);
+        musicVolume.style.backgroundSize = playingMusic.volume * 100 + '% 100%';
       } else {
+        musicVolume.value = (backupMusicVolume * 100).toString();
         playingMusic.volume = backupMusicVolume;
-        setProgressVolumeWidth(backupMusicVolume * 100);
+        musicVolume.style.backgroundSize = playingMusic.volume * 100 + '% 100%';
       }
     }
   }
@@ -217,9 +168,7 @@ function MusicPlayer() {
           <span className="current-time">{changeFormatToTime(musicControl.current?.currentTime || 0)}</span>
           <span className="max-duration">{changeFormatToTime(musicControl.current?.duration || 0)}</span>
         </div>
-        <div className="progress" onClick={mousePositionRelativeToProgressBar}>
-          <div className="progress-bar" style={progressStyle}></div>
-        </div>
+        <input className="input-range" name="musicplayer-progress" ref={musicProgress} type="range" min="0" max={musicControl.current?.duration || 0} onInput={changeInputRange} />
         <div className="serveral-icons">
           <div className="volume-wrap width-half">
             {musicControl.current?.volume === 0 ? (
@@ -228,12 +177,9 @@ function MusicPlayer() {
               <img className="icon" src="/icons/volume-up.svg" alt="volume-up" onClick={toggleVolume} />
             )}
             <div className="progress-wrap width-half">
-              <div className="progress" onClick={mousePositionRelativeToVolumeProgressBar}>
-                <div className="progress-bar" style={progressVolumeStyle}></div>
-              </div>
+              <input className="input-range" name="volume-progress" ref={volumeProgress} type="range" min="0" max="100" onInput={changeVolume} />
             </div>
           </div>
-          <input type="range" min="0" />
           <div className="icons-wrap">
             <img className="icon" src="/icons/thumbs-up.svg" alt="thumbs-up" />
             <img className="icon" src="/icons/playlist-add.svg" alt="playlist-add" />
