@@ -36,22 +36,28 @@ function UploadModalInner() {
     setUploadedFile(curObj);
   };
 
-  const fileUploadMethod = async () => {
-    const formData = new FormData();
-    Object.values(uploadedFile.musicFile!).forEach(el => {
-      formData.append('userFile1', el);
-    });
-    Object.values(uploadedFile.thumbnailFile!).forEach(el => {
-      formData.append('userFile2', el);
-    });
-    formData.append('singer', uploadedFile.singer!);
-    formData.append('description', uploadedFile.descript!);
-    await fetch('/upload', {
-      method: 'POST',
-      body: formData,
-    });
-    const curObj = resetFileState(_.cloneDeep(uploadedFile));
-    setUploadedFile(curObj);
+  const fileUploadMethod = () => {
+    if(timerRef.current){
+      clearTimeout(timerRef.current.timer!);
+    }
+    const uploadTimer = setTimeout(async () => {
+      const formData = new FormData();
+      Object.values(uploadedFile.musicFile!).forEach(el => {
+        formData.append('userFile1', el);
+      });
+      Object.values(uploadedFile.thumbnailFile!).forEach(el => {
+        formData.append('userFile2', el);
+      });
+      formData.append('singer', uploadedFile.singer!);
+      formData.append('description', uploadedFile.descript!);
+      await fetch('/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const curObj = resetFileState(_.cloneDeep(uploadedFile));
+      setUploadedFile(curObj);
+    }, 200);
+    timerRef.current.timer = uploadTimer;
   };
 
   const resetFileState = (curObj:FileType):FileType => {
@@ -88,7 +94,7 @@ function UploadModalInner() {
       curObj.descript=e.target.value;
       console.log(curObj)
       setUploadedFile(curObj);
-    }, 200);
+    }, 400);
     timerRef.current!.timer = timer;
   };
 
@@ -136,7 +142,6 @@ function UploadModalInner() {
             onChange={writeDescription}
           />
         </div>
-        {/* {...getRootProps({onDrop: event => event.stopPropagation()})} */}
         <div className={styles.musicForm}
         onDrag={overrideEventDefaults}
         onDragStart={overrideEventDefaults}
