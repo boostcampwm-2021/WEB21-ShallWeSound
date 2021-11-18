@@ -1,12 +1,18 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, {useState, useRef} from 'react';
 import UploadModal from "./UploadModal";
-
-
+import {timeoutRef} from '../../types'
 function HeaderComponent() {
+  const timerRef = useRef<timeoutRef>({timer:setTimeout(() => {})})
   const [searchInput, setSearchInput] = useState("");
 
   function searchInputChange (e: React.ChangeEvent<HTMLInputElement>) {
-    setSearchInput(e.target.value);
+    if(timerRef.current){
+      clearTimeout(timerRef.current.timer!);
+    }
+    const searchTimer = setTimeout(() => {
+      setSearchInput(e.target.value);
+    }, 200);
+    timerRef.current.timer = searchTimer;
   }
 
   function doSearch() {

@@ -1,10 +1,7 @@
 import styles from '../../stylesheets/style.module.scss';
 import React, { useState, useRef} from 'react';
-import {FileType} from '../../types'
+import {FileType, timeoutRef} from '../../types'
 
-type timeoutRef={
-  timer:NodeJS.Timeout|null
-}
 function UploadModalInner() {
   console.log('render');
   const singerRef = useRef<HTMLInputElement>(null);

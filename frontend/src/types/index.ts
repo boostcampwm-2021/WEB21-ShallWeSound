@@ -15,4 +15,8 @@ type FileType = {
   musicFile: FileList | null;
   thumbnailFile: FileList | null;
 };
-export type { Music, FileType };
+
+type timeoutRef={
+  timer:NodeJS.Timeout|null
+}
+export type { Music, FileType, timeoutRef };
