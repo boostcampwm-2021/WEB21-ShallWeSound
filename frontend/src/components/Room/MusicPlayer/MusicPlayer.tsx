@@ -36,12 +36,10 @@ function MusicPlayer() {
     });
 
     socket.on('changeMusicInfo', (data: music) => {
-      console.log("music Info changing");
-      console.log(data);
       setMusicInfo({
         ...musicInfo,
-        ...data
-      })
+        ...data,
+      });
     });
 
     socket.on('clientPause', (data: string) => {
@@ -63,13 +61,16 @@ function MusicPlayer() {
         musicControl.current.muted = false;
       }
     }, 200);
-  });
+  }, []);
 
-  function goPrevMusic() { socket.emit('prevMusicReq') };
-  function goNextMusic() { socket.emit('nextMusicReq') };
+  function goPrevMusic() {
+    socket.emit('prevMusicReq');
+  }
+  function goNextMusic() {
+    socket.emit('nextMusicReq');
+  }
 
   function changeFormatToTime(number: number) {
-    console.log(musicCurrentTime);
     const minute = Math.floor(number / 60);
     const second = Math.floor(number % 60);
     const formattedSecond = second >= 10 ? second : '0' + second.toString();
@@ -92,15 +93,17 @@ function MusicPlayer() {
     }
   }
 
-  function updateMusic() { musicControl?.current?.play() };
+  function updateMusic() {
+    musicControl?.current?.play();
+  }
 
   function updateCurrentTime() {
     const playingMusic = musicControl.current;
     const playingMusicProgress = musicProgress.current;
     if (playingMusic && playingMusicProgress) {
-      setMusicCurrentTime(playingMusic.currentTime)
+      setMusicCurrentTime(playingMusic.currentTime);
       playingMusicProgress.value = playingMusic.currentTime.toString();
-      playingMusicProgress.style.backgroundSize = playingMusic.currentTime * 100 / playingMusic.duration + '% 100%';
+      playingMusicProgress.style.backgroundSize = (playingMusic.currentTime * 100) / playingMusic.duration + '% 100%';
       playingMusic.onseeked = () => {
         socket.emit('moving', playingMusic.currentTime);
       };
@@ -112,7 +115,7 @@ function MusicPlayer() {
     const playingMusicProgress = musicProgress.current;
     if (playingMusic && playingMusicProgress) {
       playingMusic.currentTime = parseFloat(playingMusicProgress.value);
-      playingMusicProgress.style.backgroundSize = e.target.value * 100 / e.target.max + '% 100%';
+      playingMusicProgress.style.backgroundSize = (e.target.value * 100) / e.target.max + '% 100%';
     }
   }
 
@@ -169,7 +172,15 @@ function MusicPlayer() {
           <span className="current-time">{changeFormatToTime(musicControl.current?.currentTime || 0)}</span>
           <span className="max-duration">{changeFormatToTime(musicControl.current?.duration || 0)}</span>
         </div>
-        <input className="input-range" name="musicplayer-progress" ref={musicProgress} type="range" min="0" max={musicControl.current?.duration || 0} onInput={changeInputRange} />
+        <input
+          className="input-range"
+          name="musicplayer-progress"
+          ref={musicProgress}
+          type="range"
+          min="0"
+          max={musicControl.current?.duration || 0}
+          onInput={changeInputRange}
+        />
         <div className="serveral-icons">
           <div className="volume-wrap width-half">
             {musicControl.current?.volume === 0 ? (
@@ -178,7 +189,15 @@ function MusicPlayer() {
               <img className="icon" src="/icons/volume-up.svg" alt="volume-up" onClick={toggleVolume} />
             )}
             <div className="progress-wrap width-half">
-              <input className="input-range" name="volume-progress" ref={volumeProgress} type="range" min="0" max="100" onInput={changeVolume} />
+              <input
+                className="input-range"
+                name="volume-progress"
+                ref={volumeProgress}
+                type="range"
+                min="0"
+                max="100"
+                onInput={changeVolume}
+              />
             </div>
           </div>
           <div className="icons-wrap">
