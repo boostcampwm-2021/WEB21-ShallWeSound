@@ -1,17 +1,19 @@
 type Music = {
   MID: number;
-  title: string;
-  src: string;
+  name: string;
+  path: string;
+  description: string;
   isPlayed: boolean;
   singer: string;
+  thumbnail: string;
 };
 
-type FileType={
-  musicName: string,
-  thumbnailName: string,
-  singer: string,
-  descript: string,
-  musicFile: FileList|null,
-  thumbnailFile: FileList|null
-}
+type FileType = {
+  musicName: string;
+  thumbnailName: string;
+  singer: string;
+  descript: string;
+  musicFile: FileList | null;
+  thumbnailFile: FileList | null;
+};
 export type { Music, FileType };

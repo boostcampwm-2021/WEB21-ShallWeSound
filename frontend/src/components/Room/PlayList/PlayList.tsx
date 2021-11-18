@@ -13,7 +13,6 @@ const PlayList = () => {
   const [playList, setPlayList] = useState<Music[]>([]);
 
   useEffect(() => {
-    
     socket.on('responsePlayList', (data: Music[]) => {
       setPlayList([...data]);
     });
@@ -34,7 +33,7 @@ const PlayList = () => {
       <Title>P L A Y &nbsp; L I S T</Title>
       <PlayListWrapper>
         {playList.map((music: Music, i: number) => (
-          <PlayListItem key={i} title={music.title} singer={music.singer} />
+          <PlayListItem key={i} title={music.name} singer={music.singer} />
         ))}
       </PlayListWrapper>
       <ButtonWrapper>

@@ -11,8 +11,28 @@ const Room = () => {
 
   useEffect(() => {
     window.onpopstate = event => {
-      socket.emit('leaveRoom', 'data');
+      socket.emit('leaveRoom');
     };
+
+    window.onload = event => {
+      // fetch('/api/room/entered', {
+      //   credentials: 'include',
+      // })
+      //   .then(res => res.json())
+      //   .then(data => {
+      //     if (data.test) {
+      //       socket.emit('joinRoom', data.roomTitle);
+      //     }
+      //   });
+    };
+
+    // socket.on('destroy', () => {
+    //   fetch('/api/room/destroy', {
+    //     credentials: 'include',
+    //   })
+    //     .then(res => res.json())
+    //     .then(data => console.log(data));
+    // });
 
     return () => {
       socket.off('leaveRoom');
