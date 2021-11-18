@@ -4,15 +4,16 @@ import { PlayList } from '../socket/music';
 import { Server } from 'http';
 import crypto from 'crypto';
 
-export function makeHash(fileBuffer:string):string{
-  return crypto.createHash('sha512').update(fileBuffer + `${process.env.SALT}`).digest('hex');
+export function makeHash(fileBuffer: string): string {
+  return crypto
+    .createHash('sha512')
+    .update(fileBuffer + `${process.env.SALT}`)
+    .digest('hex');
 }
 
 export const utils = {
   findRoom: function (socketData: socketInfo[], socketID: string) {
-    const target = socketData.find(
-      val => val.socketId.some(client => client === socketID) === true,
-    )!;
+    const target = socketData.find(val => val.socketId.some(client => client === socketID) === true)!;
 
     return target;
   },
@@ -25,11 +26,7 @@ export const utils = {
     return data;
   },
 
-  updateDisconnectData: function (
-    targetRoom: socketInfo,
-    socketData: socketInfo[],
-    socket: Socket,
-  ) {
+  updateDisconnectData: function (targetRoom: socketInfo, socketData: socketInfo[], socket: Socket) {
     if (targetRoom !== undefined) {
       targetRoom.socketId = targetRoom.socketId.filter(val => val !== socket.id);
       if (!targetRoom.socketId.length) {
@@ -71,8 +68,6 @@ export const utils = {
 
   joinRoom: function (socket: Socket, namespace: any, target: socketInfo) {
     socket.broadcast.to([target.socketId[0]]).emit('requestTime', 'time');
-    namespace
-      .to(target.name)
-      .emit('joinRoomClient', `${target.name} 입니다. 누군가가 입장했습니다.`);
+    namespace.to(target.name).emit('joinRoomClient', `${target.name} 입니다. 누군가가 입장했습니다.`);
   },
 };

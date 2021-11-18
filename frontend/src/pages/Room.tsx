@@ -13,7 +13,10 @@ const Room = () => {
       socket.emit('leaveRoom');
     };
 
-    window.onload = event => {};
+    window.onload = event => {
+      const roomTitle = window.location.pathname.match(/[^/]+/gm)![1];
+      socket.emit('joinRoom', roomTitle);
+    };
 
     return () => {
       socket.off('leaveRoom');

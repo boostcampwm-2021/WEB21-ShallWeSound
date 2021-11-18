@@ -41,7 +41,9 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('play', (data: string) => {
+      const targetRoomTemp: socketInfo = utils.findRoom(socketData, socket.id);
       const targetRoom = utils.findRoomMaster(socketData, socket.id);
+      utils.joinRoom(socket, namespace, targetRoomTemp);
       if (targetRoom !== undefined) socket.to(targetRoom.name).emit('clientPlay', '시작해!');
     });
 
