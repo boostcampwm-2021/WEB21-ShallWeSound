@@ -34,7 +34,7 @@ export const MainPage = ({ history }: { history: any }) => {
       socket.off('joinRoomClient');
       socket.off('updateRoomList');
     };
-  });
+  }, []);
 
   function Room({ id, name, description }: { id: number; name: string; description: string }) {
     const joinRoom = (e: React.MouseEvent<HTMLElement>) => {
@@ -86,14 +86,6 @@ export const MainPage = ({ history }: { history: any }) => {
       });
       setNextRoomIndex(nextRoomIndex + 1);
 
-      // fetch(`/api/room/entering?title=${dialogInput.name}`, {
-      //   credentials: 'include',
-      // }) // session 쓸때 credentials : 'include' 설정해주기
-      //   .then(res => res.json())
-      //   .then(data => {
-      //     console.log(data.list);
-      //   });
-
       history.push(`/room/${dialogInput.name}`);
     } else {
       alert('입력칸을 다 채워주세요');
@@ -101,16 +93,6 @@ export const MainPage = ({ history }: { history: any }) => {
   }
 
   useEffect(() => {
-    // fetch('/api/room/entered', {
-    //   credentials: 'include',
-    // })
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     if (data.test) {
-    //       socket.emit('joinRoom', data.roomTitle);
-    //       history.push('/room');
-    //     }
-    //   });
     fetch('/api/room', {
       credentials: 'include',
     }) // session 쓸때 credentials : 'include' 설정해주기

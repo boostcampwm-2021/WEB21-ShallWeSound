@@ -26,7 +26,7 @@ function ChatComponent() {
       setChats(curChat);
     });
     scrollToBottom();
-  }, [socket, chats]);
+  }, [chats]);
 
   function MakeChatList() {
     const chatlist = chats.map((chat, idx) => {
