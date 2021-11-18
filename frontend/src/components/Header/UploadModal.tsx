@@ -125,7 +125,6 @@ function UploadModalInner() {
           <input
             ref={singerRef}
             className={styles.singer}
-            // value={uploadedFile.singer}
             type="text"
             placeholder="아티스트 이름"
             onChange={writeSingerName}
@@ -136,7 +135,6 @@ function UploadModalInner() {
           <textarea
             ref={descriptionRef}
             className={styles.descript}
-            // value={uploadedFile.descript}
             placeholder="곡 설명을 입력하세요"
             onChange={writeDescription}
           />
