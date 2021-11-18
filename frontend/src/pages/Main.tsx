@@ -43,7 +43,7 @@ export const MainPage = ({ history }: { history: any }) => {
     const joinRoom = (e: React.MouseEvent<HTMLElement>) => {
       socket.emit('joinRoom', name);
       console.log('joinRoom 이벤트 발생');
-      history.push('/room');
+      history.push(`/room/${name}`);
     };
 
     return (
@@ -88,40 +88,39 @@ export const MainPage = ({ history }: { history: any }) => {
         description: dialogInput.description,
       });
 
-      fetch(`/api/room/entering?title=${dialogInput.name}`, {
-        credentials: 'include',
-      }) // session 쓸때 credentials : 'include' 설정해주기
-        .then(res => res.json())
-        .then(data => {
-          console.log(data.list);
-        });
+      // fetch(`/api/room/entering?title=${dialogInput.name}`, {
+      //   credentials: 'include',
+      // }) // session 쓸때 credentials : 'include' 설정해주기
+      //   .then(res => res.json())
+      //   .then(data => {
+      //     console.log(data.list);
+      //   });
 
-      history.push('/room');
+      history.push(`/room/${dialogInput.name}`);
     } else {
       alert('입력칸을 다 채워주세요');
     }
   }
 
   useEffect(() => {
-    fetch('/api/room/entered', {
-      credentials: 'include',
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.test) {
-          socket.emit('joinRoom', data.roomTitle);
-          history.push('/room');
-        }
-      });
-
-    fetch('/api/room', {
-      credentials: 'include',
-    }) // session 쓸때 credentials : 'include' 설정해주기
-      .then(res => res.json())
-      .then(data => {
-        console.log(data.list);
-        setRoomList(data.list);
-      });
+    // fetch('/api/room/entered', {
+    //   credentials: 'include',
+    // })
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     if (data.test) {
+    //       socket.emit('joinRoom', data.roomTitle);
+    //       history.push('/room');
+    //     }
+    //   });
+    // fetch('/api/room', {
+    //   credentials: 'include',
+    // }) // session 쓸때 credentials : 'include' 설정해주기
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     console.log(data.list);
+    //     setRoomList(data.list);
+    //   });
   }, []);
 
   return (

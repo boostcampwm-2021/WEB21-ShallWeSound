@@ -15,24 +15,24 @@ const Room = () => {
     };
 
     window.onload = event => {
-      fetch('/api/room/entered', {
-        credentials: 'include',
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.test) {
-            socket.emit('joinRoom', { id: 5, name: data.roomTitle, description: 'test' });
-          }
-        });
+      // fetch('/api/room/entered', {
+      //   credentials: 'include',
+      // })
+      //   .then(res => res.json())
+      //   .then(data => {
+      //     if (data.test) {
+      //       socket.emit('joinRoom', data.roomTitle);
+      //     }
+      //   });
     };
 
-    socket.on('destroy', () => {
-      fetch('/api/room/destroy', {
-        credentials: 'include',
-      })
-        .then(res => res.json())
-        .then(data => console.log(data));
-    });
+    // socket.on('destroy', () => {
+    //   fetch('/api/room/destroy', {
+    //     credentials: 'include',
+    //   })
+    //     .then(res => res.json())
+    //     .then(data => console.log(data));
+    // });
 
     return () => {
       socket.off('leaveRoom');

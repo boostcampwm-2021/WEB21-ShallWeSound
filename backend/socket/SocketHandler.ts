@@ -98,12 +98,6 @@ const socketHandler = (io: Server) => {
         const target = utils.findRoomOnTitle(socketData, roomName);
         target?.socketId.push(socket.id);
         if (target?.socketId.length) utils.joinRoom(socket, namespace, target);
-      } else {
-        console.log('방장 새로고침');
-        utils.updateNewRoom(socketData, socket, roomName);
-        const roomList = utils.getRoomListForClient(socketData);
-        console.log(roomName, roomList);
-        socket.broadcast.emit('updateRoomList', { list: roomList });
       }
     });
 
