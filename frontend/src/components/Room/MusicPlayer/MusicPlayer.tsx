@@ -63,12 +63,13 @@ function MusicPlayer() {
         musicControl.current.muted = false;
       }
     }, 200);
-  }, []);
+  });
 
   function goPrevMusic() { socket.emit('prevMusicReq') };
   function goNextMusic() { socket.emit('nextMusicReq') };
 
   function changeFormatToTime(number: number) {
+    console.log(musicCurrentTime);
     const minute = Math.floor(number / 60);
     const second = Math.floor(number % 60);
     const formattedSecond = second >= 10 ? second : '0' + second.toString();

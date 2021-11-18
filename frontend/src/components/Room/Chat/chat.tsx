@@ -1,6 +1,5 @@
 import React from 'react';
 import { useState, useRef, useEffect } from 'react';
-import { io, Socket } from 'socket.io-client';
 import styles from '../../../stylesheets/style.module.scss';
 import * as _ from 'lodash';
 // const socket = io();
@@ -27,7 +26,7 @@ function ChatComponent() {
       setChats(curChat);
     });
     scrollToBottom();
-  }, [chats]);
+  }, [socket, chats]);
 
   function MakeChatList() {
     const chatlist = chats.map((chat, idx) => {

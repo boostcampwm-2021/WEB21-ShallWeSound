@@ -1,6 +1,4 @@
-import { listenerCount } from 'process';
-import React, { useState, useContext, useEffect, useRef, EventHandler } from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import React, { useState, useEffect } from 'react';
 import { Socket } from 'socket.io-client';
 import { useSocket } from '../context/MyContext';
 import '../stylesheets/main.scss';
@@ -16,8 +14,7 @@ export const MainPage = ({ history }: { history: any }) => {
 
   const [roomList, setRoomList] = useState<Room[]>([]);
   const [visible, setVisible] = useState(false);
-  const [appear, setAppear] = useState(false);
-  const [nextRoomIndex, setNextRoomIndex] = useState(3);
+  const [nextRoomIndex, setNextRoomIndex] = useState(1);
   const [dialogInput, setDialogInput] = useState<Room>({
     id: nextRoomIndex,
     name: '',
@@ -37,7 +34,7 @@ export const MainPage = ({ history }: { history: any }) => {
       socket.off('joinRoomClient');
       socket.off('updateRoomList');
     };
-  }, []);
+  });
 
   function Room({ id, name, description }: { id: number; name: string; description: string }) {
     const joinRoom = (e: React.MouseEvent<HTMLElement>) => {
@@ -87,6 +84,7 @@ export const MainPage = ({ history }: { history: any }) => {
         name: dialogInput.name,
         description: dialogInput.description,
       });
+      setNextRoomIndex(nextRoomIndex + 1);
 
       // fetch(`/api/room/entering?title=${dialogInput.name}`, {
       //   credentials: 'include',

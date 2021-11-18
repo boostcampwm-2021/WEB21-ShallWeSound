@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Room } from '../pages/Room';
 import '../stylesheets/reset.css';
 import styles from '../stylesheets/style.module.scss';

@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useRef, useState } from 'react';
+import { createContext, useContext } from 'react';
 import io from 'socket.io-client';
 
 const socket: any = io('http://localhost:3000/music');
