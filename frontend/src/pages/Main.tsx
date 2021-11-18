@@ -3,7 +3,7 @@ import { Socket } from 'socket.io-client';
 import HeaderComponent from '../components/Header/Header';
 import { useSocket } from '../context/MyContext';
 import '../stylesheets/main.scss';
-
+import config from '../config.host.json';
 interface Room {
   id: number;
   name: string;
@@ -94,7 +94,7 @@ export const MainPage = ({ history }: { history: any }) => {
   }
 
   useEffect(() => {
-    fetch('/api/room', {
+    fetch(`${config.localhost}/api/room`, {
       credentials: 'include',
     }) // session 쓸때 credentials : 'include' 설정해주기
       .then(res => res.json())
