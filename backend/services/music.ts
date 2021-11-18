@@ -19,7 +19,7 @@ export default {
   },
   async searchByPage(keyword: string, page: number) {
     const result = await MusicModel.findAll({
-      where: Sequelize.literal(`MATCH (name, singer) AGAINST ('*':keyword'*' in boolean mode)`),
+      where: Sequelize.literal(`MATCH (name, singer) AGAINST ('+':keyword'*' in boolean mode)`),
       replacements: {
         keyword: keyword,
       },
