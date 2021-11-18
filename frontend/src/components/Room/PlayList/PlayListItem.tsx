@@ -19,7 +19,8 @@ const PlayListItem = ({ MID, title, singer, isPlayed }: Props) => {
   const socket: any = useSocket();
   const [isHover, setIsHover] = useState(false);
 
-  const hoverHandler = () => setIsHover(!isHover);
+  const hoverOn = () => setIsHover(true);
+  const hoverOut = () => setIsHover(false);
 
   const clickPlay = () => {
     socket.emit('clickAndPlayMusic', title);
@@ -31,7 +32,7 @@ const PlayListItem = ({ MID, title, singer, isPlayed }: Props) => {
   };
 
   return (
-    <Item isPlayed={isPlayed} onMouseEnter={hoverHandler} onMouseLeave={hoverHandler} onClick={clickPlay}>
+    <Item isPlayed={isPlayed} onMouseEnter={hoverOn} onMouseLeave={hoverOut} onClick={clickPlay}>
       <Layout>
         <TextWrapper>
           <Text color="#ffffff" weight="500" size="18px">
