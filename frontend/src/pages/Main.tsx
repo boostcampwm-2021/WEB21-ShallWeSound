@@ -1,10 +1,9 @@
-import { listenerCount } from 'process';
-import React, { useState, useContext, useEffect, useRef, EventHandler } from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import React, { useState, useEffect } from 'react';
 import { Socket } from 'socket.io-client';
+import HeaderComponent from '../components/Header/Header';
 import { useSocket } from '../context/MyContext';
 import '../stylesheets/main.scss';
-
+import config from '../config.host.json';
 interface Room {
   id: number;
   name: string;
@@ -16,8 +15,7 @@ export const MainPage = ({ history }: { history: any }) => {
 
   const [roomList, setRoomList] = useState<Room[]>([]);
   const [visible, setVisible] = useState(false);
-  const [appear, setAppear] = useState(false);
-  const [nextRoomIndex, setNextRoomIndex] = useState(3);
+  const [nextRoomIndex, setNextRoomIndex] = useState(1);
   const [dialogInput, setDialogInput] = useState<Room>({
     id: nextRoomIndex,
     name: '',
@@ -37,13 +35,13 @@ export const MainPage = ({ history }: { history: any }) => {
       socket.off('joinRoomClient');
       socket.off('updateRoomList');
     };
-  });
+  }, []);
 
   function Room({ id, name, description }: { id: number; name: string; description: string }) {
     const joinRoom = (e: React.MouseEvent<HTMLElement>) => {
       socket.emit('joinRoom', name);
       console.log('joinRoom 이벤트 발생');
-      history.push('/room');
+      history.push(`/room/${name}`);
     };
 
     return (
@@ -73,20 +71,32 @@ export const MainPage = ({ history }: { history: any }) => {
   }
 
   function createRoom() {
+    if (
+      dialogInput.name.split('').every(val => val === ' ') ||
+      dialogInput.description.split('').every(val => val === ' ')
+    ) {
+      alert('공백만 입력할 수 없습니다. 다시 입력해주세요');
+      return;
+    }
+
     if (dialogInput.name && dialogInput.description) {
       socket.emit('createRoom', {
         id: nextRoomIndex,
         name: dialogInput.name,
         description: dialogInput.description,
       });
-      history.push('/room');
+      setNextRoomIndex(nextRoomIndex + 1);
+
+      history.push(`/room/${dialogInput.name}`);
     } else {
-      console.log('입력 칸이 비어있습니다');
+      alert('입력칸을 다 채워주세요');
     }
   }
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/room') // session 쓸때 credentials : 'include' 설정해주기
+    fetch(`${config.localhost}/api/room`, {
+      credentials: 'include',
+    }) // session 쓸때 credentials : 'include' 설정해주기
       .then(res => res.json())
       .then(data => {
         console.log(data.list);
@@ -95,45 +105,51 @@ export const MainPage = ({ history }: { history: any }) => {
   }, []);
 
   return (
-    <div className={'body'}>
-      {visible && (
-        <div className="dark-background">
-          <div className="dialog">
-            <p>방 생성</p>
-            <form className="input-wrap" action="submit">
-              <label htmlFor="room-id">방 제목</label>
-              <input
-                type="text"
-                id="room-id"
-                placeholder="방 제목"
-                onChange={changeDialogRoomName}
-              />
-              <label htmlFor="room-detail">방 설명</label>
-              <textarea
-                name="text1"
-                cols={40}
-                rows={5}
-                className="input-description"
-                id="room-detail"
-                placeholder="방 설명"
-                onChange={changeDialogRoomDescription}
-              />
-            </form>
-            <div className="button-wrap">
-              <button className="button" onClick={createRoom}>생성</button>
-              <button className="button" onClick={toggleCreateRoomDialog}>취소</button>
+    <>
+      <HeaderComponent />
+      <div className={'body'}>
+        {visible && (
+          <div className="dark-background">
+            <div className="dialog">
+              <p>방 생성</p>
+              <form className="input-wrap" action="submit">
+                <label htmlFor="room-id">방 제목</label>
+                <input type="text" id="room-id" placeholder="방 제목" onChange={changeDialogRoomName} />
+                <label htmlFor="room-detail">방 설명</label>
+                <textarea
+                  name="text1"
+                  cols={40}
+                  rows={5}
+                  className="input-description"
+                  id="room-detail"
+                  placeholder="방 설명"
+                  onChange={changeDialogRoomDescription}
+                />
+              </form>
+              <div className="button-wrap">
+                <button className="button" onClick={createRoom}>
+                  생성
+                </button>
+                <button className="button" onClick={toggleCreateRoomDialog}>
+                  취소
+                </button>
+              </div>
             </div>
           </div>
+        )}
+        <div className="main-wrap">
+          <div className={'roomList'}>
+            {roomList.length ? (
+              roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)
+            ) : (
+              <p className="room-empty-notice">열려 있는 방이 존재하지 않습니다!</p>
+            )}
+          </div>
+          <button className="button" onClick={toggleCreateRoomDialog}>
+            방 추가
+          </button>
         </div>
-      )}
-      <div className="main-wrap">
-        <div className={'roomList'}>
-          {roomList.length
-            ? roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)
-            : <p className="room-empty-notice">열려 있는 방이 존재하지 않습니다!</p>}
-        </div>
-        <button className="button" onClick={toggleCreateRoomDialog}>방 추가</button>
       </div>
-    </div>
+    </>
   );
 };

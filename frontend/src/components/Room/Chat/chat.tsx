@@ -1,6 +1,5 @@
-import React, { HtmlHTMLAttributes } from 'react';
+import React from 'react';
 import { useState, useRef, useEffect } from 'react';
-import { io, Socket } from 'socket.io-client';
 import styles from '../../../stylesheets/style.module.scss';
 import * as _ from 'lodash';
 // const socket = io();
@@ -14,14 +13,23 @@ function ChatComponent() {
   const socket: any = useSocket();
   const [chats, setChats] = useState<chatType[]>([]);
   const [newChat, setNewChat] = useState<string>('');
-  const chatListRef = useRef();
-  const idRef = useRef<number>(0);
+  const chatListRef = useRef<HTMLDivElement>(null);
+  const scrollToBottom = () => {
+    if (chatListRef.current) {
+      chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
+    }
+  };
   useEffect(() => {
     socket?.on('chatMessage', ({ id, msg }: chatType) => {
       const curChat = _.cloneDeep(chats);
       curChat.push({ id: id, msg: msg });
       setChats(curChat);
     });
+    scrollToBottom();
+
+    return () => {
+      socket.off('chatMessage');
+    };
   }, [chats]);
 
   function MakeChatList() {
@@ -61,7 +69,7 @@ function ChatComponent() {
   };
   return (
     <div className={styles.chatBox}>
-      <div className={styles.chatList}>
+      <div className={styles.chatList} ref={chatListRef}>
         <MakeChatList />
       </div>
       <div className={styles.chatInputSquare}>

@@ -1,14 +1,11 @@
 import styles from '../../stylesheets/style.module.scss';
 import React, { useState, useRef} from 'react';
-import * as _ from 'lodash';
 import {FileType, timeoutRef} from '../../types'
 
 function UploadModalInner() {
   console.log('render');
   const singerRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
-  const musicFileRef = useRef<HTMLInputElement>(null);
-  const thumbnailFileRef = useRef<HTMLInputElement>(null);
   const timerRef = useRef<timeoutRef>({timer:setTimeout(() => {})});
   const [uploadedFile, setUploadedFile] = useState<FileType>({
     musicName:'파일선택',
@@ -20,25 +17,22 @@ function UploadModalInner() {
   });
 
   const isFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const curObj = _.cloneDeep(uploadedFile);
-    curObj.musicFile = e.target.files!
+    const curObj = {...uploadedFile};
+    curObj.musicFile = e.target.files!;
     curObj.musicName = e.target.files![0].name;
+    e.target.value='';
     setUploadedFile(curObj);
-    console.log(curObj);
-    // e.target.value='';
   };
 
   const isThumbUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const curObj = _.cloneDeep(uploadedFile);
+    const curObj = {...uploadedFile};
     curObj.thumbnailFile = e.target.files!;
     curObj.thumbnailName = e.target.files![0].name;
+    e.target.value='';
     setUploadedFile(curObj);
-    console.log(curObj)
-    // e.target.value='';
   };
 
   const fileUploadMethod = () => {
-    console.log(uploadedFile);
     if(timerRef.current){
       clearTimeout(timerRef.current.timer!);
     }
@@ -56,10 +50,8 @@ function UploadModalInner() {
         method: 'POST',
         body: formData,
       });
-      const curObj = resetFileState(_.cloneDeep(uploadedFile));
+      const curObj = resetFileState({...uploadedFile});
       setUploadedFile(curObj);
-      musicFileRef.current!.value = '';
-      thumbnailFileRef.current!.value='';
     }, 200);
     timerRef.current.timer = uploadTimer;
   };
@@ -81,7 +73,7 @@ function UploadModalInner() {
       clearTimeout(timerRef.current.timer!);
     }
     const timer = setTimeout(function(){
-      const curObj = _.cloneDeep(uploadedFile);
+      const curObj = {...uploadedFile};
       curObj.singer=e.target.value;
       console.log(curObj)
       setUploadedFile(curObj);
@@ -94,7 +86,7 @@ function UploadModalInner() {
       clearTimeout(timerRef.current.timer!);
     }
     const timer = setTimeout(function(){
-      const curObj = _.cloneDeep(uploadedFile);
+      const curObj = {...uploadedFile};
       curObj.descript=e.target.value;
       console.log(curObj)
       setUploadedFile(curObj);
@@ -104,7 +96,7 @@ function UploadModalInner() {
 
   const dropListener = (event: React.DragEvent<HTMLDivElement>) => {
     overrideEventDefaults(event);
-    const curObj = _.cloneDeep(uploadedFile);
+    const curObj = {...uploadedFile};
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
       if(event.dataTransfer.files[0].type === 'image/jpeg'){
         curObj.thumbnailFile = event.dataTransfer.files;
@@ -168,7 +160,6 @@ function UploadModalInner() {
             id="musicFile"
             type="file"
             name="userFile1"
-            ref={musicFileRef}
             onChange={isFileUpload}
           />
         </div>
@@ -195,7 +186,6 @@ function UploadModalInner() {
             id="thumbnailFile"
             type="file"
             name="userFile2"
-            ref={thumbnailFileRef}
             onChange={isThumbUpload}
           />
         </div>
@@ -226,4 +216,3 @@ function UploadModal() {
 }
 
 export default UploadModal;
-

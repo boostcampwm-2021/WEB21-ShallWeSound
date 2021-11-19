@@ -153,8 +153,6 @@
     cursor: pointer;
     position: relative;
 
-
-
     &-bar {
       height: inherit;
       width: 0%;
@@ -178,6 +176,31 @@
     }
   }
 
+  input[type='range'] {
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 999px;
+    background: $background;
+    background-image: linear-gradient($white, $white);
+    background-size: 0% 100%;
+    background-repeat: no-repeat;
+    outline: 1px solid $white;
+    cursor: pointer;
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      background: $white;
+      border-radius: 999px;
+    }
+  }
+  
+  output {
+    width: 200px;
+    height: 200px;
+  }
 
   .width-half {
     width: 50%;

@@ -13,92 +13,61 @@ const socketHandler = (io: Server) => {
 
   namespace.on('connection', socket => {
     console.log('접속 중: ', socket.id);
-
     userHash[socket.id] = userNum;
     userNum += 1;
 
     socket.broadcast.emit('enterRoom', 'new user connected');
 
     socket.on('disconnect', () => {
-      socket.broadcast.emit('leaveRoom', 'user disconnected');
-
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
-
-      if (targetRoom !== undefined) {
-        targetRoom.socketId = targetRoom.socketId.filter(val => val !== socket.id);
-        if (!targetRoom.socketId.length) {
-          socketData.splice(socketData.indexOf(targetRoom), 1);
-          const data = socketData.map(val => {
-            return { id: val.id, name: val.name, description: val.description };
-          }); // utils로 기능 빼기
-          socket.broadcast.emit('updateRoomList', { list: data });
-        }
-      }
-
-      // targetRoom이 존재하지 않을 경우도 고려해서 try, catch 적용해보기.
+      utils.updateDisconnectData(targetRoom, socketData, socket);
     });
 
     socket.on('chatMessage', (message: string) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
-
-      if (targetRoom !== undefined) {
+      if (targetRoom !== undefined)
         socket.to(targetRoom.name).emit('chatMessage', { id: userHash[socket.id], msg: message });
-      }
     });
 
-    socket.on('responseTime', (data: string) => {
-      socket.broadcast.emit('sync', data);
+    socket.on('responseTime', (data: number) => {
+      const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
+      socket.broadcast.to(targetRoom.name).emit('sync', data);
+      namespace.to(targetRoom.name).emit('changeMusicInfo', targetRoom.playList.getCurrentMusic());
     });
 
     socket.on('pause', (data: string) => {
-      const targetRoom = socketData.find(val => val.socketId[0] === socket.id);
-
-      if (targetRoom !== undefined) {
-        socket.to(targetRoom.name).emit('clientPause', '멈춰!');
-      }
+      const targetRoom = utils.findRoomMaster(socketData, socket.id);
+      if (targetRoom !== undefined) socket.to(targetRoom.name).emit('clientPause', '멈춰!');
     });
 
     socket.on('play', (data: string) => {
-      const targetRoom = socketData.find(val => val.socketId[0] === socket.id);
-
-      if (targetRoom !== undefined) {
-        socket.to(targetRoom.name).emit('clientPlay', '시작해!');
-      }
+      const targetRoomTemp: socketInfo = utils.findRoom(socketData, socket.id);
+      const targetRoom = utils.findRoomMaster(socketData, socket.id);
+      utils.joinRoom(socket, namespace, targetRoomTemp);
+      if (targetRoom !== undefined) socket.to(targetRoom.name).emit('clientPlay', '시작해!');
     });
 
     socket.on('moving', (data: string) => {
-      const targetRoom = socketData.find(val => val.socketId[0] === socket.id);
-
-      if (targetRoom !== undefined) {
-        socket.to(targetRoom.name).emit('clientMoving', data);
-      }
+      const targetRoom = utils.findRoomMaster(socketData, socket.id);
+      if (targetRoom !== undefined) socket.to(targetRoom.name).emit('clientMoving', data);
     });
 
-    socket.on('requestPlayList', page => {
-      const targetRoom = socketData.find(
-        val => val.socketId.some(client => client === socket.id) === true,
-      );
-
-      const res = targetRoom?.playList.getPlayListByPage(page);
+    socket.on('requestPlayList', () => {
+      const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
+      const res = targetRoom?.playList.getPlayList() ?? [];
       namespace.to(socket.id).emit('responsePlayList', res);
     });
 
-    socket.on('nextMusicReq', ({ src }) => {
-      const targetRoom = socketData.find(
-        val => val.socketId.some(client => client === socket.id) === true,
-      );
-
+    socket.on('nextMusicReq', () => {
+      const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       if (socket.id !== targetRoom?.socketId[0]) return;
-
-      // namespace.to(socket.id).emit('nextMusicRes', PlayList.getNextMusic());
-      socket.to(targetRoom.name).emit('clientPlay', src);
+      // next Music Response
+      namespace.to(targetRoom.name).emit('changeMusicInfo', targetRoom.playList.getNextMusic());
+      // socket.to(targetRoom.name).emit('clientPlay', src);
     });
 
     socket.on('currentMusicReq', () => {
-      const targetRoom = socketData.find(
-        val => val.socketId.some(client => client === socket.id) === true,
-      );
-
+      const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       socket.emit('currentMusicRes', targetRoom?.playList.getCurrentMusic());
 
       // if (socketData.length > 1) {
@@ -107,50 +76,55 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('addMusicInPlayListReq', async (MIDS: number[]) => {
-      const targetRoom = socketData.find(
-        val => val.socketId.some(client => client === socket.id) === true,
-      );
-
+      const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
+      if (!targetRoom) return;
       const musics: Music[] = await musicService.findMusicsBy(MIDS);
-      targetRoom?.playList.addMusics(musics);
+      targetRoom.playList.addMusics(musics);
+      if (targetRoom.playList.getPlayList().length === musics.length) {
+        targetRoom.playList.getPlayList()[0].isPlayed = true;
+        namespace.to(targetRoom.name).emit('changeMusicInfo', targetRoom.playList.getPlayList()[0]);
+      }
+      const res = targetRoom?.playList.getPlayList();
+      namespace.to(targetRoom.name).emit('responsePlayList', res);
+    });
+
+    socket.on('removeMusicInPlayListReq', (MID: number) => {
+      const targetRoom = socketData.find(val => val.socketId.some(client => client === socket.id) === true);
+      if (!targetRoom) return;
+
+      targetRoom.playList.removeMusicByMID(MID);
+
+      const res = targetRoom.playList.getPlayList();
+      namespace.to(targetRoom.name).emit('responsePlayList', res);
     });
 
     socket.on('createRoom', data => {
-      console.log(data);
-      socket.join(data.name);
-      socketData.push({
-        id: data.id,
-        name: data.name,
-        socketId: [socket.id],
-        description: data.description,
-        playList: new PlayList(),
-      });
-
-      const roomList = socketData.map(val => {
-        return { id: val.id, name: val.name, description: val.description };
-      }); // utils로 기능 빼기
-
+      utils.updateNewRoom(socketData, socket, data);
+      const roomList = utils.getRoomListForClient(socketData);
       socket.broadcast.emit('updateRoomList', { list: roomList });
     });
 
-    socket.on('joinRoom', roomname => {
-      console.log('테스트용', roomname);
-      socket.join(roomname);
-      if (
-        !socketData.some(val => {
-          return val.name === roomname;
-        })
-      ) {
-      } else {
-        const target = socketData.find(val => val.name === roomname);
+    socket.on('joinRoom', roomName => {
+      socket.join(roomName);
+      if (utils.isRoomExist(socketData, roomName)) {
+        const target = utils.findRoomOnTitle(socketData, roomName);
         target?.socketId.push(socket.id);
-        if (target?.socketId.length) {
-          socket.broadcast.to([target.socketId[0]]).emit('requestTime', 'time');
-          namespace
-            .to(roomname)
-            .emit('joinRoomClient', `${roomname} 입니다. 누군가가 입장했습니다.`);
-        }
+        if (target?.socketId.length) utils.joinRoom(socket, namespace, target);
       }
+    });
+
+    socket.on('leaveRoom', data => {
+      const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
+      utils.updateDisconnectData(targetRoom, socketData, socket);
+      namespace.to(socket.id).emit('destroy');
+    });
+
+    socket.on('clickAndPlayMusic', (clickedMusic: string) => {
+      const targetRoom = utils.findRoom(socketData, socket.id);
+      const targetPlayList = targetRoom.playList;
+      targetPlayList.setIsPlayed(false, targetPlayList.getCurrentMusic().name);
+      targetPlayList.setIsPlayed(true, clickedMusic);
+      namespace.to(targetRoom.name).emit('changeMusicInfo', targetPlayList.getMusicByName(clickedMusic));
     });
   });
 };

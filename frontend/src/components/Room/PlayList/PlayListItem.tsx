@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useSocket } from '../../../context/MyContext';
 
 type Props = {
+  MID: number;
   title: string;
   singer: string;
+  isPlayed: boolean;
 };
 
 type TextProps = {
@@ -12,36 +15,63 @@ type TextProps = {
   size: string;
 };
 
-const PlayListItem = ({ title, singer }: Props) => {
+const PlayListItem = ({ MID, title, singer, isPlayed }: Props) => {
+  const socket: any = useSocket();
+  const [isHover, setIsHover] = useState(false);
+
+  const hoverOn = () => setIsHover(true);
+  const hoverOut = () => setIsHover(false);
+
+  const clickPlay = () => {
+    socket.emit('clickAndPlayMusic', title);
+  };
+
+  const onRemove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    socket.emit('removeMusicInPlayListReq', MID);
+  };
+
   return (
-    <Item>
-      <Wrapper>
-        <Text color="#ffffff" weight="500" size="20px">
-          {title}
-        </Text>
-        <Text color="#FAFAFA" weight="0" size="14px">
-          {singer}
-        </Text>
-      </Wrapper>
-      <Detail></Detail>
+    <Item isPlayed={isPlayed} onMouseEnter={hoverOn} onMouseLeave={hoverOut} onClick={clickPlay}>
+      <Layout>
+        <TextWrapper>
+          <Text color="#ffffff" weight="500" size="18px">
+            {title}
+          </Text>
+          <Text color="#FAFAFA" weight="0" size="14px">
+            {singer}
+          </Text>
+        </TextWrapper>
+        {isHover ? <CancelButton onClick={onRemove}>X</CancelButton> : <Detail></Detail>}
+      </Layout>
     </Item>
   );
 };
 
-const Item = styled.div`
+const Item = styled.div<{ isPlayed: boolean }>`
   height: 50px;
   margin: 0px 20px;
+  padding: 4px 0px;
   line-height: 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background: ${props => (props.isPlayed ? '#ffffff1a' : 'transparent')};
 
   &:not(:last-child) {
     border-bottom: 1px solid #ecdff5;
   }
 `;
 
-const Wrapper = styled.div`
+const Layout = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.5;
+  }
+`;
+
+const TextWrapper = styled.div`
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -81,6 +111,13 @@ const Detail = styled.div`
   &:after {
     top: 7px;
   }
+`;
+
+const CancelButton = styled.button`
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
 `;
 
 export default PlayListItem;

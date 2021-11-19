@@ -4,14 +4,13 @@ import styled from 'styled-components';
 interface Props {
   name: string;
   singer: string;
-  thumnail: string;
   description: string;
+  thumbnail: string;
   selected: boolean;
 }
 
-const MusicSearchItem = ({ name, singer, thumnail, description, selected }: Props) => {
+const MusicSearchItem = ({ name, singer, thumbnail, description, selected }: Props) => {
   const [detail, setDetail] = useState(false);
-
   const onDetail = () => {
     setDetail(true);
   };
