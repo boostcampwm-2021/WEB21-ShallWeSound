@@ -1,19 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { Socket } from 'socket.io-client';
 import HeaderComponent from '../components/Header/Header';
 import { useSocket } from '../context/MyContext';
 import '../stylesheets/main.scss';
 import config from '../config.host.json';
+import { RouteComponentProps } from 'react-router';
 interface Room {
   id: number;
   name: string;
   description: string;
 }
 
-export const MainPage = ({ history }: { history: any }) => {
+interface sry {
+  loading: boolean;
+  data: Room[];
+  error: Error;
+}
+
+type Action =
+  | { type: 'LOADING' }
+  | { type: 'SUCCESS'; data: Room[] }
+  | { type: 'ERROR'; error: Error }
+  | { type: null };
+
+export const MainPage = ({ history }: { history: RouteComponentProps['history'] }) => {
   const socket: Socket = useSocket()!;
 
-  const [roomList, setRoomList] = useState<Room[]>([]);
+  // const [roomList, setRoomList] = useState<Room[]>([]);
   const [visible, setVisible] = useState(false);
   const [nextRoomIndex, setNextRoomIndex] = useState(1);
   const [dialogInput, setDialogInput] = useState<Room>({
@@ -22,13 +35,56 @@ export const MainPage = ({ history }: { history: any }) => {
     description: '',
   });
 
+  const reducer = (state: any, action: Action) => {
+    switch (action.type) {
+      case 'LOADING':
+        return {
+          loading: true,
+          data: null,
+          error: null,
+        };
+      case 'SUCCESS':
+        return {
+          loading: false,
+          data: action.data,
+          error: null,
+        };
+      case 'ERROR':
+        return {
+          loading: false,
+          data: null,
+          error: action.error,
+        };
+      default:
+        throw new Error(`Unhandled action type: ${action.type}`);
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, { loading: false, data: [], error: null });
+
+  const fetchUser = async () => {
+    dispatch({ type: 'LOADING' });
+
+    try {
+      const result = await fetch(`${config.localhost}/api/room`, {
+        credentials: 'include',
+      }); // session 쓸때 credentials : 'include' 설정해주기
+
+      const roomList = await result.json();
+
+      dispatch({ type: 'SUCCESS', data: roomList.list });
+    } catch (e) {
+      dispatch({ type: 'ERROR', error: new Error() });
+    }
+  };
+
   useEffect(() => {
     socket.on('joinRoomClient', data => {
       console.log(data);
     });
 
     socket.on('updateRoomList', data => {
-      setRoomList(data.list);
+      dispatch({ type: 'SUCCESS', data: data.list });
     });
 
     return () => {
@@ -94,19 +150,14 @@ export const MainPage = ({ history }: { history: any }) => {
   }
 
   useEffect(() => {
-    fetch(`${config.localhost}/api/room`, {
-      credentials: 'include',
-    }) // session 쓸때 credentials : 'include' 설정해주기
-      .then(res => res.json())
-      .then(data => {
-        console.log(data.list);
-        setRoomList(data.list);
-      });
+    fetchUser();
   }, []);
+
+  const { loading, data: roomList, error } = state;
 
   return (
     <>
-      <HeaderComponent />
+      <HeaderComponent history={history} />
       <div className={'body'}>
         {visible && (
           <div className="dark-background">
@@ -139,8 +190,8 @@ export const MainPage = ({ history }: { history: any }) => {
         )}
         <div className="main-wrap">
           <div className={'roomList'}>
-            {roomList.length ? (
-              roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)
+            {roomList?.length ? (
+              roomList?.map(val => <Room id={val.id} name={val.name} description={val.description} />)
             ) : (
               <p className="room-empty-notice">열려 있는 방이 존재하지 않습니다!</p>
             )}

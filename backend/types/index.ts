@@ -22,4 +22,14 @@ type userList = {
   [socketid: string]: number;
 };
 
+type musicTable = {
+  MID: number;
+  name: string;
+  singer: string;
+  description: string;
+  thumbnail: string;
+  path: string;
+  isPlayed: boolean;
+};
+
 export type { Music, socketInfo, userList };
