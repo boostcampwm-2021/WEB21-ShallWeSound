@@ -122,11 +122,30 @@
     background: transparent;
     color: $purple;
     // width: 5.5em;
-    height: 2em;
+    // height: 2em;
+    width: 140px;
+    height: 120px;
     border-radius: 10px;
     font-weight: bold;
     font-size: large;
     cursor: pointer;
+    stroke: none;
+    fill: $purple;
+
+    &:hover {
+        svg {
+            stroke: $semi-white;
+            background-color: $purple;
+            fill: $semi-white;
+        }
+    }
+
+    svg {
+        width: 50px;
+        height: 50px;
+        padding: 0.5rem;
+        border-radius: 999px;
+    }
 }
 .UploadModalInner{
     position: absolute;
