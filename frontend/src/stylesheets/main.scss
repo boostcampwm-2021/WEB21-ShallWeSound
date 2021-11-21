@@ -1,27 +1,39 @@
 @import './global.scss';
 
 .body {
-  background: $background;
+  // background: $background;
+  position: relative;
   width: 100vw;
-  height: calc(100vh - 40px);
+  height: calc(90% - 130px - 1rem);
+  margin-bottom: 1rem;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .main-wrap {
   width: 80%;
-  height: 80%;
-  border: 4px double $white;
-  padding: 4rem;
+  height: 100%;
+  background-color: $semi-white;
+  color: $purple;
+  // border: 4px double $white;
+  box-sizing: border-box;
+  padding: 1.5rem;
   border-radius: 3rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
+  h2 {
+    width: 100%;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-align: start;
+  }
+
   .room-empty-notice {
-    color: $white;
+    color: $purple;
     font-size: 4rem;
     font-style: italic;
   }
@@ -33,24 +45,30 @@
   padding: 2rem;
   margin: 0.5rem 1rem;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
 
   * + * {
-    margin-top: 1.5rem;
+    margin-left: 1rem;
     // margin-bottom: 0.5rem;
   }
 
   .room {
-    width: 50%;
-    border: 4px solid $white;
+    display: inline-block;
+    width: 25%;
+    border: 4px solid $purple;
     border-radius: 1rem;
-    color: $white;
+    color: $purple;
     padding: 2rem;
     display: flex;
     flex-direction: column;
     cursor: pointer;
+
+    &:hover {
+      background-color: $purple;
+      color: $semi-white;
+    }
 
     p {
       display: inline-block;
@@ -62,6 +80,7 @@
 
     .room-name {
       font-size: 1.5rem;
+      text-align: center;
     }
 
     .room-descripton {
