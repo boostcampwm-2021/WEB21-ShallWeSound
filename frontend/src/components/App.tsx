@@ -7,12 +7,12 @@ import { RouteComponentProps } from 'react-router';
 
 function App({ history }: { history: RouteComponentProps['history'] }) {
   return (
-    <div className={styles.root}>
+    <>
       <HeaderComponent history={history} />
-      <div className={styles.App}>
+      <div className="body">
         <Room></Room>
       </div>
-    </div>
+    </>
   );
 }
 

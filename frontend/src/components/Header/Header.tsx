@@ -33,6 +33,7 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
   return (
     <div className="header">
       <UploadModal />
+      <img className="header-logo" src="/images/logo.png" alt="logo" />
       <div className="header-search">
         <input
           className="header-search-input"

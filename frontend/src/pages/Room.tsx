@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import MusicPlayer from '../components/Room/MusicPlayer/MusicPlayer';
 import PlayList from '../components/Room/PlayList/PlayList';
 import ChatComponent from '../components/Room/Chat/chat';
-import styled from 'styled-components';
 import { useSocket } from '../context/MyContext';
 
 const Room = () => {
@@ -24,21 +23,26 @@ const Room = () => {
   });
 
   return (
-    <>
+    <div className="room-wrap">
       <div>
         <MusicPlayer></MusicPlayer>
+        <PlayList></PlayList>
+      </div>
+      <div>
+        <div style={{width: "400px", height: "150px", backgroundColor: "#beaee2", color: "#f9f9f9", marginBottom: "1rem", padding: "1rem", boxSizing: "border-box", borderRadius: "0.25rem"}}>
+          <h3>참가자 5명</h3>
+          <ul>
+            <li>철수</li>
+            <li>훈이</li>
+            <li>맹구</li>
+            <li>유리</li>
+            <li>짱구</li>
+          </ul>
+        </div>
         <ChatComponent />
       </div>
-      <StyledDiv>
-        <PlayList></PlayList>
-      </StyledDiv>
-    </>
+    </div>
   );
 };
-
-const StyledDiv = styled.div`
-  /* width: 100vw; 
-  height: 100vh; */
-`;
 
 export { Room };
