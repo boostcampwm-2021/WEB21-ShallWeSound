@@ -1,9 +1,6 @@
 import axios from 'axios';
 import * as jwt from 'jsonwebtoken'
-import qs from 'qs'
-
-type authCode= string | qs.ParsedQs | string[] | qs.ParsedQs[] | undefined;
-
+import {authCode} from '../types/index'
 
 const githubLoginService = async(code:authCode)=>{
     const access_token = await axios({
