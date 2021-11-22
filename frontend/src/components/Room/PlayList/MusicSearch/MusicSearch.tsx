@@ -1,77 +1,57 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useReducer } from 'react';
 import styled from 'styled-components';
-import config from '../../config.host.json';
-import SearchBar from '../Util/SearchBar';
+import config from '../../../../config.host.json';
+import SearchBar from '../../../Util/SearchBar';
 import MusicSearchItem from './MusicSearchItem';
-import CircleButton from '../Util/CircleButton';
-import { useSocket } from '../../context/MyContext';
-import PopUp from '../Util/PopUp';
+import CircleButton from '../../../Util/CircleButton';
+import { useSocket } from '../../../../context/MyContext';
+import PopUp from '../../../Util/PopUp';
+import { Music } from '../../../../types';
 
-interface Music {
-  MID: number;
-  name: string;
-  singer: string;
-  description: string;
-  thumbnail: string;
-  path: string;
-  isPlayed: boolean;
-}
-
-interface SearchResult {
-  result: Music[];
-  selectedInResult: number[];
-}
+import { reducer as addMusicStatusReducer } from './reducer/addMusicState';
+import { reducer as searchResultReducer } from './reducer/searchResult';
 
 const MusicSearch = () => {
   const socket: any = useSocket();
   const page = useRef(0);
-  const [addMusicStatus, setaddMusicStatus] = useState({
+  const [keyword, setKeyword] = useState('');
+  const [addMusicState, dispatchAddMusicState] = useReducer(addMusicStatusReducer, {
     success: false,
     fail: false,
   });
-  const [keyword, setKeyword] = useState('');
-  const [searchResult, setSearchResult] = useState<SearchResult>({
+
+  const [searchResult, dispatchSearchResult] = useReducer(searchResultReducer, {
     result: [],
-    selectedInResult: [],
+    selectedMusicInResult: [],
   });
 
-  const { result, selectedInResult } = searchResult;
-  const fetchMusic = async () => {
-    const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}&page=${page.current}`);
-    const musics = await res.json();
+  const { result, selectedMusicInResult } = searchResult;
 
-    setSearchResult({
-      ...searchResult,
-      result: [...result, ...musics],
-    });
+  const fetchMusic = async () => {
+    try {
+      const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}&page=${page.current}`);
+      const musics = await res.json();
+
+      dispatchSearchResult({ type: 'FETCH_SUCCESS', result: musics });
+    } catch (e) {
+      dispatchSearchResult({ type: 'FETCH_FAILURE' });
+    }
   };
 
   useEffect(() => {
     socket.on('duplicatedMusicInPlayList', () => {
-      setaddMusicStatus({
-        success: false,
-        fail: true,
-      });
+      dispatchAddMusicState({ type: 'FAILURE' });
 
       setTimeout(() => {
-        setaddMusicStatus({
-          success: false,
-          fail: false,
-        });
+        dispatchAddMusicState({ type: 'INIT' });
       }, 700);
     });
 
     socket.on('successAddMusic', () => {
-      setaddMusicStatus({
-        success: true,
-        fail: false,
-      });
+      dispatchAddMusicState({ type: 'SUCCESS' });
 
       setTimeout(() => {
-        setaddMusicStatus({
-          success: false,
-          fail: false,
-        });
+        dispatchAddMusicState({ type: 'INIT' });
       }, 700);
     });
 
@@ -92,15 +72,12 @@ const MusicSearch = () => {
   }, [result]);
 
   const addMusicInPlayList = () => {
-    socket.emit('addMusicInPlayListReq', selectedInResult);
+    socket.emit('addMusicInPlayListReq', selectedMusicInResult);
 
-    setSearchResult({
-      ...searchResult,
-      selectedInResult: [],
-    });
+    dispatchSearchResult({ type: 'REQUEST_ADD_MUSIC_IN_PLAYLIST' });
   };
 
-  const onScroll = async (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+  const onScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
     const isEndOfScroll = e.currentTarget.scrollTop + e.currentTarget.clientHeight >= e.currentTarget.scrollHeight;
 
     if (isEndOfScroll) {
@@ -108,31 +85,23 @@ const MusicSearch = () => {
     }
   };
 
-  const isSelected = (MID: number): boolean => (selectedInResult.indexOf(MID) >= 0 ? true : false);
+  const isSelected = (MID: number): boolean => (selectedMusicInResult.indexOf(MID) >= 0 ? true : false);
 
-  const selectMusic = (MID: number) => {
-    if (selectedInResult.indexOf(MID) >= 0) {
-      setSearchResult({
-        ...searchResult,
-        selectedInResult: selectedInResult.filter(id => id !== MID),
-      });
+  const onSelectMusic = (MID: number) => {
+    if (isSelected(MID)) {
+      const newSelectedList = selectedMusicInResult.filter((id: number) => id !== MID);
+      dispatchSearchResult({ type: 'UNSELECT_MUSIC', selectedInResult: newSelectedList });
     } else {
-      setSearchResult({
-        ...searchResult,
-        selectedInResult: [...selectedInResult, MID],
-      });
+      dispatchSearchResult({ type: 'SELECT_MUSIC', selectedInResult: [...selectedMusicInResult, MID] });
     }
   };
 
   const onKeywordChange = (value: string) => {
     setKeyword(value);
-    setSearchResult({
-      result: [],
-      selectedInResult: [],
-    });
+    dispatchSearchResult({ type: 'INIT' });
   };
 
-  const { success, fail } = addMusicStatus;
+  const { success, fail } = addMusicState;
 
   return (
     <>
@@ -150,7 +119,7 @@ const MusicSearch = () => {
           <ResultWrapper onScroll={onScroll}>
             {result.length ? (
               result.map((k: Music, i: number) => (
-                <div key={i} onClick={() => selectMusic(+k.MID)}>
+                <div key={i} onClick={() => onSelectMusic(+k.MID)}>
                   <MusicSearchItem
                     name={k.name}
                     singer={k.singer}

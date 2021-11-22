@@ -11,6 +11,7 @@ type Music = {
   isPlayed: boolean;
   singer: string;
   thumbnail: string;
+  description: string;
 };
 
 type FileType = {
