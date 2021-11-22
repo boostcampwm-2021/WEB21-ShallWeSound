@@ -150,7 +150,6 @@ export const MainPage = ({ history }: { history: any }) => {
             방 추가
           </button>
         </div>
-        <img className="record-image" src="/images/background-record.png" alt="shall we sound?" />
       </div>
     </>
   );

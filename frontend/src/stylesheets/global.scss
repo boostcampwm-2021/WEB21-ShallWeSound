@@ -1,3 +1,5 @@
+@import 'https://fonts.googleapis.com/css2?family=Jua&display=swap';
+
 /* Color */
 $white: #fff;
 $semi-white: #f9f9f9;
@@ -20,6 +22,7 @@ $color-chatbox:	#9bbbd4;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-family: "Jua", Arial, Helvetica, sans-serif;
 }
 
 .record-image {
