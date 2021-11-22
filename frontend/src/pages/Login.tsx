@@ -8,7 +8,7 @@ const LoginPage = ({ history }: { history: RouteComponentProps['history'] }) => 
         window.location.href='http://localhost:3000/oauth/kakao';
     }
     const googleLogin = () =>{
-        window.location.href='http://localhost:3000/oauth/google';
+        window.location.href='http://localhost:3000/oauth/github';
     }
     return(
         <div>
