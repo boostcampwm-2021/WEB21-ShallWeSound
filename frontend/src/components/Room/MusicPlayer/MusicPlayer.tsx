@@ -14,7 +14,7 @@ interface music {
   isPlayed: boolean;
 }
 
-function MusicPlayer() {
+function MusicPlayer({ isHost }: { isHost: boolean }) {
   const musicControl = useRef<HTMLVideoElement | null>(null);
   const musicProgress = useRef<HTMLInputElement>(null);
   const volumeProgress = useRef<HTMLInputElement>(null);
@@ -180,6 +180,7 @@ function MusicPlayer() {
           min="0"
           max={musicControl.current?.duration || 0}
           onInput={changeInputRange}
+          disabled={!isHost}
         />
         <div className="serveral-icons">
           <div className="volume-wrap width-half">

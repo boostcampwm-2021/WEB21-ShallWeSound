@@ -1,13 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import HeaderComponent from '../components/Header/Header';
 import MusicPlayer from '../components/Room/MusicPlayer/MusicPlayer';
 import PlayList from '../components/Room/PlayList/PlayList';
 import ChatComponent from '../components/Room/Chat/chat';
+import UserList from '../components/Room/UserList/UserList';
 import { useSocket } from '../context/MyContext';
+import config from '../config.host.json';
 import { RouteComponentProps } from 'react-router';
 
 const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
   const socket: any = useSocket();
+
+  const roomData = window.location.pathname.match(/[^/]+/gm)![1];
+  const [isHost, setIsHost] = useState<boolean>(false);
+  const [userList, setUserList] = useState<string[]>([]);
 
   useEffect(() => {
     window.onpopstate = event => {
@@ -19,9 +25,22 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
       socket.emit('joinRoom', roomTitle);
     };
 
+    console.log(socket.id);
+
     return () => {
       socket.off('leaveRoom');
     };
+  }, []);
+
+  useEffect(() => {
+    fetch(`${config.localhost}/api/userList?roomTitle=${roomData}`, {
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(data => {
+        setUserList(data.list);
+        if (userList[0] === socket.id) setIsHost(true);
+      });
   });
 
   return (
@@ -29,31 +48,11 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
       <HeaderComponent history={history} />
       <div className="room-wrap">
         <div>
-          <MusicPlayer></MusicPlayer>
+          <MusicPlayer isHost={isHost}></MusicPlayer>
           <PlayList></PlayList>
         </div>
         <div>
-          <div
-            style={{
-              width: '400px',
-              height: '150px',
-              backgroundColor: '#beaee2',
-              color: '#f9f9f9',
-              marginBottom: '1rem',
-              padding: '1rem',
-              boxSizing: 'border-box',
-              borderRadius: '0.25rem',
-            }}
-          >
-            <h3>참가자 5명</h3>
-            <ul>
-              <li>철수</li>
-              <li>훈이</li>
-              <li>맹구</li>
-              <li>유리</li>
-              <li>짱구</li>
-            </ul>
-          </div>
+          <UserList user={userList} />
           <ChatComponent />
         </div>
       </div>
