@@ -29,7 +29,7 @@ type musicTable = {
   description: string;
   thumbnail: string;
   path: string;
-  isPlayed: boolean;
+  content_hash: string;
 };
 
-export type { Music, socketInfo, userList };
+export type { Music, socketInfo, userList, musicTable };
