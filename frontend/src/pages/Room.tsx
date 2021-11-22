@@ -6,14 +6,27 @@ import ChatComponent from '../components/Room/Chat/chat';
 import UserList from '../components/Room/UserList/UserList';
 import { useSocket } from '../context/MyContext';
 import config from '../config.host.json';
+import { useAsync } from '../context/useAsync';
 import { RouteComponentProps } from 'react-router';
+import { fetchState } from '../types';
 
 const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
   const socket: any = useSocket();
 
   const roomData = window.location.pathname.match(/[^/]+/gm)![1];
   const [isHost, setIsHost] = useState<boolean>(false);
-  const [userList, setUserList] = useState<string[]>([]);
+
+  const fetchUserList = async () => {
+    const data = await fetch(`${config.localhost}/api/userList?roomTitle=${roomData}`, {
+      credentials: 'include',
+    });
+    const result = await data.json();
+
+    return result.list;
+  };
+
+  const [state, refetchUserList] = useAsync(fetchUserList, []);
+  const { loading, data: userList, error } = state as fetchState;
 
   useEffect(() => {
     window.onpopstate = event => {
@@ -25,23 +38,28 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
       socket.emit('joinRoom', roomTitle);
     };
 
-    console.log(socket.id);
-
     return () => {
       socket.off('leaveRoom');
     };
   }, []);
 
   useEffect(() => {
-    fetch(`${config.localhost}/api/userList?roomTitle=${roomData}`, {
-      credentials: 'include',
-    })
-      .then(res => res.json())
-      .then(data => {
-        setUserList(data.list);
-        if (userList[0] === socket.id) setIsHost(true);
-      });
-  });
+    if (socket.id !== undefined && userList[0] === socket.id) setIsHost(true);
+
+    socket.on('updateUserList', () => {
+      refetchUserList();
+    });
+
+    socket.on('delegateHost', (isHostServer: boolean) => {
+      console.log('위임받기');
+      setIsHost(isHostServer);
+    });
+
+    return () => {
+      socket.off('updateUserList');
+      socket.off('delegateHost');
+    };
+  }, []);
 
   return (
     <>

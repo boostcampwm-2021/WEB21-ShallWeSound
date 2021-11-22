@@ -21,6 +21,11 @@ const socketHandler = (io: Server) => {
     socket.on('disconnect', () => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       utils.updateDisconnectData(targetRoom, socketData, socket);
+
+      if (targetRoom && targetRoom.socketId.length > 1) {
+        namespace.to(targetRoom.socketId[0]).emit('delegateHost', true);
+        namespace.to(targetRoom.name).emit('updateUserList');
+      }
     });
 
     socket.on('chatMessage', (message: string) => {
@@ -110,13 +115,16 @@ const socketHandler = (io: Server) => {
         const target = utils.findRoomOnTitle(socketData, roomName);
         target?.socketId.push(socket.id);
         if (target?.socketId.length) utils.joinRoom(socket, namespace, target);
+        namespace.to(target?.name!).emit('updateUserList');
       }
     });
 
     socket.on('leaveRoom', data => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       utils.updateDisconnectData(targetRoom, socketData, socket);
-      namespace.to(socket.id).emit('destroy');
+
+      namespace.to(targetRoom.socketId[0]).emit('delegateHost', true);
+      namespace.to(targetRoom.name).emit('updateUserList');
     });
 
     socket.on('clickAndPlayMusic', (clickedMusic: string) => {
