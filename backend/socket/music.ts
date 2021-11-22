@@ -1,3 +1,4 @@
+import music from '../services/music';
 import type { Music } from '../types';
 
 export class PlayList {
@@ -42,5 +43,10 @@ export class PlayList {
 
   removeMusicByMID(MID: number): void {
     this.playlist = this.playlist.filter(music => music.MID !== MID);
+  }
+
+  isExist(musics: Music[]): boolean {
+    const MIDs = this.playlist.map(music => music.MID);
+    return musics.find(music => MIDs.includes(music.MID)) ? true : false;
   }
 }
