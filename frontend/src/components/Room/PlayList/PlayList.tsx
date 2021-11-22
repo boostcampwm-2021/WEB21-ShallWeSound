@@ -57,14 +57,14 @@ const PlayList = () => {
 };
 
 const Container = styled.div`
-  background: none;
-  outline: 4px solid #fff;
+  background: #beaee2;
   border-radius: 10px;
-  box-shadow: rgb(0 0 0 / 50%) 0px 10px 25px;
-  width: 280px;
-  height: 816px;
+  /* box-shadow: rgb(0 0 0 / 50%) 0px 10px 25px; */
+  width: 400px;
+  height: 300px;
   float: right;
   position: relative;
+  margin-right: 2rem;
 `;
 
 const Title = styled.div`

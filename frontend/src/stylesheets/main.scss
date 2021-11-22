@@ -1,16 +1,5 @@
 @import './global.scss';
 
-.body {
-  // background: $background;
-  position: relative;
-  width: 100vw;
-  height: calc(90% - 130px - 1rem);
-  margin-bottom: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
 .main-wrap {
   width: 80%;
   height: 100%;
@@ -158,4 +147,17 @@
   border-radius: 1rem;
   cursor: pointer;
   margin: 0 0.5rem;
+}
+
+.room-wrap {
+  width: 80%;
+  height: 100%;
+  background-color: $semi-white;
+  color: $purple;
+  box-sizing: border-box;
+  padding: 2rem;
+  border-radius: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

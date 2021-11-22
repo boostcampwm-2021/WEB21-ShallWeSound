@@ -1,10 +1,5 @@
 @import "./global.scss";
 
-.root{
-    background: $background;//$background;//$white;//$background; //#e9ecef;
-    position: relative;
-
-}
 .App {
     position: relative;
     background-size: cover;
@@ -19,7 +14,7 @@
     overflow: hidden;
     height: auto;
     margin-bottom: 0.5rem;
-
+    color: $semi-black;
 
     .othersChat{
         display: block;
@@ -59,11 +54,11 @@
 }
 
 .chatBox{
-    background: none;//linear-gradient(#4b6cb7, #182848);
-    // background-color: $color-chatbox;
-    outline: 4px solid $white;
+    // background: none;//linear-gradient(#4b6cb7, #182848);
+    background-color: $purple;
+    // outline: 4px solid $white;
     width: 400px;
-    height: 380px;
+    height: 570px;
     position: relative;
     border-radius: 0.25rem;
     

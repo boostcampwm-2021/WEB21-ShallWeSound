@@ -20,7 +20,6 @@ $color-chatbox:	#9bbbd4;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: "Maple Light", "Maple OTF Light", Arial, Helvetica, sans-serif;
 }
 
 .record-image {
@@ -32,6 +31,16 @@ $color-chatbox:	#9bbbd4;
   z-index: 0;
 }
 
+.body {
+  // background: $background;
+  position: relative;
+  width: 100vw;
+  height: calc(90% - 130px - 1rem);
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
 
 @keyframes fade-in {
   from { opacity: 0 }
