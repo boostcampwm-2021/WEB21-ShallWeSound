@@ -1,12 +1,14 @@
-import React, {useState, useRef} from 'react';
-import UploadModal from "./UploadModal";
-import {timeoutRef} from '../../types'
-function HeaderComponent() {
-  const timerRef = useRef<timeoutRef>({timer:setTimeout(() => {})})
-  const [searchInput, setSearchInput] = useState("");
+import React, { useState, useRef } from 'react';
+import UploadModal from './UploadModal';
+import { timeoutRef } from '../../types';
+import { RouteComponentProps } from 'react-router';
 
-  function searchInputChange (e: React.ChangeEvent<HTMLInputElement>) {
-    if(timerRef.current){
+function HeaderComponent({ history }: { history: RouteComponentProps['history'] }) {
+  const timerRef = useRef<timeoutRef>({ timer: setTimeout(() => {}) });
+  const [searchInput, setSearchInput] = useState('');
+
+  function searchInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (timerRef.current) {
       clearTimeout(timerRef.current.timer!);
     }
     const searchTimer = setTimeout(() => {
@@ -16,11 +18,14 @@ function HeaderComponent() {
   }
 
   function doSearch() {
-    console.log("do Search!");
+    history.push(`/result/${searchInput}`);
+    window.onpopstate = () => {
+      alert('뒤로가기 ㅋㅋ');
+    };
   }
 
-  function searchInputSubmit (e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
+  function searchInputSubmit(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
       doSearch();
     }
   }
@@ -30,11 +35,17 @@ function HeaderComponent() {
       <UploadModal />
       <img className="header-logo" src="/images/logo.png" alt="logo" />
       <div className="header-search">
-        <input className="header-search-input" type="text" placeholder="검색어를 입력하세요" onChange={searchInputChange} onKeyPress={searchInputSubmit} />
-        <img src="/icons/search.svg" alt="search" onClick={doSearch}/>
+        <input
+          className="header-search-input"
+          type="text"
+          placeholder="검색어를 입력하세요"
+          onChange={searchInputChange}
+          onKeyPress={searchInputSubmit}
+        />
+        <img src="/icons/search.svg" alt="search" onClick={doSearch} />
       </div>
     </div>
-  )
+  );
 }
 
 export default HeaderComponent;

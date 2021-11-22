@@ -4,16 +4,12 @@ import HeaderComponent from '../components/Header/Header';
 import { useSocket } from '../context/MyContext';
 import '../stylesheets/main.scss';
 import config from '../config.host.json';
-interface Room {
-  id: number;
-  name: string;
-  description: string;
-}
+import { useAsync } from '../context/useAsync';
+import { fetchState, Room } from '../types';
+import { RouteComponentProps } from 'react-router';
 
-export const MainPage = ({ history }: { history: any }) => {
+export const MainPage = ({ history }: { history: RouteComponentProps['history'] }) => {
   const socket: Socket = useSocket()!;
-
-  const [roomList, setRoomList] = useState<Room[]>([]);
   const [visible, setVisible] = useState(false);
   const [nextRoomIndex, setNextRoomIndex] = useState(1);
   const [dialogInput, setDialogInput] = useState<Room>({
@@ -22,20 +18,13 @@ export const MainPage = ({ history }: { history: any }) => {
     description: '',
   });
 
-  useEffect(() => {
-    socket.on('joinRoomClient', data => {
-      console.log(data);
+  const listFetch = async () => {
+    const result = await fetch(`${config.localhost}/api/room`, {
+      credentials: 'include',
     });
-
-    socket.on('updateRoomList', data => {
-      setRoomList(data.list);
-    });
-
-    return () => {
-      socket.off('joinRoomClient');
-      socket.off('updateRoomList');
-    };
-  }, []);
+    const res = await result.json();
+    return res.list;
+  };
 
   function Room({ id, name, description }: { id: number; name: string; description: string }) {
     const joinRoom = (e: React.MouseEvent<HTMLElement>) => {
@@ -93,21 +82,30 @@ export const MainPage = ({ history }: { history: any }) => {
     }
   }
 
+  const [state, fetchUser] = useAsync(listFetch, []);
+
+  const { loading, data: roomList, error } = state as fetchState;
+
   useEffect(() => {
-    fetch(`${config.localhost}/api/room`, {
-      credentials: 'include',
-    }) // session 쓸때 credentials : 'include' 설정해주기
-      .then(res => res.json())
-      .then(data => {
-        console.log(data.list);
-        setRoomList(data.list);
-      });
+    socket.on('joinRoomClient', data => {
+      console.log(data);
+    });
+
+    socket.on('updateRoomList', data => {
+      console.log('업데이트리스트');
+      fetchUser();
+    });
+
+    return () => {
+      socket.off('joinRoomClient');
+      socket.off('updateRoomList');
+    };
   }, []);
 
   return (
     <>
-      <HeaderComponent />
-      <div className="body">
+      <HeaderComponent history={history} />
+      <div className={'body'}>
         {visible && (
           <div className="dark-background">
             <div className="dialog">

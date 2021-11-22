@@ -126,6 +126,10 @@ const socketHandler = (io: Server) => {
       targetPlayList.setIsPlayed(true, clickedMusic);
       namespace.to(targetRoom.name).emit('changeMusicInfo', targetPlayList.getMusicByName(clickedMusic));
     });
+
+    socket.on('zzz', data => {
+      console.log(data);
+    });
   });
 };
 

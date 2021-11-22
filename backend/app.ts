@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import http from 'http';
 import dotenv from 'dotenv';
+import MusicService from './services/music';
 dotenv.config({ path: __dirname + '/config/.env' });
 
 import socket from './socket';
@@ -23,9 +24,16 @@ const SequelizeAuto = require('sequelize-auto');
 //   console.log('연결 성공');
 // });
 
+async function aaa() {
+  const data = await MusicService.search('Le Malls');
+  console.log(data[0].name);
+}
+
+aaa();
+
 app.use(
   cors({
-    origin: 'http://101.101.209.122:3001',
+    origin: 'http://localhost:3001',
     credentials: true,
   }),
 );
