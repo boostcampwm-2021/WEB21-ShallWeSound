@@ -27,12 +27,16 @@ const MusicSearch = () => {
 
   const { result, selectedMusicInResult } = searchResult;
 
-  const fetchMusic = async () => {
+  const fetchMusic = async (more = false) => {
     try {
       const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}&page=${page.current}`);
       const musics = await res.json();
 
-      dispatchSearchResult({ type: 'FETCH_SUCCESS', result: musics });
+      if (more) {
+        dispatchSearchResult({ type: 'FETCH_MORE_SUCCESS', result: musics });
+      } else {
+        dispatchSearchResult({ type: 'FETCH_SUCCESS', result: musics });
+      }
     } catch (e) {
       dispatchSearchResult({ type: 'FETCH_FAILURE' });
     }
@@ -81,7 +85,7 @@ const MusicSearch = () => {
     const isEndOfScroll = e.currentTarget.scrollTop + e.currentTarget.clientHeight >= e.currentTarget.scrollHeight;
 
     if (isEndOfScroll) {
-      fetchMusic();
+      fetchMusic(true);
     }
   };
 
@@ -98,7 +102,6 @@ const MusicSearch = () => {
 
   const onKeywordChange = (value: string) => {
     setKeyword(value);
-    dispatchSearchResult({ type: 'INIT' });
   };
 
   const { success, fail } = addMusicState;
@@ -118,14 +121,14 @@ const MusicSearch = () => {
           <SearchBar keyword={keyword} onKeywordChange={onKeywordChange} />
           <ResultWrapper onScroll={onScroll}>
             {result.length ? (
-              result.map((k: Music, i: number) => (
-                <div key={i} onClick={() => onSelectMusic(+k.MID)}>
+              result.map((music: Music, i: number) => (
+                <div key={i} onClick={() => onSelectMusic(+music.MID)}>
                   <MusicSearchItem
-                    name={k.name}
-                    singer={k.singer}
-                    thumbnail={k.thumbnail}
-                    description={k.description}
-                    selected={isSelected(+k.MID)}
+                    name={music.name}
+                    singer={music.singer}
+                    thumbnail={music.thumbnail}
+                    description={music.description}
+                    selected={isSelected(+music.MID)}
                   />
                 </div>
               ))
