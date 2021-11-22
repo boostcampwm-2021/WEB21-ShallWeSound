@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import config from '../config.host.json';
+import { RouteComponentProps } from 'react-router';
+import HeaderComponent from '../components/Header/Header';
 
 interface musicResultItem {
   name: string;
@@ -7,7 +9,7 @@ interface musicResultItem {
   thumbnail: string;
 }
 
-const ResultPage = () => {
+const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) => {
   const [resultList, setResultList] = useState<musicResultItem[]>([]);
 
   useEffect(() => {
@@ -19,6 +21,7 @@ const ResultPage = () => {
 
   return (
     <>
+      <HeaderComponent history={history} />
       <div>여긴 결과페이지다.</div>
       {resultList.map(val => {
         return (
