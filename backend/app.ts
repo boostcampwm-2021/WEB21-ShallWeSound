@@ -12,6 +12,7 @@ import audioRouter from './routes/audio';
 import apiRouter from './routes/api/';
 import uploadRouter from './routes/upload';
 import downloadRouter from './routes/download';
+import loginRouter from './routes/login';
 
 const models = require('./models/index.js');
 const app: express.Application = express();
@@ -48,6 +49,7 @@ app.use('/room', roomRouter);
 app.use('/audio', audioRouter);
 app.use('/upload', uploadRouter);
 app.use('/download', downloadRouter);
+app.use('/oauth', loginRouter);
 
 app.use(express.static(path.join(__dirname, 'videos')));
 
