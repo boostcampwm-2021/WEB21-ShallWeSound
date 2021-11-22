@@ -20,17 +20,6 @@ const server: http.Server = http.createServer(app);
 const sequelize = require('sequelize');
 const SequelizeAuto = require('sequelize-auto');
 
-// models.sequelize.sync().then(() => {
-//   console.log('연결 성공');
-// });
-
-async function aaa() {
-  const data = await MusicService.search('Le Malls');
-  console.log(data[0].name);
-}
-
-aaa();
-
 app.use(
   cors({
     origin: 'http://localhost:3001',

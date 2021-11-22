@@ -45,7 +45,9 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
 
   useEffect(() => {
     if (socket.id !== undefined && userList[0] === socket.id) setIsHost(true);
+  }, [userList]);
 
+  useEffect(() => {
     socket.on('updateUserList', () => {
       refetchUserList();
     });

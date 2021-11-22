@@ -22,7 +22,7 @@ const socketHandler = (io: Server) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       utils.updateDisconnectData(targetRoom, socketData, socket);
 
-      if (targetRoom && targetRoom.socketId.length > 1) {
+      if (targetRoom && targetRoom.socketId.length > 0) {
         namespace.to(targetRoom.socketId[0]).emit('delegateHost', true);
         namespace.to(targetRoom.name).emit('updateUserList');
       }
