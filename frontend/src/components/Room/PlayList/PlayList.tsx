@@ -37,16 +37,20 @@ const PlayList = ({ isHost }: { isHost: boolean }) => {
     <Container>
       <Title>P L A Y &nbsp; L I S T</Title>
       <PlayListWrapper>
-        {playList.map((music: Music, i: number) => (
-          <PlayListItem
-            key={i}
-            MID={music.MID}
-            title={music.name}
-            singer={music.singer}
-            isPlayed={music.isPlayed}
-            isHost={isHost}
-          />
-        ))}
+        {playList.length !== 0 ? (
+          playList.map((music: Music, i: number) => (
+            <PlayListItem
+              key={i}
+              MID={music.MID}
+              title={music.name}
+              singer={music.singer}
+              isPlayed={music.isPlayed}
+              isHost={isHost}
+            />
+          ))
+        ) : (
+          <Title>방장이 아직 곡을 추가하지 않았습니다. 잠시만 기다려주세요! </Title>
+        )}
       </PlayListWrapper>
       <ButtonWrapper>
         {isHost && (
