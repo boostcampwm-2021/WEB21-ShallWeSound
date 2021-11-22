@@ -6,12 +6,12 @@ import HeaderComponent from './Header/Header';
 
 function App() {
   return (
-    <div className={styles.root}>
+    <>
       <HeaderComponent />
-      <div className={styles.App}>
+      <div className="body">
         <Room></Room>
       </div>
-    </div>
+    </>
   );
 }
 

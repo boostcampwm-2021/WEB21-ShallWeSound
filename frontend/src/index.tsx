@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './stylesheets/global.scss';
 import App from './components/App';
 import { MainPage } from './pages/Main';
 import { ContextProvider } from './context/MyContext';

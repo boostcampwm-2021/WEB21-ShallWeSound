@@ -28,6 +28,7 @@ function HeaderComponent() {
   return (
     <div className="header">
       <UploadModal />
+      <img className="header-logo" src="/images/logo.png" alt="logo" />
       <div className="header-search">
         <input className="header-search-input" type="text" placeholder="검색어를 입력하세요" onChange={searchInputChange} onKeyPress={searchInputSubmit} />
         <img src="/icons/search.svg" alt="search" onClick={doSearch}/>

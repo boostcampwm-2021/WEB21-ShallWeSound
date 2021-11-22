@@ -107,7 +107,7 @@ export const MainPage = ({ history }: { history: any }) => {
   return (
     <>
       <HeaderComponent />
-      <div className={'body'}>
+      <div className="body">
         {visible && (
           <div className="dark-background">
             <div className="dialog">
@@ -138,6 +138,7 @@ export const MainPage = ({ history }: { history: any }) => {
           </div>
         )}
         <div className="main-wrap">
+          <h2>방 참가하기</h2>
           <div className={'roomList'}>
             {roomList.length ? (
               roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)
