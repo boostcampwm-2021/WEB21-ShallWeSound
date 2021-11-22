@@ -49,7 +49,7 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
       <div className="room-wrap">
         <div>
           <MusicPlayer isHost={isHost}></MusicPlayer>
-          <PlayList></PlayList>
+          <PlayList isHost={isHost}></PlayList>
         </div>
         <div>
           <UserList user={userList} />
