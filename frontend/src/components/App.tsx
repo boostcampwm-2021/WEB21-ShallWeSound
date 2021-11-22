@@ -48,6 +48,17 @@ function App() {
     <>
       <Router>
         <Route
+          path="/login"
+          render={()=>{
+            console.log(isAuthenticated());
+            if(!isAuthenticated()){
+              return <Route component={LoginPage} />;
+            }else{
+              return <Redirect to={{ pathname: "/" }} />;
+            }
+          }}
+        />
+        <Route
         path="/"
         render={()=>{
           console.log(isAuthenticated());
@@ -58,13 +69,24 @@ function App() {
           }
         }}
         />
+        <Route
+        path="/main"
+        render={()=>{
+          console.log(isAuthenticated());
+          if(!isAuthenticated()){
+            return <Redirect to={{ pathname: "/" }} />;
+          }else{
+            return <Route component={MainPage} />;
+          }
+        }}
+        />
         <Route 
         path="/room" 
         render={()=>{
           if(!isAuthenticated()){
-            return <Route path='/login'/>;
+            return <Redirect to={{ pathname: "/" }}/>;
           }else{
-            return <Redirect to={{ pathname: "/room" }} />;
+            return <Route component={Room} />;
           }
         }}
         />
@@ -72,16 +94,12 @@ function App() {
         path="/result" 
         render={()=>{
           if(!isAuthenticated()){
-            return <Route path='/login' />;
+            return <Redirect to={{ pathname: "/" }}/>;
           }else{
-            return <Redirect to={{ pathname: "/result" }} />;
+            return <Route component={ResultPage} />;
           }
         }}
         />
-        <Route path='/login' component={LoginPage}/>
-        <Route path='/result' component={ResultPage}/>
-        <Route path='/room' component={Room}/>
-        <Route path='/main' component={MainPage}/>
       </Router>
       ,
     </>
