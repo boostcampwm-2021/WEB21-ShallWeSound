@@ -32,10 +32,18 @@ type fetchState = {
   error: any;
 };
 
+type musicResultItem = {
+  name: string;
+  singer: string;
+  thumbnail: string;
+  description: string;
+  path: string;
+};
+
 type Action =
   | { type: 'LOADING' }
   | { type: 'SUCCESS'; data: Room[] }
   | { type: 'ERROR'; error: Error }
   | { type: null };
 
-export type { Music, FileType, timeoutRef, fetchState, Room, Action };
+export type { Music, FileType, timeoutRef, fetchState, Room, Action, musicResultItem };

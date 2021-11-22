@@ -2,12 +2,7 @@ import React, { useEffect, useState } from 'react';
 import config from '../config.host.json';
 import { RouteComponentProps } from 'react-router';
 import HeaderComponent from '../components/Header/Header';
-
-interface musicResultItem {
-  name: string;
-  singer: string;
-  thumbnail: string;
-}
+import { musicResultItem } from '../types';
 
 const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) => {
   const [resultList, setResultList] = useState<musicResultItem[]>([]);
@@ -28,6 +23,7 @@ const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) =>
           <div>
             {val.name}
             {val.singer}
+            {val.description}
             <img src={val.thumbnail}></img>
           </div>
         );

@@ -36,7 +36,6 @@
       z-index: 5;
       cursor: pointer;
     }
-
   }
 
   video {
@@ -79,7 +78,7 @@
     justify-content: space-around;
     align-items: center;
 
-    .icon { 
+    .icon {
       cursor: pointer;
     }
   }
@@ -133,9 +132,7 @@
 
     &:hover {
       background-color: lighten($color: $black, $amount: 30);
-      
     }
-    
   }
 
   &-timer {
@@ -161,9 +158,9 @@
       border: 0.5px solid $semi-white;
       border-radius: inherit;
       background-color: $semi-white;
-      
+
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         height: 18px;
         width: 18px;
@@ -197,7 +194,7 @@
       border-radius: 999px;
     }
   }
-  
+
   output {
     width: 200px;
     height: 200px;
