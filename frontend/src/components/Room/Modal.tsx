@@ -24,14 +24,13 @@ const Modal = ({ widthP, heightP, onToggle, children }: Props) => {
 
   return (
     <>
-      <ModalOverlay onClick={onToggle}>
-        <StyledModal widthP={widthP} heightP={heightP} onClick={e => e.stopPropagation()}>
-          <Head>
-            <CloseButton onClick={onToggle}>X</CloseButton>
-          </Head>
-          {children}
-        </StyledModal>
-      </ModalOverlay>
+      <ModalOverlay onClick={onToggle} />
+      <StyledModal widthP={widthP} heightP={heightP} onClick={e => e.stopPropagation()}>
+        <Head>
+          <CloseButton onClick={onToggle}>X</CloseButton>
+        </Head>
+        {children}
+      </StyledModal>
     </>
   );
 };
