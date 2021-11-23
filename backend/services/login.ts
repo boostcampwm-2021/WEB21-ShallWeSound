@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as jwt from 'jsonwebtoken'
 import {authCode} from '../types/index'
-
+import {client, resultPrint} from '../config/redis'
 const githubLoginService = async(code:authCode)=>{
     const access_token = await axios({
         method: 'POST',
@@ -20,12 +20,12 @@ const githubLoginService = async(code:authCode)=>{
     });
     const userID = userResponse.data.login;
     const userEmail = userResponse.data.email;
-    const token = jwt.sign({
-    userID: userID
-    }, `${process.env.SALT}`, {
-    expiresIn: '1h'
+    const aToken = jwt.sign(userID, `${process.env.SALT}`, {
+    expiresIn: '1m'
     });
-    return token;
+    const rToken = jwt.sign({}, `${process.env.SALT}`, {expiresIn:'1h'})
+    client.set(aToken, rToken, resultPrint);
+    return aToken;
 
 }
 const kakaoLoginService = async(code:authCode)=>{
@@ -49,15 +49,40 @@ const kakaoLoginService = async(code:authCode)=>{
         },
     });
     const userID = userResponse.data.id;
-    const token = jwt.sign({
-        userID: userID
-        }, `${process.env.SALT}`, {
-        expiresIn: '1h'
+    const aToken = jwt.sign(userID,  `${process.env.SALT}`, {
+        expiresIn: '1m'
         });
-    return token;
+    const rToken = jwt.sign({}, `${process.env.SALT}`, {expiresIn:'1h'})
+    client.set(aToken, rToken, resultPrint);
+
+    return aToken;
 }
 
+const verifyToken = (accessToken:string) =>{
+    try{
+        const verifyResult = jwt.verify(accessToken, `${process.env.SALT}`);
+
+        return {
+            result:true,
+            userID:verifyResult,
+
+        }
+    }catch(err){
+
+    }
+    
+}
+
+const refrashToken = (accessToken:string)=>{
+    try{
+        const result = jwt.verify()
+
+    }catch(err){
+
+    }
+}
 export const loginServie={
     githubLogin:githubLoginService,
-    kakaoLogin:kakaoLoginService
+    kakaoLogin:kakaoLoginService,
+    verifyToken:verifyToken
 }

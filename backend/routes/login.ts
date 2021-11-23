@@ -1,5 +1,6 @@
 import express from 'express';
 import {loginServie} from '../services/login'
+import * as jwt from 'jsonwebtoken'
 const router = express.Router();
 router.use(express.json());
 router.get('/kakao' ,(req, res)=>{
@@ -21,6 +22,21 @@ router.get('/kakao/callback' , async (req, res)=>{
     res.cookie('jwt', token).redirect('http://localhost:3001/');
 })
 
+router.get('/authenticate', (req, res)=>{
+    const curToken = req.body.jwt;
+    const authenticateResult = loginServie.verifyToken(curToken);
+    
+    
+})
+
+router.get('/verifyTest', (req, res)=>{
+    const tempToken = jwt.sign({
+        test:'test'
+    }, 'salt', {expiresIn:'1s'});
+    setTimeout(() => {
+        res.send(jwt.verify(tempToken, 'salt'));
+    }, 2000);
+})
 
 
 
