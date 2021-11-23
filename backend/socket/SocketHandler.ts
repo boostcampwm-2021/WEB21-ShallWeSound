@@ -25,6 +25,8 @@ const socketHandler = (io: Server) => {
       if (targetRoom && targetRoom.socketId.length > 0) {
         namespace.to(targetRoom.socketId[0]).emit('delegateHost', true);
         namespace.to(targetRoom.name).emit('updateUserList');
+        const roomList = utils.getRoomListForClient(socketData);
+        socket.broadcast.emit('updateRoomList', { list: roomList });
       }
     });
 
@@ -106,16 +108,18 @@ const socketHandler = (io: Server) => {
     socket.on('createRoom', data => {
       utils.updateNewRoom(socketData, socket, data);
       const roomList = utils.getRoomListForClient(socketData);
-      socket.broadcast.emit('updateRoomList', { list: roomList });
     });
 
     socket.on('joinRoom', roomName => {
       socket.join(roomName);
+      console.log('방입장', roomName);
       if (utils.isRoomExist(socketData, roomName)) {
         const target = utils.findRoomOnTitle(socketData, roomName);
         target?.socketId.push(socket.id);
         if (target?.socketId.length) utils.joinRoom(socket, namespace, target);
         namespace.to(target?.name!).emit('updateUserList');
+        const roomList = utils.getRoomListForClient(socketData);
+        socket.broadcast.emit('updateRoomList', { list: roomList });
       }
     });
 
@@ -126,6 +130,8 @@ const socketHandler = (io: Server) => {
       if (targetRoom !== undefined) {
         namespace.to(targetRoom.socketId[0]).emit('delegateHost', true);
         namespace.to(targetRoom.name).emit('updateUserList');
+        const roomList = utils.getRoomListForClient(socketData);
+        socket.broadcast.emit('updateRoomList', { list: roomList });
       }
     });
 

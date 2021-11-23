@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import config from '../config.host.json';
-import { RouteComponentProps } from 'react-router';
-import HeaderComponent from '../components/Header/Header';
 import { musicResultItem } from '../types';
-
-const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) => {
+import PlayButton from '../components/Util/PlayButton';
+const ResultPages = (prop: any, ref: any) => {
+  const musicProgress = useRef<HTMLInputElement>(null);
+  const musicControl = useRef<HTMLAudioElement>(null);
+  const [srcState, setSrc] = useState<string>('');
   const [resultList, setResultList] = useState<musicResultItem[]>([]);
 
   useEffect(() => {
@@ -14,9 +15,22 @@ const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) =>
       .then(data => setResultList(data.list));
   }, [window.location.pathname]);
 
+  const click = (src: string) => {
+    setSrc(src);
+  };
+
   return (
     <>
       <div className="body">
+        {/* <input
+          className="input-range"
+          name="musicplayer-progress"
+          onInput={changeInputRange}
+          ref={musicProgress}
+          type="range"
+          min="0"
+        /> */}
+        {/* <audio src={srcState} ref={musicControl} className={'result-player'} loop controls></audio> */}
         <div className="search-main-wrap">
           <div className="search-result-wrap">
             <p className="search-result-cnt">총 {resultList.length} 개의 검색 결과가 있습니다.</p>
@@ -29,6 +43,7 @@ const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) =>
                     <p className="search-result-singer">{val.singer}</p>
                     <p className="search-result-description">{val.description}</p>
                   </div>
+                  {/* <PlayButton audRef={musicControl} src={val.path} play={click}></PlayButton> */}
                 </div>
               );
             })}
@@ -39,5 +54,7 @@ const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) =>
     </>
   );
 };
+
+const ResultPage = forwardRef(ResultPages);
 
 export { ResultPage };

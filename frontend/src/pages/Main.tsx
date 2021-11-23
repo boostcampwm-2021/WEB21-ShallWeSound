@@ -16,6 +16,7 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
     id: nextRoomIndex,
     name: '',
     description: '',
+    totalUser: 5,
   });
 
   const listFetch = async () => {
@@ -26,7 +27,7 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
     return res.list;
   };
 
-  function Room({ id, name, description }: { id: number; name: string; description: string }) {
+  function Room({ id, name, description, total }: { id: number; name: string; description: string; total: string }) {
     const joinRoom = (e: React.MouseEvent<HTMLElement>) => {
       history.push(`/room/${name}`);
     };
@@ -35,6 +36,7 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
       <div className={'room'} onClick={joinRoom} key={id}>
         <p className="room-name">{name}</p>
         <p className="room-description">{description}</p>
+        <p>{total}</p>
       </div>
     );
   }
@@ -136,7 +138,9 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
           <h2>방 참가하기</h2>
           <div className={'roomList'}>
             {roomList.length ? (
-              roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)
+              roomList.map(val => (
+                <Room id={val.id} name={val.name} description={val.description} total={`${val.totalUser}명 접속 중`} />
+              ))
             ) : (
               <p className="room-empty-notice">열려 있는 방이 존재하지 않습니다!</p>
             )}

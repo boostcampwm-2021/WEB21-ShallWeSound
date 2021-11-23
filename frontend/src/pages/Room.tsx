@@ -13,7 +13,7 @@ import { fetchState } from '../types';
 const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
   const socket: any = useSocket();
 
-  const roomData = window.location.pathname.match(/[^/]+/gm)![1];
+  const roomData = decodeURI(window.location.pathname.match(/[^/]+/gm)![1]);
   const [isHost, setIsHost] = useState<boolean>(false);
 
   const fetchUserList = async () => {
@@ -29,8 +29,6 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
   const { loading, data: userList, error } = state as fetchState;
 
   useEffect(() => {
-    if (socket.id !== undefined && userList[0] !== socket.id) socket.emit('joinRoom', roomData);
-
     window.onpopstate = event => {
       socket.emit('leaveRoom');
     };
@@ -40,8 +38,11 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
       socket.emit('joinRoom', roomTitle);
     };
 
+    socket.emit('joinRoom', roomData);
+
     return () => {
       socket.off('leaveRoom');
+      socket.off('joinRoom');
     };
   }, []);
 

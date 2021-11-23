@@ -29,7 +29,7 @@ router.use(
 
 router.get('/', (req: express.Request, res: express.Response) => {
   const data = socketData.map(val => {
-    return { id: val.id, name: val.name, description: val.description };
+    return { id: val.id, name: val.name, description: val.description, totalUser: val.socketId.length };
   });
   res.json({ list: data });
 });

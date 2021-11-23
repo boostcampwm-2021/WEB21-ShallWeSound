@@ -41,11 +41,10 @@ export const utils = {
   },
 
   updateNewRoom: function (socketData: socketInfo[], socket: Socket, roomData: any) {
-    socket.join(roomData.name);
     socketData.push({
       id: roomData.id,
       name: roomData.name,
-      socketId: [socket.id],
+      socketId: [],
       description: roomData.description,
       playList: new PlayList(),
     });
@@ -53,7 +52,7 @@ export const utils = {
 
   getRoomListForClient: function (socketData: socketInfo[]) {
     return socketData.map(val => {
-      return { id: val.id, name: val.name, description: val.description };
+      return { id: val.id, name: val.name, description: val.description, totalUesr: val.socketId.length };
     }); // utils로 기능 빼기
   },
 
