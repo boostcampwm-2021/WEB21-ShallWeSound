@@ -47,10 +47,12 @@ const MusicSearch = () => {
   );
 
   useEffect(() => {
+    let popUpTimer: NodeJS.Timeout;
+
     socket.on('duplicatedMusicInPlayList', () => {
       dispatchAddMusicState({ type: 'FAILURE' });
 
-      setTimeout(() => {
+      popUpTimer = setTimeout(() => {
         dispatchAddMusicState({ type: 'INIT' });
       }, 700);
     });
@@ -58,7 +60,7 @@ const MusicSearch = () => {
     socket.on('successAddMusic', () => {
       dispatchAddMusicState({ type: 'SUCCESS' });
 
-      setTimeout(() => {
+      popUpTimer = setTimeout(() => {
         dispatchAddMusicState({ type: 'INIT' });
       }, 700);
     });
@@ -66,6 +68,7 @@ const MusicSearch = () => {
     return () => {
       socket.off('duplicatedMusicInPlayList');
       socket.off('successAddMusic');
+      clearTimeout(popUpTimer);
     };
   }, [socket]);
 
