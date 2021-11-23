@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 interface Props {
   widthP: string;
@@ -35,6 +35,15 @@ const Modal = ({ widthP, heightP, onToggle, children }: Props) => {
   );
 };
 
+const moveUp = keyframes`
+  from {
+    top: 70%
+  }
+  to {
+    top: 50%
+  }
+`;
+
 const ModalOverlay = styled.div`
   box-sizing: border-box;
   position: fixed;
@@ -57,6 +66,7 @@ const StyledModal = styled.div<StyledProps>`
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 200;
+  animation: ${moveUp} 0.5s ease-out;
 `;
 
 const Head = styled.div`

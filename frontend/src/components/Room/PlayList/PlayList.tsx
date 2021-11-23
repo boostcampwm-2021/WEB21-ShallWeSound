@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import type { Music } from '../../../types';
 import PlayListItem from './PlayListItem';
 import CircleButton from '../../Util/CircleButton';
-import Modal from '../Modal';
+import Modal from '../../Util/Modal';
 import MusicSearch from './MusicSearch/MusicSearch';
 import { useSocket } from '../../../context/MyContext';
 
