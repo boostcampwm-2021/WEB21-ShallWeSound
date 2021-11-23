@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { musicResultItem } from '../types';
 
-const LoginPage = ({ history }: { history: RouteComponentProps['history'] }) => {
+const LoginPage = () => {
     const kakaoLogin = ()=>{
         console.log('카카오로그인')
         window.location.href='http://localhost:3000/oauth/kakao';

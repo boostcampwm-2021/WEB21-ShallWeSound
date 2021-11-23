@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import { Room } from '../pages/Room';
 import { MainPage } from '../pages/Main';
 import { ResultPage } from '../pages/Result';
@@ -15,31 +15,8 @@ function App() {
   const cookies = new Cookies();
   const [jwt, setJwt] = useState(cookies.get('jwt'));
   const [authenticate, setAuthenticate] = useState(false);
-  // const cookieLogin = async (cookie) => {
-  //   if (cookie !== null && cookie !== undefined) {
-  //     const result = await fetch("/login", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json;charset=utf-8",
-  //       },
-  //       body: JSON.stringify({
-  //         jwt: cookie,
-  //       }),
-  //     });
-  //     const idJson = await result.json();
-  //     setId(idJson.id);
-  //     return idJson;
-  //   }
-  // };
-  useEffect(()=>{
-    if(jwt === null){
-      cookies.remove("jwt")
-      history.push("/");
-    }
-  }, [jwt])
 
-
-  const isAuthenticated = () => {
+  function isAuthenticated() {
     if (!jwt || jwt === undefined){
       return false;
     }else{
@@ -52,10 +29,9 @@ function App() {
       }).then(res=>{
         return res.json()
       }).then(res=>{
-        console.log(
-          res
-        )
-        setAuthenticate(res.isOK);
+        if(authenticate != res.isOK){
+          setAuthenticate(res.isOK);
+        }
       })
     }
   };
@@ -64,20 +40,19 @@ function App() {
     <>
       <Router>
         <Route
-          path="/login"
+          exact path="/login"
           render={()=>{
-            const result = isAuthenticated();
             if(!authenticate){
-              return <Route component={LoginPage} />;
+              return <LoginPage/>;
             }else{
-              return <Redirect to={{ pathname: "/" }} />;
+              return <Redirect to={{ pathname: "/main" }} />;
             }
           }}
         />
         <Route
-        path="/"
+        exact path="/"
         render={()=>{
-          const result = isAuthenticated();
+          isAuthenticated();
           if(!authenticate){
             return <Redirect to={{ pathname: "/login" }} />;
           }else{
@@ -86,20 +61,20 @@ function App() {
         }}
         />
         <Route
-        path="/main"
+        exact path="/main"
         render={()=>{
-          const result = isAuthenticated();
+          isAuthenticated();
           if(!authenticate){
             return <Redirect to={{ pathname: "/" }} />;
           }else{
-            return <Route component={MainPage} />;
+            return <Route path='/main'component={MainPage} />;
           }
         }}
         />
         <Route 
         path="/room" 
         render={()=>{
-          const result =isAuthenticated();
+          isAuthenticated();
           if(!authenticate){
             return <Redirect to={{ pathname: "/" }}/>;
           }else{
@@ -110,7 +85,7 @@ function App() {
         <Route 
         path="/result" 
         render={()=>{
-          const result = isAuthenticated();
+          isAuthenticated();
           if(!authenticate){
             return <Redirect to={{ pathname: "/" }}/>;
           }else{
@@ -119,7 +94,6 @@ function App() {
         }}
         />
       </Router>
-      ,
     </>
   );
 }
