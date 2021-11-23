@@ -7,7 +7,7 @@ const defaultOption = {
 };
 
 export const useInfiniteScroll = (callback: () => {}, option = defaultOption) => {
-  const [ref, setRef] = useState<any>(null);
+  const [ref, setRef] = useState<Element | null>(null);
 
   useEffect(() => {
     let observer: IntersectionObserver;

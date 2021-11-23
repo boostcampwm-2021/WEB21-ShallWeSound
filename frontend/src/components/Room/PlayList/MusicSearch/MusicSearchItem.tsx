@@ -71,6 +71,7 @@ const Image = styled.img`
   margin: 0 0.8rem 0 0;
   display: flex;
   align-items: center;
+  font-size: 0.5rem;
 `;
 
 const TextWrapper = styled.div`

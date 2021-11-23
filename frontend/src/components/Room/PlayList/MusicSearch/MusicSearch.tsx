@@ -19,25 +19,27 @@ const MusicSearch = () => {
   const [searchResult, dispatchSearchResult] = useReducer(searchResultReducer, {
     result: [],
     selectedMusicInResult: [],
+    hasMore: false,
   });
   const [addMusicState, dispatchAddMusicState] = useReducer(addMusicStatusReducer, {
     success: false,
     fail: false,
   });
 
-  const { result, selectedMusicInResult } = searchResult;
+  const { result, selectedMusicInResult, hasMore } = searchResult;
   const { success, fail } = addMusicState;
 
   const fetchMusic = useCallback(
     async (more = true) => {
       try {
         const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}&page=${page.current}`);
-        const musics = await res.json();
+        const json = await res.json();
+        const musics = json.result;
 
         if (more) {
-          dispatchSearchResult({ type: 'FETCH_MORE_SUCCESS', result: musics });
+          dispatchSearchResult({ type: 'FETCH_MORE_SUCCESS', result: musics, hasMore: json.hasMore });
         } else {
-          dispatchSearchResult({ type: 'FETCH_SUCCESS', result: musics });
+          dispatchSearchResult({ type: 'FETCH_SUCCESS', result: musics, hasMore: json.hasMore });
         }
       } catch (e) {
         dispatchSearchResult({ type: 'FETCH_FAILURE' });
@@ -139,7 +141,7 @@ const MusicSearch = () => {
         ) : (
           <div>검색 결과 없음</div>
         )}
-        <div ref={result.length ? setObserveTarget : null}>&nbsp;</div>
+        <div ref={hasMore ? setObserveTarget : null}>&nbsp;</div>
       </ResultWrapper>
       <ButtonWrapper>
         <CircleButton size="45px" colorP={'#b6bac4'} onClick={addMusicInPlayList}>
