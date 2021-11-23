@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useReducer } from 'react';
+import React, { useState, useRef, useEffect, useReducer, useCallback } from 'react';
 import styled from 'styled-components';
 import config from '../../../../config.host.json';
 import SearchBar from '../../../Util/SearchBar';
@@ -7,7 +7,6 @@ import CircleButton from '../../../Util/CircleButton';
 import { useSocket } from '../../../../context/MyContext';
 import PopUp from '../../../Util/PopUp';
 import { Music } from '../../../../types';
-
 import { reducer as addMusicStatusReducer } from './reducer/addMusicState';
 import { reducer as searchResultReducer } from './reducer/searchResult';
 
@@ -27,20 +26,23 @@ const MusicSearch = () => {
 
   const { result, selectedMusicInResult } = searchResult;
 
-  const fetchMusic = async (more = false) => {
-    try {
-      const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}&page=${page.current}`);
-      const musics = await res.json();
+  const fetchMusic = useCallback(
+    async (more = false) => {
+      try {
+        const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}&page=${page.current}`);
+        const musics = await res.json();
 
-      if (more) {
-        dispatchSearchResult({ type: 'FETCH_MORE_SUCCESS', result: musics });
-      } else {
-        dispatchSearchResult({ type: 'FETCH_SUCCESS', result: musics });
+        if (more) {
+          dispatchSearchResult({ type: 'FETCH_MORE_SUCCESS', result: musics });
+        } else {
+          dispatchSearchResult({ type: 'FETCH_SUCCESS', result: musics });
+        }
+      } catch (e) {
+        dispatchSearchResult({ type: 'FETCH_FAILURE' });
       }
-    } catch (e) {
-      dispatchSearchResult({ type: 'FETCH_FAILURE' });
-    }
-  };
+    },
+    [keyword],
+  );
 
   useEffect(() => {
     socket.on('duplicatedMusicInPlayList', () => {
@@ -68,8 +70,7 @@ const MusicSearch = () => {
   useEffect(() => {
     page.current = 0;
     fetchMusic();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword]);
+  }, [fetchMusic]);
 
   useEffect(() => {
     page.current = result.length;
@@ -118,7 +119,7 @@ const MusicSearch = () => {
         </PopUpWrapper>
       ) : (
         <Layout>
-          <SearchBar keyword={keyword} onKeywordChange={onKeywordChange} />
+          <SearchBar onKeywordChange={onKeywordChange} />
           <ResultWrapper onScroll={onScroll}>
             {result.length ? (
               result.map((music: Music, i: number) => (
