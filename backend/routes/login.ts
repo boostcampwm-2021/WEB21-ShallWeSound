@@ -1,6 +1,7 @@
 import express from 'express';
 import {loginServie} from '../services/login'
 import * as jwt from 'jsonwebtoken'
+
 const router = express.Router();
 router.use(express.json());
 router.get('/kakao' ,(req, res)=>{
@@ -25,37 +26,29 @@ router.get('/kakao/callback' , async (req, res)=>{
     res.cookie('jwt', token).redirect('http://localhost:3001/');
 })
 
-router.get('/authenticate', async (req, res)=>{
+router.post('/authenticate', async (req, res)=>{
+    console.log(req.body);
     const curToken = req.body.jwt;
+    console.log(curToken);
     const authenticateResult = await loginServie.verifyToken(curToken);
     if(authenticateResult.result === true){
         if(authenticateResult.newToken === null){
-            res.send(200);
+            res.json({isOK:true});
         }else{
             loginServie.updateOrDelete(curToken, authenticateResult.newToken, 1);
             res.cookie('jwt', authenticateResult.newToken);
             res.cookie('userID', authenticateResult.userID);
-            res.send(200);
+            res.json({isOK:true});
         }
     }else{
         loginServie.updateOrDelete(curToken, null, 2);
         res.cookie('jwt', null);
         res.cookie('userID', null);
-        res.send(200);
+        res.json({isOK:false});
     }
 })
-const getUserId = (obj:string|jwt.JwtPayload):string =>{
-    if(typeof obj === 'string'){
-        return obj;
-    }else{
-        return obj.test;
-    }
-}
+
 router.get('/verifyTest', (req, res)=>{
-    const tempToken = jwt.sign({test:'test'}, 'salt', {expiresIn:'1m'});
-    setTimeout(() => {
-        res.send(getUserId(jwt.verify(`${tempToken}`, 'salt')));
-    }, 2000);
 })
 
 

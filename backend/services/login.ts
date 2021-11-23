@@ -118,7 +118,8 @@ export const loginServie={
     githubLogin:githubLoginService,
     kakaoLogin:kakaoLoginService,
     verifyToken:verifyToken,
-    updateOrDelete:updateOrDelete
+    updateOrDelete:updateOrDelete,
+    getUserId:getUserId
 }
 
 

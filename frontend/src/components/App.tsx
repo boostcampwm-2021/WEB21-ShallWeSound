@@ -14,7 +14,7 @@ function App() {
   const history = useHistory();
   const cookies = new Cookies();
   const [jwt, setJwt] = useState(cookies.get('jwt'));
-
+  const [authenticate, setAuthenticate] = useState(false);
   // const cookieLogin = async (cookie) => {
   //   if (cookie !== null && cookie !== undefined) {
   //     const result = await fetch("/login", {
@@ -40,8 +40,24 @@ function App() {
 
 
   const isAuthenticated = () => {
-    if (!jwt || jwt === undefined) return false;
-    return true;
+    if (!jwt || jwt === undefined){
+      return false;
+    }else{
+      fetch('/oauth/authenticate', {
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/json',
+      },
+        body:JSON.stringify({jwt:cookies.get('jwt')})
+      }).then(res=>{
+        return res.json()
+      }).then(res=>{
+        console.log(
+          res
+        )
+        setAuthenticate(res.isOK);
+      })
+    }
   };
 
   return (
@@ -50,8 +66,8 @@ function App() {
         <Route
           path="/login"
           render={()=>{
-            console.log(isAuthenticated());
-            if(!isAuthenticated()){
+            const result = isAuthenticated();
+            if(!authenticate){
               return <Route component={LoginPage} />;
             }else{
               return <Redirect to={{ pathname: "/" }} />;
@@ -61,8 +77,8 @@ function App() {
         <Route
         path="/"
         render={()=>{
-          console.log(isAuthenticated());
-          if(!isAuthenticated()){
+          const result = isAuthenticated();
+          if(!authenticate){
             return <Redirect to={{ pathname: "/login" }} />;
           }else{
             return <Redirect to={{ pathname: "/main" }} />;
@@ -72,8 +88,8 @@ function App() {
         <Route
         path="/main"
         render={()=>{
-          console.log(isAuthenticated());
-          if(!isAuthenticated()){
+          const result = isAuthenticated();
+          if(!authenticate){
             return <Redirect to={{ pathname: "/" }} />;
           }else{
             return <Route component={MainPage} />;
@@ -83,7 +99,8 @@ function App() {
         <Route 
         path="/room" 
         render={()=>{
-          if(!isAuthenticated()){
+          const result =isAuthenticated();
+          if(!authenticate){
             return <Redirect to={{ pathname: "/" }}/>;
           }else{
             return <Route component={Room} />;
@@ -93,7 +110,8 @@ function App() {
         <Route 
         path="/result" 
         render={()=>{
-          if(!isAuthenticated()){
+          const result = isAuthenticated();
+          if(!authenticate){
             return <Redirect to={{ pathname: "/" }}/>;
           }else{
             return <Route component={ResultPage} />;
