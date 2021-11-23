@@ -5,7 +5,7 @@
   height: 100%;
   background-color: $semi-white;
   color: $purple;
-  // border: 4px double $white;
+  position: relative;
   box-sizing: border-box;
   padding: 2rem;
   border-radius: 3rem;
@@ -13,6 +13,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow-y: auto;
 
   h2 {
     width: 100%;
@@ -160,4 +161,69 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.search-result-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .search-result-cnt {
+    width: 100%;
+    padding-bottom: 0.75rem;
+    border-bottom: 4px double $purple;
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  * + * {
+    margin-top: 0.75rem;
+  }
+}
+
+
+.search-result-item {
+  width: 70%;
+  height: 10rem;
+  border: 4px solid $purple;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+
+  &:last-child {
+    margin-bottom: 1rem;
+  }
+
+  .search-result-thumbnail {
+    width: 100px;
+    height: 100px;
+    padding-right: 1rem;
+    border-right: 2px solid $purple;
+    margin-right: 1rem;
+  }
+
+  .search-result-words {
+    .search-result-name {
+      font-size: 1.5rem;
+    }
+    
+    .search-result-singer {
+      font-size: 1.125rem;
+      font-style: italic;
+    }
+
+
+    * + * {
+      margin-bottom: 1rem;
+    }
+  }
+  
+}
+
+.search-result-end {
+  color: $semi-white;
 }
