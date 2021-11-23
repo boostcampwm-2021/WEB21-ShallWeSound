@@ -123,8 +123,10 @@ const socketHandler = (io: Server) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       utils.updateDisconnectData(targetRoom, socketData, socket);
 
-      namespace.to(targetRoom.socketId[0]).emit('delegateHost', true);
-      namespace.to(targetRoom.name).emit('updateUserList');
+      if (targetRoom !== undefined) {
+        namespace.to(targetRoom.socketId[0]).emit('delegateHost', true);
+        namespace.to(targetRoom.name).emit('updateUserList');
+      }
     });
 
     socket.on('clickAndPlayMusic', (clickedMusic: string) => {

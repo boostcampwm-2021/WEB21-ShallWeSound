@@ -29,6 +29,8 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
   const { loading, data: userList, error } = state as fetchState;
 
   useEffect(() => {
+    if (socket.id !== undefined && userList[0] !== socket.id) socket.emit('joinRoom', roomData);
+
     window.onpopstate = event => {
       socket.emit('leaveRoom');
     };
@@ -65,7 +67,6 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
 
   return (
     <>
-      <HeaderComponent history={history} />
       <div className="room-wrap">
         <div>
           <MusicPlayer isHost={isHost}></MusicPlayer>
