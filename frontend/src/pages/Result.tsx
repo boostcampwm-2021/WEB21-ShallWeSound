@@ -16,7 +16,6 @@ const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) =>
 
   return (
     <>
-      <HeaderComponent history={history} />
       <div className="body">
         <div className="main-wrap">
           <div className="search-result-wrap">

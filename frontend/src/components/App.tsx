@@ -12,6 +12,7 @@ function App() {
   return (
     <>
       <Router>
+        <HeaderComponent />
         <Route path="/room" component={Room} />
         <Route path="/main" component={MainPage} />
         <Route path="/result" component={ResultPage} />

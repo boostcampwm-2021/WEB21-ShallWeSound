@@ -65,7 +65,6 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
 
   return (
     <>
-      <HeaderComponent history={history} />
       <div className="room-wrap">
         <div>
           <MusicPlayer isHost={isHost}></MusicPlayer>

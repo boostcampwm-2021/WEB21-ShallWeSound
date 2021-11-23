@@ -3,6 +3,7 @@ import UploadModal from './UploadModal';
 import { timeoutRef } from '../../types';
 import { RouteComponentProps } from 'react-router';
 import CreateRoomButton from './CreateRoomModal';
+import { withRouter } from 'react-router-dom';
 
 function HeaderComponent({ history }: { history: RouteComponentProps['history'] }) {
   const timerRef = useRef<timeoutRef>({ timer: setTimeout(() => {}) });
@@ -56,4 +57,4 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
   );
 }
 
-export default HeaderComponent;
+export default withRouter(HeaderComponent);

@@ -64,7 +64,6 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
 
   return (
     <>
-      <HeaderComponent history={history} />
       <div className={'body'}>
         {/* <CreateRoomModal history={history} socket={socket} onCancel={() => toggleCreateRoomDialog} /> */}
         <div className="main-wrap">
