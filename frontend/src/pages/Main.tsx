@@ -55,14 +55,20 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
   return (
     <div className={'body'}>
       <div className="main-wrap">
-        <h2>방 참가하기</h2>
-        <div className={'roomList'}>
-          {roomList.length ? (
-            roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)
-          ) : (
-            <p className="room-empty-notice">열려 있는 방이 존재하지 않습니다!</p>
-          )}
-        </div>
+        {roomList.length ? (
+        <>
+          <h2>방 참가하기</h2>
+          <div className={'roomList'}>
+            {roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)}
+          </div>
+        </>
+        ) : (
+          <div className="room-empty-notice">
+            <img src="/icons/no-room.svg" alt="Room list is empty!" />
+            <p>열려 있는 방이 존재하지 않습니다!</p>
+            <p className="room-empty-notice-detail">아직 만들어진 방이 없다면,<br/>직접 방을 만들어 음악을 함께 하는 건 어떨가요?</p>
+          </div>
+        )}
       </div>
     </div>
   );

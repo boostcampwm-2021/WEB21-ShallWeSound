@@ -23,9 +23,26 @@
   }
 
   .room-empty-notice {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     color: $purple;
-    font-size: 4rem;
-    font-style: italic;
+    font-size: 3rem;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 10rem;
+      height: 10rem;
+      margin-bottom: 3rem;
+    }
+
+    &-detail {
+      margin-top: 1.5rem;
+      font-size: 1.5rem;
+      text-align: center;
+    }
   }
 }
 
