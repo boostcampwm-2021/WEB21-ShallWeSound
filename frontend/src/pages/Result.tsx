@@ -17,17 +17,26 @@ const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) =>
   return (
     <>
       <HeaderComponent history={history} />
-      <div>여긴 결과페이지다.</div>
-      {resultList.map(val => {
-        return (
-          <div>
-            {val.name}
-            {val.singer}
-            {val.description}
-            <img src={val.thumbnail}></img>
+      <div className="body">
+        <div className="main-wrap">
+          <div className="search-result-wrap">
+            <p className="search-result-cnt">총 {resultList.length} 개의 검색 결과가 있습니다.</p>
+            {resultList.map(val => {
+              return (
+                <div className="search-result-item">
+                  <img className="search-result-thumbnail" src={val.thumbnail} alt={val.name} />
+                  <div className="search-result-words">
+                    <p className="search-result-name">{val.name.slice(0, val.name.lastIndexOf('.'))}</p>
+                    <p className="search-result-singer">{val.singer}</p>
+                    <p className="search-result-description">{val.description}</p>
+                  </div>
+                </div>
+              );
+            })}
+            <div className="search-result-end">end</div>
           </div>
-        );
-      })}
+        </div>
+      </div>
     </>
   );
 };
