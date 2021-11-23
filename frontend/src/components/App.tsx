@@ -1,17 +1,13 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import {useState} from 'react';
 import { Room } from '../pages/Room';
 import { MainPage } from '../pages/Main';
 import { ResultPage } from '../pages/Result';
 import { LoginPage } from '../pages/Login';
 import '../stylesheets/reset.css';
-import styles from '../stylesheets/style.module.scss';
-import HeaderComponent from './Header/Header';
-import { RouteComponentProps } from 'react-router';
-import { BrowserRouter as Router, Route, useHistory, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route,  Redirect } from 'react-router-dom';
 import {Cookies} from 'react-cookie';
 
 function App() {
-  const history = useHistory();
   const cookies = new Cookies();
   const [jwt, setJwt] = useState(cookies.get('jwt'));
   const [authenticate, setAuthenticate] = useState(false);
