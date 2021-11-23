@@ -69,6 +69,16 @@ $color-chatbox:	#9bbbd4;
   justify-content: space-between;
   align-items: center;
   position: relative;
+  font: inherit;
+
+  button {
+    font: inherit;
+  }
+
+  .header-left-wrap {
+    display: flex;
+    align-items: center;
+  }
 
   .header-logo {
     position: absolute;

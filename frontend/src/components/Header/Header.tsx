@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import UploadModal from './UploadModal';
 import { timeoutRef } from '../../types';
 import { RouteComponentProps } from 'react-router';
+import CreateRoomButton from './CreateRoomModal';
 
 function HeaderComponent({ history }: { history: RouteComponentProps['history'] }) {
   const timerRef = useRef<timeoutRef>({ timer: setTimeout(() => {}) });
@@ -36,7 +37,10 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
 
   return (
     <div className="header">
-      <UploadModal />
+      <div className="header-left-wrap">
+        <UploadModal />
+        <CreateRoomButton />
+      </div>
       <img className="header-logo" src="/images/logo.png" alt="logo" onClick={goMain}/>
       <div className="header-search">
         <input
