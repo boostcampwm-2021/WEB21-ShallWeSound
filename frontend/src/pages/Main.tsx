@@ -66,7 +66,7 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
           <div className="room-empty-notice">
             <img src="/icons/no-room.svg" alt="Room list is empty!" />
             <p>열려 있는 방이 존재하지 않습니다!</p>
-            <p className="room-empty-notice-detail">아직 만들어진 방이 없다면,<br/>직접 방을 만들어 음악을 함께 하는 건 어떨가요?</p>
+            <p className="room-empty-notice-detail">아직 만들어진 방이 없다면,<br/>직접 방을 만들어 음악을 함께 하는 건 어떨까요?</p>
           </div>
         )}
       </div>

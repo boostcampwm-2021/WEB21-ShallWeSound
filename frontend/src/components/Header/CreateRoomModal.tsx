@@ -45,6 +45,7 @@ function CreateRoomModal ({ history, onClose }: { history: RouteComponentProps['
         description: dialogInput.description,
       });
       setNextRoomIndex(nextRoomIndex + 1);
+      onClose();
 
       history.push(`/room/${dialogInput.name}`);
     } else {
@@ -52,8 +53,13 @@ function CreateRoomModal ({ history, onClose }: { history: RouteComponentProps['
     }
   }
   return (
-    <div className="dialog">
-      <p>방 생성</p>
+    <div className="modal">
+      <div className="modal-close" onClick={onClose}>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
+          <path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+        </svg>
+      </div>
+      <p className="modal-title">방 생성</p>
       <form className="input-wrap" action="submit">
         <label htmlFor="room-id">방 제목</label>
         <input type="text" id="room-id" placeholder="방 제목" onChange={changeDialogRoomName} />
@@ -92,7 +98,7 @@ function CreateRoomButton ({ history } : { history: RouteComponentProps['history
   }
 
   return (
-    <div className="modalContainer">
+    <div className="modal-container">
       <button className="header-button" onClick={appearModal}>
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M14 6v15H3v-2h2V3h9v1h5v15h2v2h-4V6h-3zm-4 5v2h2v-2h-2z"/></svg>
         <p>방 생성하기</p>
