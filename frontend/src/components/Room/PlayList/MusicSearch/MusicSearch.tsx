@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useReducer, useCallback } from 'react';
+import { useState, useRef, useEffect, useReducer, useCallback } from 'react';
 import styled from 'styled-components';
 import config from '../../../../config.host.json';
 import SearchBar from '../../../Util/SearchBar';
@@ -10,24 +10,26 @@ import { Music } from '../../../../types';
 import { reducer as addMusicStatusReducer } from './reducer/addMusicState';
 import { reducer as searchResultReducer } from './reducer/searchResult';
 
+import { useInfiniteScroll } from '../../../../hooks/useinfiniteScroll';
+
 const MusicSearch = () => {
   const socket: any = useSocket();
   const page = useRef(0);
   const [keyword, setKeyword] = useState('');
+  const [searchResult, dispatchSearchResult] = useReducer(searchResultReducer, {
+    result: [],
+    selectedMusicInResult: [],
+  });
   const [addMusicState, dispatchAddMusicState] = useReducer(addMusicStatusReducer, {
     success: false,
     fail: false,
   });
 
-  const [searchResult, dispatchSearchResult] = useReducer(searchResultReducer, {
-    result: [],
-    selectedMusicInResult: [],
-  });
-
   const { result, selectedMusicInResult } = searchResult;
+  const { success, fail } = addMusicState;
 
   const fetchMusic = useCallback(
-    async (more = false) => {
+    async (more = true) => {
       try {
         const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}&page=${page.current}`);
         const musics = await res.json();
@@ -69,25 +71,15 @@ const MusicSearch = () => {
 
   useEffect(() => {
     page.current = 0;
-    fetchMusic();
+    fetchMusic(false);
   }, [fetchMusic]);
 
   useEffect(() => {
     page.current = result.length;
   }, [result]);
 
-  const addMusicInPlayList = () => {
-    socket.emit('addMusicInPlayListReq', selectedMusicInResult);
-
-    dispatchSearchResult({ type: 'REQUEST_ADD_MUSIC_IN_PLAYLIST' });
-  };
-
-  const onScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-    const isEndOfScroll = e.currentTarget.scrollTop + e.currentTarget.clientHeight >= e.currentTarget.scrollHeight;
-
-    if (isEndOfScroll) {
-      fetchMusic(true);
-    }
+  const onKeywordChange = (value: string) => {
+    setKeyword(value);
   };
 
   const isSelected = (MID: number): boolean => (selectedMusicInResult.indexOf(MID) >= 0 ? true : false);
@@ -101,50 +93,57 @@ const MusicSearch = () => {
     }
   };
 
-  const onKeywordChange = (value: string) => {
-    setKeyword(value);
+  const addMusicInPlayList = () => {
+    socket.emit('addMusicInPlayListReq', selectedMusicInResult);
+
+    dispatchSearchResult({ type: 'REQUEST_ADD_MUSIC_IN_PLAYLIST' });
   };
 
-  const { success, fail } = addMusicState;
+  const setObserveTarget = useInfiniteScroll(fetchMusic);
+
+  if (fail) {
+    return (
+      <PopUpWrapper>
+        <PopUp text={'이미 추가된 음악입니다!'} />
+      </PopUpWrapper>
+    );
+  }
+
+  if (success) {
+    return (
+      <PopUpWrapper>
+        <PopUp text={'음악이 추가되었습니다!'} />
+      </PopUpWrapper>
+    );
+  }
 
   return (
-    <>
-      {fail ? (
-        <PopUpWrapper>
-          <PopUp text={'이미 추가된 음악입니다!'} />
-        </PopUpWrapper>
-      ) : success ? (
-        <PopUpWrapper>
-          <PopUp text={'음악이 추가되었습니다!'} />
-        </PopUpWrapper>
-      ) : (
-        <Layout>
-          <SearchBar onKeywordChange={onKeywordChange} />
-          <ResultWrapper onScroll={onScroll}>
-            {result.length ? (
-              result.map((music: Music, i: number) => (
-                <div key={i} onClick={() => onSelectMusic(+music.MID)}>
-                  <MusicSearchItem
-                    name={music.name}
-                    singer={music.singer}
-                    thumbnail={music.thumbnail}
-                    description={music.description}
-                    selected={isSelected(+music.MID)}
-                  />
-                </div>
-              ))
-            ) : (
-              <div>검색 결과 없음</div>
-            )}
-          </ResultWrapper>
-          <ButtonWrapper>
-            <CircleButton size="45px" colorP={'#b6bac4'} onClick={addMusicInPlayList}>
-              +
-            </CircleButton>
-          </ButtonWrapper>
-        </Layout>
-      )}
-    </>
+    <Layout>
+      <SearchBar onKeywordChange={onKeywordChange} />
+      <ResultWrapper>
+        {result.length ? (
+          result.map((music: Music, i: number) => (
+            <MusicSearchItem
+              key={i}
+              name={music.name}
+              singer={music.singer}
+              thumbnail={music.thumbnail}
+              description={music.description}
+              selected={isSelected(+music.MID)}
+              onClick={() => onSelectMusic(+music.MID)}
+            />
+          ))
+        ) : (
+          <div>검색 결과 없음</div>
+        )}
+        <div ref={result.length ? setObserveTarget : null}>&nbsp;</div>
+      </ResultWrapper>
+      <ButtonWrapper>
+        <CircleButton size="45px" colorP={'#b6bac4'} onClick={addMusicInPlayList}>
+          +
+        </CircleButton>
+      </ButtonWrapper>
+    </Layout>
   );
 };
 

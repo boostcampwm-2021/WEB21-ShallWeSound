@@ -25,8 +25,8 @@ export const reducer = (state: State, action: Action) => {
       };
     case 'FETCH_MORE_SUCCESS':
       return {
+        ...state,
         result: [...state.result, ...(action.result ?? [])],
-        selectedMusicInResult: [],
       };
     case 'FETCH_FAILURE':
       return {
