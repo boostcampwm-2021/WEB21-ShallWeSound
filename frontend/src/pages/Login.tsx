@@ -1,20 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { RouteComponentProps } from 'react-router';
-import { musicResultItem } from '../types';
-
+import  '../stylesheets/login.scss'
 const LoginPage = () => {
     const kakaoLogin = ()=>{
-        console.log('카카오로그인')
         window.location.href='http://localhost:3000/oauth/kakao';
     }
-    const googleLogin = () =>{
+    const githubLogin = () =>{
         window.location.href='http://localhost:3000/oauth/github';
     }
     return(
-        <div>
-            <div onClick={googleLogin}><img src="images/btn_google_signin_light_normal_web.png"></img> </div>
-            <div onClick={kakaoLogin}><img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" /> </div>
+        <>
+        <img className="header-logo" src="/images/logo.png" alt="logo" />
+        <div className={"loginBox"}>
+            <div className={"loginText"}>그 노래, 같이 들어요!</div>
+            <div className={'Btn'} onClick={githubLogin}>
+                <img src="/images/GitHub-Mark-120px-plus.png" />
+                <div>github login</div>
+            </div>
+            <div className='Btn' onClick={kakaoLogin}> 
+                <img src="/images/kakao.png"/>
+                <div>kakao login</div>
+            </div>
         </div>
+        </>
     )
 };
 
