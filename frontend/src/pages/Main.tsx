@@ -29,6 +29,7 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
   function Room({ id, name, description }: { id: number; name: string; description: string }) {
     const joinRoom = (e: React.MouseEvent<HTMLElement>) => {
       socket.emit('joinRoom', name);
+
       history.push(`/room/${name}`);
     };
 

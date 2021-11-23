@@ -18,7 +18,7 @@ const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) =>
     <>
       <HeaderComponent history={history} />
       <div className="body">
-        <div className="main-wrap">
+        <div className="search-main-wrap">
           <div className="search-result-wrap">
             <p className="search-result-cnt">총 {resultList.length} 개의 검색 결과가 있습니다.</p>
             {resultList.map(val => {
