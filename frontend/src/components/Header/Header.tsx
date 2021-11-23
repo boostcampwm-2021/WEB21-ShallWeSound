@@ -40,7 +40,7 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
     <div className="header">
       <div className="header-left-wrap">
         <UploadModal />
-        <CreateRoomButton />
+        <CreateRoomButton history={history} />
       </div>
       <img className="header-logo" src="/images/logo.png" alt="logo" onClick={goMain}/>
       <div className="header-search">

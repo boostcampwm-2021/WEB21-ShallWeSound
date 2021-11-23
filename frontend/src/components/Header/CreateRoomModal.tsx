@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Socket } from 'socket.io-client';
+import { useSocket } from '../../context/MyContext';
 
 import '../../stylesheets/header.scss';
 import { Room } from '../../types';
 
-function CreateRoomModal ({ history, socket, onCancel }: { history: RouteComponentProps['history'], socket: Socket, onCancel: any }) {
+function CreateRoomModal ({ history, onClose }: { history: RouteComponentProps['history'], onClose: () => void }) {
+  const socket: Socket = useSocket()!
   const [nextRoomIndex, setNextRoomIndex] = useState(1);
   const [dialogInput, setDialogInput] = useState<Room>({
     id: nextRoomIndex,
@@ -50,44 +52,52 @@ function CreateRoomModal ({ history, socket, onCancel }: { history: RouteCompone
     }
   }
   return (
-      // <div className="dark-background">
-        <div className="dialog">
-          <p>방 생성</p>
-          <form className="input-wrap" action="submit">
-            <label htmlFor="room-id">방 제목</label>
-            <input type="text" id="room-id" placeholder="방 제목" onChange={changeDialogRoomName} />
-            <label htmlFor="room-detail">방 설명</label>
-            <textarea
-              name="text1"
-              cols={40}
-              rows={5}
-              className="input-description"
-              id="room-detail"
-              placeholder="방 설명"
-              onChange={changeDialogRoomDescription}
-            />
-          </form>
-          <div className="button-wrap">
-            <button className="button" onClick={createRoom}>
-              생성
-            </button>
-            <button className="button" onClick={onCancel}>
-              취소
-            </button>
-          </div>
-        </div>
-      // </div>
+    <div className="dialog">
+      <p>방 생성</p>
+      <form className="input-wrap" action="submit">
+        <label htmlFor="room-id">방 제목</label>
+        <input type="text" id="room-id" placeholder="방 제목" onChange={changeDialogRoomName} />
+        <label htmlFor="room-detail">방 설명</label>
+        <textarea
+          name="text1"
+          cols={40}
+          rows={5}
+          className="input-description"
+          id="room-detail"
+          placeholder="방 설명"
+          onChange={changeDialogRoomDescription}
+        />
+      </form>
+      <div className="button-wrap">
+        <button className="button" onClick={createRoom}>
+          생성
+        </button>
+        <button className="button" onClick={onClose}>
+          취소
+        </button>
+      </div>
+    </div>
   )
 }
 
-function CreateRoomButton () {
+function CreateRoomButton ({ history } : { history: RouteComponentProps['history'] }) {
+  const [viewModal, setViewModal] = useState(false);
+  
+  function appearModal () {
+    setViewModal(true);
+  }
+
+  function disappearModal () {
+    setViewModal(false);
+  }
+
   return (
     <div className="modalContainer">
-      <button className="header-button">
+      <button className="header-button" onClick={appearModal}>
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M14 6v15H3v-2h2V3h9v1h5v15h2v2h-4V6h-3zm-4 5v2h2v-2h-2z"/></svg>
         <p>방 생성하기</p>
       </button>
-      {/* <CreateRoomModal /> */}
+      {viewModal && <CreateRoomModal history={history} onClose={disappearModal}/>}
     </div>
   )
 }

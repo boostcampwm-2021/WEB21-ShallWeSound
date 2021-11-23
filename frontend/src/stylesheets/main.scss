@@ -85,29 +85,21 @@
   }
 }
 
-.dark-background {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  position: fixed;
-  left: 0;
-  top: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
 .dialog {
+  position: fixed;
+  top: calc(50% - 12.5rem);
+  left: 0;
   width: 20rem;
   height: 25rem;
-  background-color: $white;
+  background-color: $semi-white;
+  border: 2px solid $purple;
   padding: 2rem;
   border-radius: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 9999;
 
   *:nth-child(n) {
     margin-bottom: 1rem;
@@ -115,14 +107,16 @@
 
   input {
     padding: 0.5rem;
-    border: 1px solid $black;
-    border-radius: 0.5rem;
+    border: 4px solid $purple;
+    outline: none;
+    font: inherit;
   }
 
   textarea {
     padding: 0.5rem;
-    border: 1px solid $black;
-    border-radius: 0.5rem;
+    border: 4px solid $purple;
+    outline: none;
+    font: inherit;
   }
 
   .input-wrap {
@@ -142,13 +136,18 @@
   height: 50px;
   box-sizing: border-box;
   padding: 0.75rem 1rem;
-  color: gray;
-  background-color: $white;
+  color: $purple;
+  background-color: $semi-white;
   font-weight: 700;
-  border: 4px solid gray;
+  border: 4px solid $purple;
   border-radius: 1rem;
   cursor: pointer;
   margin: 0 0.5rem;
+
+  &:hover {
+    color: $semi-white;
+    background-color: $purple;
+  }
 }
 
 .room-wrap {

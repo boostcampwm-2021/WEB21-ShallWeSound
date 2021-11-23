@@ -7,12 +7,9 @@ import { RouteComponentProps } from 'react-router';
 
 import '../stylesheets/main.scss';
 import { fetchState } from '../types';
-import HeaderComponent from '../components/Header/Header';
-import CreateRoomModal from '../components/Header/CreateRoomModal';
 
 export const MainPage = ({ history }: { history: RouteComponentProps['history'] }) => {
   const socket: Socket = useSocket()!;
-  const [visible, setVisible] = useState(false);
   
   const listFetch = async () => {
     const result = await fetch(`${config.localhost}/api/room`, {
@@ -35,15 +32,8 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
       </div>
     );
   }
-  
-  function toggleCreateRoomDialog(e: any) {
-    console.log(typeof(e))
-    setVisible(!visible);
-  }
-
 
   const [state, fetchUser] = useAsync(listFetch, []);
-
   const { loading, data: roomList, error } = state as fetchState;
 
   useEffect(() => {
@@ -63,23 +53,17 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
   }, []);
 
   return (
-    <>
-      <div className={'body'}>
-        {/* <CreateRoomModal history={history} socket={socket} onCancel={() => toggleCreateRoomDialog} /> */}
-        <div className="main-wrap">
-          <h2>방 참가하기</h2>
-          <div className={'roomList'}>
-            {roomList.length ? (
-              roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)
-            ) : (
-              <p className="room-empty-notice">열려 있는 방이 존재하지 않습니다!</p>
-            )}
-          </div>
-          {/* <button className="button" onClick={toggleCreateRoomDialog}>
-            방 추가
-          </button> */}
+    <div className={'body'}>
+      <div className="main-wrap">
+        <h2>방 참가하기</h2>
+        <div className={'roomList'}>
+          {roomList.length ? (
+            roomList.map(val => <Room id={val.id} name={val.name} description={val.description} />)
+          ) : (
+            <p className="room-empty-notice">열려 있는 방이 존재하지 않습니다!</p>
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
