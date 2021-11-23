@@ -12,7 +12,7 @@ const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) =>
     fetch(`${config.localhost}/api/result?keyword=${keyword}`)
       .then(res => res.json())
       .then(data => setResultList(data.list));
-  }, []);
+  }, [window.location.pathname]);
 
   return (
     <>
