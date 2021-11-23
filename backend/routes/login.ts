@@ -13,28 +13,48 @@ router.get("/github", (req, res)=>{
 
 router.get('/github/callback', async (req, res)=>{
     const { code } = req.query;
-    const token = loginServie.githubLogin(code);
+    const token = await loginServie.githubLogin(code);
+    res.cookie('userID', loginServie.getUserId( jwt.verify(token, `${process.env.SALT}`)))
     res.cookie('jwt', token).redirect('http://localhost:3001/');
+
 })
 
 router.get('/kakao/callback' , async (req, res)=>{
-    const token = loginServie.kakaoLogin(req.query.code);
+    const token = await loginServie.kakaoLogin(req.query.code);
+    res.cookie('userID', loginServie.getUserId( jwt.verify(token, `${process.env.SALT}`)))
     res.cookie('jwt', token).redirect('http://localhost:3001/');
 })
 
-router.get('/authenticate', (req, res)=>{
+router.get('/authenticate', async (req, res)=>{
     const curToken = req.body.jwt;
-    const authenticateResult = loginServie.verifyToken(curToken);
-    
-    
+    const authenticateResult = await loginServie.verifyToken(curToken);
+    if(authenticateResult.result === true){
+        if(authenticateResult.newToken === null){
+            res.send(200);
+        }else{
+            loginServie.updateOrDelete(curToken, authenticateResult.newToken, 1);
+            res.cookie('jwt', authenticateResult.newToken);
+            res.cookie('userID', authenticateResult.userID);
+            res.send(200);
+        }
+    }else{
+        loginServie.updateOrDelete(curToken, null, 2);
+        res.cookie('jwt', null);
+        res.cookie('userID', null);
+        res.send(200);
+    }
 })
-
+const getUserId = (obj:string|jwt.JwtPayload):string =>{
+    if(typeof obj === 'string'){
+        return obj;
+    }else{
+        return obj.test;
+    }
+}
 router.get('/verifyTest', (req, res)=>{
-    const tempToken = jwt.sign({
-        test:'test'
-    }, 'salt', {expiresIn:'1s'});
+    const tempToken = jwt.sign({test:'test'}, 'salt', {expiresIn:'1m'});
     setTimeout(() => {
-        res.send(jwt.verify(tempToken, 'salt'));
+        res.send(getUserId(jwt.verify(`${tempToken}`, 'salt')));
     }, 2000);
 })
 
