@@ -35,6 +35,7 @@ function App() {
   return (
     <>
       <Router>
+        <HeaderComponent />
         <Route
           exact path="/login"
           render={()=>{

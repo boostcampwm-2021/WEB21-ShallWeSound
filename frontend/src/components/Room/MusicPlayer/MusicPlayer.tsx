@@ -14,7 +14,7 @@ interface music {
   isPlayed: boolean;
 }
 
-function MusicPlayer() {
+function MusicPlayer({ isHost }: { isHost: boolean }) {
   const musicControl = useRef<HTMLVideoElement | null>(null);
   const musicProgress = useRef<HTMLInputElement>(null);
   const volumeProgress = useRef<HTMLInputElement>(null);
@@ -180,6 +180,7 @@ function MusicPlayer() {
           min="0"
           max={musicControl.current?.duration || 0}
           onInput={changeInputRange}
+          disabled={!isHost}
         />
         <div className="serveral-icons">
           <div className="volume-wrap width-half">
@@ -200,10 +201,10 @@ function MusicPlayer() {
               />
             </div>
           </div>
-          <div className="icons-wrap">
+          {/* <div className="icons-wrap">
             <img className="icon" src="/icons/thumbs-up.svg" alt="thumbs-up" />
             <img className="icon" src="/icons/playlist-add.svg" alt="playlist-add" />
-          </div>
+          </div> */}
         </div>
       </div>
     </>

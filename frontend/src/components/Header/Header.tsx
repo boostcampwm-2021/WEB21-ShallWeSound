@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import UploadModal from './UploadModal';
 import { timeoutRef } from '../../types';
 import { RouteComponentProps } from 'react-router';
+import CreateRoomButton from './CreateRoomModal';
+import { withRouter } from 'react-router-dom';
 
 function HeaderComponent({ history }: { history: RouteComponentProps['history'] }) {
   const timerRef = useRef<timeoutRef>({ timer: setTimeout(() => {}) });
@@ -17,11 +19,12 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
     timerRef.current.timer = searchTimer;
   }
 
+  function goMain() {
+    history.push(`/main`);
+  }
+
   function doSearch() {
     history.push(`/result/${searchInput}`);
-    window.onpopstate = () => {
-      alert('뒤로가기 ㅋㅋ');
-    };
   }
 
   function searchInputSubmit(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -32,8 +35,11 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
 
   return (
     <div className="header">
-      <UploadModal />
-      <img className="header-logo" src="/images/logo.png" alt="logo" />
+      <div className="header-left-wrap">
+        <UploadModal />
+        <CreateRoomButton history={history} />
+      </div>
+      <img className="header-logo" src="/images/logo.png" alt="logo" onClick={goMain}/>
       <div className="header-search">
         <input
           className="header-search-input"
@@ -48,4 +54,4 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
   );
 }
 
-export default HeaderComponent;
+export default withRouter(HeaderComponent);

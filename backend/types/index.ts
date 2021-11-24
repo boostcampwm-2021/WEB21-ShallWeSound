@@ -13,7 +13,7 @@ type Music = {
 };
 
 type socketInfo = {
-  id: number;
+  id: string;
   name: string;
   socketId: string[];
   description: string;

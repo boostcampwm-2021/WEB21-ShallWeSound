@@ -7,7 +7,7 @@ import Modal from '../Modal';
 import MusicSearch from '../MusicSearch';
 import { useSocket } from '../../../context/MyContext';
 
-const PlayList = () => {
+const PlayList = ({ isHost }: { isHost: boolean }) => {
   const socket: any = useSocket();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [playList, setPlayList] = useState<Music[]>([]);
@@ -37,14 +37,27 @@ const PlayList = () => {
     <Container>
       <Title>P L A Y &nbsp; L I S T</Title>
       <PlayListWrapper>
-        {playList.map((music: Music, i: number) => (
-          <PlayListItem key={i} MID={music.MID} title={music.name} singer={music.singer} isPlayed={music.isPlayed} />
-        ))}
+        {playList.length !== 0 ? (
+          playList.map((music: Music, i: number) => (
+            <PlayListItem
+              key={i}
+              MID={music.MID}
+              title={music.name}
+              singer={music.singer}
+              isPlayed={music.isPlayed}
+              isHost={isHost}
+            />
+          ))
+        ) : (
+          <Title>방장이 아직 곡을 추가하지 않았습니다. 잠시만 기다려주세요! </Title>
+        )}
       </PlayListWrapper>
       <ButtonWrapper>
-        <CircleButton size="45px" colorP="#ffffff" onClick={toggleModal}>
-          +
-        </CircleButton>
+        {isHost && (
+          <CircleButton size="45px" colorP="#ffffff" onClick={toggleModal}>
+            +
+          </CircleButton>
+        )}
       </ButtonWrapper>
 
       {modalVisible ? (

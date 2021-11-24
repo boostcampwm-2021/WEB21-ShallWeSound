@@ -1,7 +1,8 @@
 type Room = {
-  id: number;
+  id: string;
   name: string;
   description: string;
+  totalUser: number;
 };
 
 type Music = {
@@ -28,7 +29,7 @@ type timeoutRef = {
 
 type fetchState = {
   loading: boolean;
-  data: Room[];
+  data: Room[] & string[];
   error: any;
 };
 
@@ -42,7 +43,7 @@ type musicResultItem = {
 
 type Action =
   | { type: 'LOADING' }
-  | { type: 'SUCCESS'; data: Room[] }
+  | { type: 'SUCCESS'; data: Room[] & string[] }
   | { type: 'ERROR'; error: Error }
   | { type: null };
 
