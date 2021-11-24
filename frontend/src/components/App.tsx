@@ -4,8 +4,9 @@ import { MainPage } from '../pages/Main';
 import { ResultPage } from '../pages/Result';
 import { LoginPage } from '../pages/Login';
 import '../stylesheets/reset.css';
-import { BrowserRouter as Router, Route,  Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import {Cookies} from 'react-cookie';
+import HeaderComponent from '../components/Header/Header';
 
 function App() {
   const cookies = new Cookies();
@@ -35,61 +36,65 @@ function App() {
   return (
     <>
       <Router>
-        <HeaderComponent />
-        <Route
-          exact path="/login"
-          render={()=>{
-            if(!authenticate){
-              return <LoginPage/>;
-            }else{
-              return <Redirect to={{ pathname: "/main" }} />;
-            }
-          }}
-        />
-        <Route
-        exact path="/"
-        render={()=>{
-          isAuthenticated();
-          if(!authenticate){
-            return <Redirect to={{ pathname: "/login" }} />;
-          }else{
-            return <Redirect to={{ pathname: "/main" }} />;
-          }
-        }}
-        />
-        <Route
-        exact path="/main"
-        render={()=>{
-          isAuthenticated();
-          if(!authenticate){
-            return <Redirect to={{ pathname: "/" }} />;
-          }else{
-            return <Route path='/main'component={MainPage} />;
-          }
-        }}
-        />
-        <Route 
-        path="/room" 
-        render={()=>{
-          isAuthenticated();
-          if(!authenticate){
-            return <Redirect to={{ pathname: "/" }}/>;
-          }else{
-            return <Route component={Room} />;
-          }
-        }}
-        />
-        <Route 
-        path="/result" 
-        render={()=>{
-          isAuthenticated();
-          if(!authenticate){
-            return <Redirect to={{ pathname: "/" }}/>;
-          }else{
-            return <Route component={ResultPage} />;
-          }
-        }}
-        />
+        <Switch>
+          <Route
+            exact path="/login"
+            render={()=>{
+              if(!authenticate){
+                return <LoginPage/>;
+              }else{
+                return <Redirect to={{ pathname: "/main" }} />;
+              }
+            }}
+          />
+          <>
+            <HeaderComponent />
+            <Route
+            exact path="/"
+            render={()=>{
+              isAuthenticated();
+              if(!authenticate){
+                return <Redirect to={{ pathname: "/login" }} />;
+              }else{
+                return <Redirect to={{ pathname: "/main" }} />;
+              }
+            }}
+            />
+            <Route
+            exact path="/main"
+            render={()=>{
+              isAuthenticated();
+              if(!authenticate){
+                return <Redirect to={{ pathname: "/" }} />;
+              }else{
+                return <Route path='/main'component={MainPage} />;
+              }
+            }}
+            />
+            <Route 
+            path="/room" 
+            render={()=>{
+              isAuthenticated();
+              if(!authenticate){
+                return <Redirect to={{ pathname: "/" }}/>;
+              }else{
+                return <Route component={Room} />;
+              }
+            }}
+            />
+            <Route 
+            path="/result" 
+            render={()=>{
+              isAuthenticated();
+              if(!authenticate){
+                return <Redirect to={{ pathname: "/" }}/>;
+              }else{
+                return <Route component={ResultPage} />;
+              }
+            }}
+            />
+          </>
+        </Switch>
       </Router>
     </>
   );
