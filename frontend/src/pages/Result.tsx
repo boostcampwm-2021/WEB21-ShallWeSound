@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import config from '../config.host.json';
-import { RouteComponentProps } from 'react-router';
 import { musicResultItem } from '../types';
 
 function SearchResultItem ({ name, singer, thumbnail, description, path } : { name: string, singer: string, thumbnail: string, description: string, path: string }) {
@@ -24,7 +23,7 @@ function SearchResultItem ({ name, singer, thumbnail, description, path } : { na
   )
 }
 
-const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) => {
+const ResultPages = (prop: any, ref: any) => {
   const [resultList, setResultList] = useState<musicResultItem[]>([]);
 
   useEffect(() => {
@@ -32,7 +31,7 @@ const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) =>
     fetch(`${config.localhost}/api/result?keyword=${keyword}`)
       .then(res => res.json())
       .then(data => setResultList(data.list));
-  }, []);
+  }, [window.location.pathname]);
 
   return (
     <div className="body">
@@ -48,5 +47,7 @@ const ResultPage = ({ history }: { history: RouteComponentProps['history'] }) =>
     </div>
   );
 };
+
+const ResultPage = forwardRef(ResultPages);
 
 export { ResultPage };

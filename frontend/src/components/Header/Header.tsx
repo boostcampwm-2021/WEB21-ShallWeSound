@@ -25,9 +25,6 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
 
   function doSearch() {
     history.push(`/result/${searchInput}`);
-    window.onpopstate = () => {
-      alert('뒤로가기 ㅋㅋ');
-    };
   }
 
   function searchInputSubmit(e: React.KeyboardEvent<HTMLInputElement>) {

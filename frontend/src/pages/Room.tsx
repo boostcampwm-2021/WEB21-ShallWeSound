@@ -13,7 +13,10 @@ import { fetchState } from '../types';
 const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
   const socket: any = useSocket();
 
-  const roomData = window.location.pathname.match(/[^/]+/gm)![1];
+  const roomData = decodeURI(window.location.pathname.match(/[^/]+/gm)![1]).toString();
+
+  console.log(roomData);
+
   const [isHost, setIsHost] = useState<boolean>(false);
 
   const fetchUserList = async () => {
@@ -33,13 +36,18 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
       socket.emit('leaveRoom');
     };
 
-    window.onload = event => {
-      const roomTitle = window.location.pathname.match(/[^/]+/gm)![1];
-      socket.emit('joinRoom', roomTitle);
+    window.onload = () => {
+      if (isHost) {
+        alert('방장 권한이 사라집니다 그래도 새로고침 하실껀가요?');
+      }
+      alert('방장 권한이 사라집니다 그래도 새로고침 하실껀가요?');
     };
+
+    socket.emit('joinRoom', roomData);
 
     return () => {
       socket.off('leaveRoom');
+      socket.off('joinRoom');
     };
   }, []);
 
@@ -49,11 +57,11 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
 
   useEffect(() => {
     socket.on('updateUserList', () => {
+      console.log('유저리스트 업데이트');
       refetchUserList();
     });
 
     socket.on('delegateHost', (isHostServer: boolean) => {
-      console.log('위임받기');
       setIsHost(isHostServer);
     });
 

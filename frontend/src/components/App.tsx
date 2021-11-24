@@ -17,7 +17,6 @@ function App() {
         <Route path="/main" component={MainPage} />
         <Route path="/result" component={ResultPage} />
       </Router>
-      ,
     </>
   );
 }

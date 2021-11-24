@@ -1,7 +1,8 @@
 type Room = {
-  id: number;
+  id: string;
   name: string;
   description: string;
+  totalUser: number;
 };
 
 type Music = {
