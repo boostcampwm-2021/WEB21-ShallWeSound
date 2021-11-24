@@ -3,6 +3,7 @@ import * as jwt from 'jsonwebtoken'
 import {authCode} from '../types/index'
 import {client, resultPrint, updateOrDeleteToken} from '../config/redis'
 import {promisify} from 'util'
+const models = require('../models/index.js');
 const githubLoginService = async(code:authCode)=>{
     const access_token = await axios({
         method: 'POST',
@@ -24,7 +25,8 @@ const githubLoginService = async(code:authCode)=>{
     const aToken = jwt.sign({userID:userID}, `${process.env.SALT}`, {
     expiresIn: '30m'
     });
-    const rToken = jwt.sign({}, `${process.env.SALT}`, {expiresIn:'1h'})
+    const rToken = jwt.sign({}, `${process.env.SALT}`, {expiresIn:'2h'})
+    searchOrCreate(userID, userEmail, 'github');
     client.set(aToken, rToken, resultPrint);
     return aToken;
 
@@ -50,10 +52,11 @@ const kakaoLoginService = async(code:authCode)=>{
         },
     });
     const userID = userResponse.data.id;
+    searchOrCreate(userID, 'kakaoEmail', 'kakao');
     const aToken = jwt.sign({userID:userID},  `${process.env.SALT}`, {
         expiresIn: '30m'
         });
-    const rToken = jwt.sign({}, `${process.env.SALT}`, {expiresIn:'1h'})
+    const rToken = jwt.sign({}, `${process.env.SALT}`, {expiresIn:'2h'})
     client.set(aToken, rToken, resultPrint);
 
     return aToken;
@@ -114,12 +117,24 @@ const refrashToken = async (accessToken:string)=>{
 const updateOrDelete = (token:string, updateToken:string|null, option:number) =>{
     updateOrDeleteToken(token, updateToken, option);
 }
+
+const searchOrCreate = (id:string, email:string, platform:string)=>{
+    models.USER.findOrCreate({
+        where: { ID:id, platform:platform },
+        defaults: {
+            ID:id,
+            user_email:email,
+            platform:platform
+        }
+    });
+}
 export const loginServie={
     githubLogin:githubLoginService,
     kakaoLogin:kakaoLoginService,
     verifyToken:verifyToken,
     updateOrDelete:updateOrDelete,
-    getUserId:getUserId
+    getUserId:getUserId,
+    searchOrCreate:searchOrCreate
 }
 
 
