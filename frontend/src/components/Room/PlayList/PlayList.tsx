@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import type { Music } from '../../../types';
 import PlayListItem from './PlayListItem';
 import CircleButton from '../../Util/CircleButton';
-import Modal from '../Modal';
-import MusicSearch from '../MusicSearch';
+import Modal from '../../Util/Modal';
+import MusicSearch from './MusicSearch/MusicSearch';
 import { useSocket } from '../../../context/MyContext';
 
 const PlayList = ({ isHost }: { isHost: boolean }) => {

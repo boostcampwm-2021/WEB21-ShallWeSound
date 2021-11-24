@@ -85,15 +85,25 @@ const socketHandler = (io: Server) => {
 
     socket.on('addMusicInPlayListReq', async (MIDS: number[]) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
-      if (!targetRoom) return;
-      const musics: Music[] = await musicService.findMusicsBy(MIDS);
-      targetRoom.playList.addMusics(musics);
-      if (targetRoom.playList.getPlayList().length === musics.length) {
-        targetRoom.playList.getPlayList()[0].isPlayed = true;
-        namespace.to(targetRoom.id).emit('changeMusicInfo', targetRoom.playList.getPlayList()[0]);
+      if (!targetRoom) {
+        return;
       }
-      const res = targetRoom?.playList.getPlayList();
-      namespace.to(targetRoom.id).emit('responsePlayList', res);
+
+      const musics: Music[] = await musicService.findMusicsBy(MIDS);
+      if (targetRoom.playList.isExist(musics)) {
+        namespace.to(socket.id).emit('duplicatedMusicInPlayList');
+        return;
+      }
+      targetRoom.playList.addMusics(musics);
+      namespace.to(socket.id).emit('successAddMusic');
+
+      const list = targetRoom?.playList.getPlayList();
+      namespace.to(targetRoom.id).emit('responsePlayList', list);
+
+      if (list.length === musics.length) {
+        list[0].isPlayed = true;
+        namespace.to(targetRoom.id).emit('changeMusicInfo', list[0]);
+      }
     });
 
     socket.on('removeMusicInPlayListReq', (MID: number) => {
