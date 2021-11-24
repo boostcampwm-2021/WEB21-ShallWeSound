@@ -10,8 +10,7 @@ $black: #000;
 $semi-black: #1e2222;
 
 $background: linear-gradient(#4b6cb7, #182848);
-$color-chatbox:	#9bbbd4;
-
+$color-chatbox: #9bbbd4;
 
 #root {
   width: 100vw;
@@ -22,7 +21,7 @@ $color-chatbox:	#9bbbd4;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: "Jua", Arial, Helvetica, sans-serif;
+  font-family: 'Jua', Arial, Helvetica, sans-serif;
 }
 
 .record-image {
@@ -46,13 +45,21 @@ $color-chatbox:	#9bbbd4;
 }
 
 @keyframes fade-in {
-  from { opacity: 0 }
-  to { opacity: 1 }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fade-out {
-  from { opacity: 1 }
-  to { opacity: 0 }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 .header {
@@ -70,11 +77,21 @@ $color-chatbox:	#9bbbd4;
   align-items: center;
   position: relative;
 
+  button {
+    font: inherit;
+  }
+
+  .header-left-wrap {
+    display: flex;
+    align-items: center;
+  }
+
   .header-logo {
     position: absolute;
-    top: -35px;  // (logo 크기 200px - height 130px) / 2
+    top: -35px; // (logo 크기 200px - height 130px) / 2
     left: calc(50% - 100px);
     z-index: 1;
+    cursor: pointer;
   }
 
   &-search {
@@ -93,7 +110,9 @@ $color-chatbox:	#9bbbd4;
   }
 
   &-search-input {
+    width: 250px;
     height: 50px;
+    font-family: inherit;
     font-weight: 700;
     font-size: 1.25rem;
     outline: none;
@@ -101,21 +120,22 @@ $color-chatbox:	#9bbbd4;
     border: 4px solid $purple;
     padding: 0.4rem;
     box-sizing: border-box;
-    // color: $white;
-
-
   }
 }
 
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+::-webkit-input-placeholder {
+  /* Chrome/Opera/Safari */
   color: rgba(0, 0, 0, 0.3);
 }
-::-moz-placeholder { /* Firefox 19+ */
+::-moz-placeholder {
+  /* Firefox 19+ */
   color: rgba(0, 0, 0, 0.3);
-};
-:-ms-input-placeholder { /* IE 10+ */
+}
+:-ms-input-placeholder {
+  /* IE 10+ */
   color: rgba(0, 0, 0, 0.3);
-};
-:-moz-placeholder { /* Firefox 18- */
+}
+:-moz-placeholder {
+  /* Firefox 18- */
   color: rgba(0, 0, 0, 0.3);
-};
+}

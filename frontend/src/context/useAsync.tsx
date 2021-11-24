@@ -33,8 +33,6 @@ const useAsync = (callback: Function, dep = []) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const fetchUser: any = async () => {
-    dispatch({ type: 'LOADING' });
-
     try {
       const result = await callback(); // session 쓸때 credentials : 'include' 설정해주기
 

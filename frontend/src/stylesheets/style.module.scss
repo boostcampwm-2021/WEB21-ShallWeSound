@@ -104,20 +104,10 @@
     
 }
 
-
-.modalContainer{
-    padding-left: 1em;
-    
-    
-}
 .headerUploadButton{
     border: 0;
-    // background-color: white ;
-    // color: #337ab7;
     background: transparent;
     color: $purple;
-    // width: 5.5em;
-    // height: 2em;
     width: 140px;
     height: 120px;
     border-radius: 10px;
@@ -160,7 +150,7 @@
             border: 0;
             height: 35px;
             width: 52px;
-            background-color: #337ab7;
+            background-color: $purple;
             color: white;
             float: right;
             margin-right: 42px;
@@ -175,10 +165,16 @@
             margin-bottom: 2em;
         }
         .musicName{
+            outline: none;
+            border: 3px solid $purple;
+            border-radius: 0.5em;
             height: 30px;
             width: 150px;
         }
         .thumbnailName{
+            outline: none;
+            border: 3px solid $purple;
+            border-radius: 0.5em;
             height: 30px;
             width: 150px;
         }
@@ -187,23 +183,29 @@
             font-weight: bold;
         }
         .singer{
+            outline: none;
+            border: 3px solid $purple;
+            border-radius: 0.5em;
             height: 30px;
             width: 210px;
             margin-bottom: 2em;
         }
         .descript{
+            outline: none;
+            border: 3px solid $purple;
+            border-radius: 0.5em;
+            resize: none;
             height: 100px;
             width: 212px;
             margin-bottom: 2em;
         }
 
         label{
-
             padding: 8px 12px;
             margin-left: 0.5em;
             color: white;
             vertical-align: middle;
-            background-color: #337ab7; 
+            background-color: $purple; 
             cursor: pointer; 
             border-radius: .25em;
         

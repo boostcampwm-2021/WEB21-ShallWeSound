@@ -7,9 +7,10 @@ interface Props {
   description: string;
   thumbnail: string;
   selected: boolean;
+  onClick?: any;
 }
 
-const MusicSearchItem = ({ name, singer, thumbnail, description, selected }: Props) => {
+const MusicSearchItem = ({ name, singer, thumbnail, description, selected, onClick }: Props) => {
   const [detail, setDetail] = useState(false);
   const onDetail = () => {
     setDetail(true);
@@ -19,9 +20,9 @@ const MusicSearchItem = ({ name, singer, thumbnail, description, selected }: Pro
   };
 
   return (
-    <SearchResultItem selected={selected}>
-      <Image>
-        <div>IMG</div>
+    <SearchResultItem selected={selected} onClick={onClick}>
+      <Image src={thumbnail} alt="thumbnail">
+        {/* <img src={thumbnail} alt="thumbnail"></img> */}
       </Image>
       <TextWrapper>
         <Title>{name}</Title>
@@ -65,10 +66,12 @@ const SearchResultItem = styled.div<SearchResultItemProps>`
   }
 `;
 
-const Image = styled.div`
+const Image = styled.img`
   width: 3rem;
+  margin: 0 0.8rem 0 0;
   display: flex;
   align-items: center;
+  font-size: 0.5rem;
 `;
 
 const TextWrapper = styled.div`

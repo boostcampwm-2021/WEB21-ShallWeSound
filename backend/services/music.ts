@@ -23,11 +23,16 @@ export default {
       replacements: {
         keyword: keyword,
       },
-      limit: 10,
+      limit: 11,
       offset: page,
     });
 
-    return result;
+    if (result.length >= 11) {
+      result.pop();
+      return { result, hasMore: true };
+    }
+
+    return { result, hasMore: false };
   },
   async findMusicsBy(MIDS: number[]) {
     const result = await MusicModel.findAll({
