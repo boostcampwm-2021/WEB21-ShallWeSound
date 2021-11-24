@@ -12,7 +12,7 @@ function App() {
   const cookies = new Cookies();
   const [jwt, setJwt] = useState(cookies.get('jwt'));
   const [authenticate, setAuthenticate] = useState(false);
-
+  console.log(authenticate);
   function isAuthenticated() {
     if (!jwt || jwt === undefined){
       return false;
@@ -40,6 +40,7 @@ function App() {
           <Route
             exact path="/login"
             render={()=>{
+              isAuthenticated();
               if(!authenticate){
                 return <LoginPage/>;
               }else{
