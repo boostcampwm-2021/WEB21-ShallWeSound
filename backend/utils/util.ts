@@ -40,12 +40,11 @@ export const utils = {
     return socketData.find(val => val.socketId[0] === socketID);
   },
 
-  updateNewRoom: function (socketData: socketInfo[], socket: Socket, roomData: any) {
-    socket.join(roomData.name);
+  updateNewRoom: function (socketData: socketInfo[], socket: Socket, roomData: any, roomID: string) {
     socketData.push({
-      id: roomData.id,
+      id: roomID,
       name: roomData.name,
-      socketId: [socket.id],
+      socketId: [],
       description: roomData.description,
       playList: new PlayList(),
     });
@@ -53,21 +52,21 @@ export const utils = {
 
   getRoomListForClient: function (socketData: socketInfo[]) {
     return socketData.map(val => {
-      return { id: val.id, name: val.name, description: val.description };
+      return { id: val.id, name: val.name, description: val.description, totalUesr: val.socketId.length };
     }); // utils로 기능 빼기
   },
 
   isRoomExist: function (socketData: socketInfo[], roomName: string) {
     return socketData.some(val => {
-      return val.name === roomName;
+      return val.id === roomName;
     });
   },
   findRoomOnTitle: function (socketData: socketInfo[], roomName: string) {
-    return socketData.find(val => val.name === roomName);
+    return socketData.find(val => val.id === roomName);
   },
 
   joinRoom: function (socket: Socket, namespace: any, target: socketInfo) {
     socket.broadcast.to([target.socketId[0]]).emit('requestTime', 'time');
-    namespace.to(target.name).emit('joinRoomClient', `${target.name} 입니다. 누군가가 입장했습니다.`);
+    namespace.to(target.id).emit('joinRoomClient', `${target.id} 입니다. 누군가가 입장했습니다.`);
   },
 };

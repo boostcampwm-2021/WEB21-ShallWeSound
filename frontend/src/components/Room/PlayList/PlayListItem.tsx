@@ -7,6 +7,7 @@ type Props = {
   title: string;
   singer: string;
   isPlayed: boolean;
+  isHost: boolean;
 };
 
 type TextProps = {
@@ -15,7 +16,7 @@ type TextProps = {
   size: string;
 };
 
-const PlayListItem = ({ MID, title, singer, isPlayed }: Props) => {
+const PlayListItem = ({ MID, title, singer, isPlayed, isHost }: Props) => {
   const socket: any = useSocket();
   const [isHover, setIsHover] = useState(false);
 
@@ -23,7 +24,7 @@ const PlayListItem = ({ MID, title, singer, isPlayed }: Props) => {
   const hoverOut = () => setIsHover(false);
 
   const clickPlay = () => {
-    socket.emit('clickAndPlayMusic', title);
+    if (isHost) socket.emit('clickAndPlayMusic', title);
   };
 
   const onRemove = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,7 +43,7 @@ const PlayListItem = ({ MID, title, singer, isPlayed }: Props) => {
             {singer}
           </Text>
         </TextWrapper>
-        {isHover ? <CancelButton onClick={onRemove}>X</CancelButton> : <Detail></Detail>}
+        {isHover ? isHost ? <CancelButton onClick={onRemove}>X</CancelButton> : <Detail></Detail> : <Detail></Detail>}
       </Layout>
     </Item>
   );

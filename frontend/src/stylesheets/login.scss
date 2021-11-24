@@ -1,0 +1,36 @@
+@import './global.scss';
+
+.loginBox{
+    display: grid;
+    place-items: center;
+    background-color: $semi-white;
+    width: 30em;
+    height: 25em;
+    border-radius: 10px;
+    
+    
+    img{
+        margin-left: 5%;
+        margin-top: 3%;
+        width:2.5em;
+        height: 2.5em;
+        object-fit: cover;
+    }
+    .loginText{
+        font-size: xx-large;
+    }
+    .Btn{
+        div{
+            width: 17em;
+            padding-top: 0.8rem;
+            text-align: center;
+            font-size: xx-large;
+        }
+        display: flex;
+        width: 20em;
+        height: 4em;
+        border:5px solid $pink;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,13 @@
+@import './global.scss';
+
+.userList {
+  width: 400px;
+  height: 150px;
+  background-color: #beaee2;
+  color: #f9f9f9;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow: scroll;
+  border-radius: 0.25rem;
+}

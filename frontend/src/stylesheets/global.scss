@@ -77,11 +77,21 @@ $color-chatbox: #9bbbd4;
   align-items: center;
   position: relative;
 
+  button {
+    font: inherit;
+  }
+
+  .header-left-wrap {
+    display: flex;
+    align-items: center;
+  }
+
   .header-logo {
     position: absolute;
     top: -35px; // (logo 크기 200px - height 130px) / 2
     left: calc(50% - 100px);
     z-index: 1;
+    cursor: pointer;
   }
 
   &-search {
@@ -100,7 +110,9 @@ $color-chatbox: #9bbbd4;
   }
 
   &-search-input {
+    width: 250px;
     height: 50px;
+    font-family: inherit;
     font-weight: 700;
     font-size: 1.25rem;
     outline: none;
@@ -108,7 +120,6 @@ $color-chatbox: #9bbbd4;
     border: 4px solid $purple;
     padding: 0.4rem;
     box-sizing: border-box;
-    // color: $white;
   }
 }
 

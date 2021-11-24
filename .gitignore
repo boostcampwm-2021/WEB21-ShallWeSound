@@ -4,3 +4,4 @@ node_modules
 *.wav
 config.json
 config.local.json
+dump.rdb
