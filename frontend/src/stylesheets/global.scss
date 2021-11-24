@@ -94,6 +94,11 @@ $color-chatbox: #9bbbd4;
     cursor: pointer;
   }
 
+  .header-right-wrap {
+    display: flex;
+    align-items: center;
+  }
+
   &-search {
     display: flex;
     align-items: center;

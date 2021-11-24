@@ -103,10 +103,10 @@
 
 .modal {
   position: absolute;
-  top: calc(130px + 1rem); // 130px: header height
+  top: calc(130px); // 130px: header height
   left: -124px; // 124px: (modal width - button width) / 2
   width: 20rem;
-  height: 25rem;
+  min-height: fit-content;
   background-color: $semi-white;
   border: 2px solid $purple;
   padding: 2rem;
