@@ -67,7 +67,7 @@ function CreateRoomModal ({ history, onClose }: { history: RouteComponentProps['
         <textarea
           name="text1"
           cols={40}
-          rows={5}
+          rows={8}
           className="input-description"
           id="room-detail"
           placeholder="방 설명"

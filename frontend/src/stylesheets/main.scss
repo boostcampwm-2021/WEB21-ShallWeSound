@@ -119,7 +119,11 @@
   z-index: 9999;
 
   *:nth-child(n) {
-    margin-bottom: 1rem;
+    margin: 0.5rem 0 0.5rem;
+
+    button {
+      margin: 0.5rem;
+    }
   }
 
   .modal-close {
@@ -138,12 +142,17 @@
 
     svg {
       fill: inherit;
-      margin-bottom: 0;
+      margin: 0;
     }
 
     &:hover {
       fill: $semi-white;
       background-color: $purple;
+    }
+
+    .button {
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
     }
   }
 
@@ -177,6 +186,7 @@
   }
 
   .input-wrap {
+    width: 100%;
     display: flex;
     flex-direction: column;
   }
@@ -199,7 +209,6 @@
   border: 4px solid $purple;
   border-radius: 1rem;
   cursor: pointer;
-  margin: 0 0.5rem;
 
   &:hover {
     color: $semi-white;

@@ -201,10 +201,10 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
               />
             </div>
           </div>
-          <div className="icons-wrap">
+          {/* <div className="icons-wrap">
             <img className="icon" src="/icons/thumbs-up.svg" alt="thumbs-up" />
             <img className="icon" src="/icons/playlist-add.svg" alt="playlist-add" />
-          </div>
+          </div> */}
         </div>
       </div>
     </>
