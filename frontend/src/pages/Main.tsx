@@ -13,7 +13,7 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
   const [visible, setVisible] = useState(false);
   const [nextRoomIndex, setNextRoomIndex] = useState(1);
   const [dialogInput, setDialogInput] = useState<Room>({
-    id: nextRoomIndex,
+    id: '',
     name: '',
     description: '',
     totalUser: 5,
@@ -27,9 +27,9 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
     return res.list;
   };
 
-  function Room({ id, name, description, total }: { id: number; name: string; description: string; total: string }) {
+  function Room({ id, name, description, total }: { id: string; name: string; description: string; total: string }) {
     const joinRoom = (e: React.MouseEvent<HTMLElement>) => {
-      history.push(`/room/${name}`);
+      history.push(`/room/${id}`);
     };
 
     return (
@@ -74,9 +74,6 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
         name: dialogInput.name,
         description: dialogInput.description,
       });
-      setNextRoomIndex(nextRoomIndex + 1);
-
-      history.push(`/room/${dialogInput.name}`);
     } else {
       alert('입력칸을 다 채워주세요');
     }
@@ -94,6 +91,10 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
     socket.on('updateRoomList', data => {
       console.log('업데이트리스트');
       fetchUser();
+    });
+
+    socket.on('createRoomRoute', (roomNumber: number) => {
+      history.push(`/room/${roomNumber}`);
     });
 
     return () => {

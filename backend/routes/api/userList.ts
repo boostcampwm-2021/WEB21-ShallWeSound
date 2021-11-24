@@ -7,6 +7,7 @@ const router = express.Router();
 router.get('/', (req, res, next) => {
   const roomTitle = `${req.query.roomTitle}`;
   const targetRoom = utils.findRoomOnTitle(socketData, roomTitle);
+  console.log(targetRoom);
   res.json({ list: targetRoom?.socketId });
 });
 

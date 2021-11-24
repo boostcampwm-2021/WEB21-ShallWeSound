@@ -40,9 +40,9 @@ export const utils = {
     return socketData.find(val => val.socketId[0] === socketID);
   },
 
-  updateNewRoom: function (socketData: socketInfo[], socket: Socket, roomData: any) {
+  updateNewRoom: function (socketData: socketInfo[], socket: Socket, roomData: any, roomID: string) {
     socketData.push({
-      id: roomData.id,
+      id: roomID,
       name: roomData.name,
       socketId: [],
       description: roomData.description,
@@ -58,15 +58,15 @@ export const utils = {
 
   isRoomExist: function (socketData: socketInfo[], roomName: string) {
     return socketData.some(val => {
-      return val.name === roomName;
+      return val.id === roomName;
     });
   },
   findRoomOnTitle: function (socketData: socketInfo[], roomName: string) {
-    return socketData.find(val => val.name === roomName);
+    return socketData.find(val => val.id === roomName);
   },
 
   joinRoom: function (socket: Socket, namespace: any, target: socketInfo) {
     socket.broadcast.to([target.socketId[0]]).emit('requestTime', 'time');
-    namespace.to(target.name).emit('joinRoomClient', `${target.name} 입니다. 누군가가 입장했습니다.`);
+    namespace.to(target.id).emit('joinRoomClient', `${target.id} 입니다. 누군가가 입장했습니다.`);
   },
 };
