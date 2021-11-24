@@ -12,7 +12,7 @@ function App() {
   return (
     <>
       <Router>
-        <Route exact component={HeaderComponent} />
+        <HeaderComponent />
         <Route path="/room" component={Room} />
         <Route path="/main" component={MainPage} />
         <Route path="/result" component={ResultPage} />

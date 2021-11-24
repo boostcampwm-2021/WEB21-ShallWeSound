@@ -72,18 +72,16 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
   }, []);
 
   return (
-    <>
-      <div className="room-wrap">
-        <div>
-          <MusicPlayer isHost={isHost}></MusicPlayer>
-          <PlayList isHost={isHost}></PlayList>
-        </div>
-        <div>
-          <UserList user={userList} />
-          <ChatComponent />
-        </div>
+    <div className="room-wrap">
+      <div>
+        <MusicPlayer isHost={isHost}></MusicPlayer>
+        <PlayList isHost={isHost}></PlayList>
       </div>
-    </>
+      <div>
+        <UserList user={userList} />
+        <ChatComponent />
+      </div>
+    </div>
   );
 };
 
