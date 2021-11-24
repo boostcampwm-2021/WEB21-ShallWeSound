@@ -15,7 +15,7 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
 
   const roomData = decodeURI(window.location.pathname.match(/[^/]+/gm)![1]).toString();
 
-  console.log(roomData);
+  console.log('방번호', roomData);
 
   const [isHost, setIsHost] = useState<boolean>(false);
 
@@ -34,13 +34,6 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
   useEffect(() => {
     window.onpopstate = event => {
       socket.emit('leaveRoom');
-    };
-
-    window.onload = () => {
-      if (isHost) {
-        alert('방장 권한이 사라집니다 그래도 새로고침 하실껀가요?');
-      }
-      alert('방장 권한이 사라집니다 그래도 새로고침 하실껀가요?');
     };
 
     socket.emit('joinRoom', roomData);

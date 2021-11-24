@@ -6,15 +6,16 @@ import { useSocket } from '../../context/MyContext';
 import '../../stylesheets/header.scss';
 import { Room } from '../../types';
 
-function CreateRoomModal ({ history, onClose }: { history: RouteComponentProps['history'], onClose: () => void }) {
-  const socket: Socket = useSocket()!
+function CreateRoomModal({ history, onClose }: { history: RouteComponentProps['history']; onClose: () => void }) {
+  const socket: Socket = useSocket()!;
   const [nextRoomIndex, setNextRoomIndex] = useState(1);
   const [dialogInput, setDialogInput] = useState<Room>({
-    id: nextRoomIndex,
+    id: '',
     name: '',
     description: '',
+    totalUser: 0,
   });
-  
+
   function changeDialogRoomName(e: React.BaseSyntheticEvent) {
     setDialogInput({
       ...dialogInput,
@@ -44,19 +45,19 @@ function CreateRoomModal ({ history, onClose }: { history: RouteComponentProps['
         name: dialogInput.name,
         description: dialogInput.description,
       });
-      setNextRoomIndex(nextRoomIndex + 1);
-      onClose();
 
-      history.push(`/room/${dialogInput.name}`);
+      onClose();
     } else {
       alert('입력칸을 다 채워주세요');
     }
   }
+
   return (
     <div className="modal">
       <div className="modal-close" onClick={onClose}>
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
-          <path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
         </svg>
       </div>
       <p className="modal-title">방 생성</p>
@@ -83,29 +84,31 @@ function CreateRoomModal ({ history, onClose }: { history: RouteComponentProps['
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-function CreateRoomButton ({ history } : { history: RouteComponentProps['history'] }) {
+function CreateRoomButton({ history }: { history: RouteComponentProps['history'] }) {
   const [viewModal, setViewModal] = useState(false);
-  
-  function appearModal () {
+
+  function appearModal() {
     setViewModal(true);
   }
 
-  function disappearModal () {
+  function disappearModal() {
     setViewModal(false);
   }
 
   return (
     <div className="modal-container">
       <button className="header-button" onClick={appearModal}>
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M14 6v15H3v-2h2V3h9v1h5v15h2v2h-4V6h-3zm-4 5v2h2v-2h-2z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
+          <path d="M14 6v15H3v-2h2V3h9v1h5v15h2v2h-4V6h-3zm-4 5v2h2v-2h-2z" />
+        </svg>
         <p>방 생성하기</p>
       </button>
-      {viewModal && <CreateRoomModal history={history} onClose={disappearModal}/>}
+      {viewModal && <CreateRoomModal history={history} onClose={disappearModal} />}
     </div>
-  )
+  );
 }
 
 export default CreateRoomButton;
