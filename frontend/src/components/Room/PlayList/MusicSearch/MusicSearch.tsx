@@ -11,6 +11,7 @@ import { reducer as addMusicStatusReducer } from './reducer/addMusicState';
 import { reducer as searchResultReducer } from './reducer/searchResult';
 
 import { useInfiniteScroll } from '../../../../hooks/useinfiniteScroll';
+import ScrollBar from '../../../Util/scrollbar';
 
 const MusicSearch = () => {
   const socket: any = useSocket();
@@ -126,22 +127,24 @@ const MusicSearch = () => {
     <Layout>
       <SearchBar onKeywordChange={onKeywordChange} />
       <ResultWrapper>
-        {result.length ? (
-          result.map((music: Music, i: number) => (
-            <MusicSearchItem
-              key={i}
-              name={music.name}
-              singer={music.singer}
-              thumbnail={music.thumbnail}
-              description={music.description}
-              selected={isSelected(+music.MID)}
-              onClick={() => onSelectMusic(+music.MID)}
-            />
-          ))
-        ) : (
-          <div>검색 결과 없음</div>
-        )}
-        <div ref={hasMore ? setObserveTarget : null}>&nbsp;</div>
+        <ScrollBar color_={'#e8ecee'}>
+          {result.length ? (
+            result.map((music: Music, i: number) => (
+              <MusicSearchItem
+                key={i}
+                name={music.name}
+                singer={music.singer}
+                thumbnail={music.thumbnail}
+                description={music.description}
+                selected={isSelected(+music.MID)}
+                onClick={() => onSelectMusic(+music.MID)}
+              />
+            ))
+          ) : (
+            <div>검색 결과 없음</div>
+          )}
+          <div ref={hasMore ? setObserveTarget : null}>&nbsp;</div>
+        </ScrollBar>
       </ResultWrapper>
       <ButtonWrapper>
         <CircleButton size="45px" colorP={'#b6bac4'} onClick={addMusicInPlayList}>
@@ -161,21 +164,7 @@ const Layout = styled.div`
 
 const ResultWrapper = styled(Layout)`
   line-height: 1.2rem;
-  height: calc(100% * 0.7);
-  overflow-y: auto;
   overflow-x: hidden;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-
-  &::-webkit-scrollbar {
-    /* Chrome, Safari, Opera*/
-    width: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    height: 17%;
-    background: #e8ecee;
-    border-radius: 10px;
-  }
 `;
 
 const ButtonWrapper = styled.div`

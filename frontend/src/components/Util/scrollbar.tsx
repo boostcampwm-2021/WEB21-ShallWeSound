@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
-const ScrollBar = styled.div`
+interface Props {
+  color_?: string;
+}
+
+const ScrollBar = styled.div<Props>`
   height: 80%;
   overflow: auto;
   -ms-overflow-style: none; /* IE and Edge */
@@ -12,7 +16,7 @@ const ScrollBar = styled.div`
   }
   &::-webkit-scrollbar-thumb {
     height: 17%;
-    background-color: rgba(255, 255, 255, 1);
+    background-color: ${props => props.color_ ?? 'rgba(255, 255, 255, 1)'};
     border-radius: 10px;
   }
 `;
