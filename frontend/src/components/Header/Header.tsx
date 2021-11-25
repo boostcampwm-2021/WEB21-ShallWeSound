@@ -4,9 +4,11 @@ import { timeoutRef } from '../../types';
 import { RouteComponentProps } from 'react-router';
 import CreateRoomButton from './CreateRoomModal';
 import { withRouter } from 'react-router-dom';
+import { useSocket } from '../../context/MyContext';
 import UserButton from './UserModal';
 
-function HeaderComponent({ history } : { history: RouteComponentProps['history'] }) {
+function HeaderComponent({ history }: { history: RouteComponentProps['history'] }) {
+  const socket: any = useSocket();
   const timerRef = useRef<timeoutRef>({ timer: setTimeout(() => {}) });
   const [searchInput, setSearchInput] = useState('');
 
@@ -21,10 +23,14 @@ function HeaderComponent({ history } : { history: RouteComponentProps['history']
   }
 
   function goMain() {
+    if (window.location.pathname.includes('room')) socket.emit('leaveRoom');
+
     history.push(`/main`);
   }
 
   function doSearch() {
+    if (window.location.pathname.includes('room')) socket.emit('leaveRoom');
+
     history.push(`/result/${searchInput}`);
   }
 

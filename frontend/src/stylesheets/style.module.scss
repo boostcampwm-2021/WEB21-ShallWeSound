@@ -1,216 +1,223 @@
-@import "./global.scss";
+@import './global.scss';
 
 .App {
-    position: relative;
-    background-size: cover;
-    display: flex;
-    min-height: calc(100vh - 40px);//calc(100vw - (100vw - 100%));
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
+  position: relative;
+  background-size: cover;
+  display: flex;
+  min-height: calc(100vh - 40px); //calc(100vw - (100vw - 100%));
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 }
 
-.msgBallon{
-    overflow: hidden;
+.msgBallon {
+  overflow: hidden;
+  height: auto;
+  margin-bottom: 0.5rem;
+  color: $semi-black;
+
+  .othersChat {
+    display: block;
     height: auto;
-    margin-bottom: 0.5rem;
-    color: $semi-black;
-
-    .othersChat{
-        display: block;
-        height: auto;
-        overflow: hidden;
-        max-width: 50%;
-        min-height: 25px;
-        float: left;
-        border-radius: 5px;
-        padding: 0.4rem  0.8rem 0;
-        margin-block-start: 0;
-        margin-block-end: 5px;
-        margin-left: 10px;
-        background-color: white;
-    }
-    .myChat{
-        float: right;
-        max-width: 50%;
-        min-height: 25px;
-        height: auto;
-        overflow: hidden;
-        text-align: left;
-        border-radius: 5px;
-        padding: 0.4rem  0.8rem 0;
-        margin-block-start: 0;
-        margin-block-end: 5px;
-        margin-right: 10px;
-        background-color: #FEE500;
-    }
-    .writer{
-        display: block;
-        margin-left: 10px;
-        margin-bottom: 0.5rem;
-    }
-    
-    
-}
-
-.chatBox{
-    // background: none;//linear-gradient(#4b6cb7, #182848);
-    background-color: $purple;
-    // outline: 4px solid $white;
-    width: 400px;
-    height: 570px;
-    position: relative;
-    border-radius: 0.25rem;
-    
-    .chatList{
-        overflow: auto;
-        box-sizing: border-box;
-        padding: 1rem;
-        height: 100%;
-        width: 100%;
-    }
-
-    .chatInputSquare{
-        background-color: white;
-        margin-top: 5px;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-
-        display: flex;
-        border-radius: 4px;
-        width: 100%;
-        height: 40px;
-        .chatInput{
-            margin-top: 5px;
-            width: 100%;
-            height: 30px;
-            border: none;
-        }
-        button{
-            margin-left: 10px;
-            height: 40px;
-            width:55px;
-            display: hidden;
-            border: none;
-            border-radius: 4px;
-            background-color: #FEE500;
-            &:active{
-                background-color: darken($color: #FEE500, $amount: 10);
-            }
-        }
-        
-    }
-    
-}
-
-.headerUploadButton{
-    border: 0;
-    background: transparent;
-    color: $purple;
-    width: 140px;
-    height: 120px;
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: large;
-    cursor: pointer;
-    stroke: none;
-    fill: $purple;
-
-    &:hover {
-        svg {
-            stroke: $semi-white;
-            background-color: $purple;
-            fill: $semi-white;
-        }
-    }
-
-    svg {
-        width: 50px;
-        height: 50px;
-        padding: 0.5rem;
-        border-radius: 999px;
-    }
-}
-.UploadModalInner{
-    position: absolute;
-    width: 300px;
-    height: 530px;
+    overflow: hidden;
+    max-width: 50%;
+    min-height: 25px;
+    float: left;
+    border-radius: 5px;
+    padding: 0.4rem 0.8rem 0;
+    margin-block-start: 0;
+    margin-block-end: 5px;
+    margin-left: 10px;
     background-color: white;
-    z-index: 100;
-    border-radius: 10px;
-    .uploadForm{
-        position: relative;
-        margin-top: 13%;
-        margin-left: 2.5em;
-        .input{
-            display: none;
-        }
-        .submitButton{
-            border: 0;
-            height: 35px;
-            width: 52px;
-            background-color: $purple;
-            color: white;
-            float: right;
-            margin-right: 42px;
-            display: block;
-            border-radius: .25em;
-            cursor: pointer;
-        }
-        .musicForm{
-            margin-bottom: 2em;
-        }
-        .thumbnailForm{
-            margin-bottom: 2em;
-        }
-        .musicName{
-            outline: none;
-            border: 3px solid $purple;
-            border-radius: 0.5em;
-            height: 30px;
-            width: 150px;
-        }
-        .thumbnailName{
-            outline: none;
-            border: 3px solid $purple;
-            border-radius: 0.5em;
-            height: 30px;
-            width: 150px;
-        }
-        .title{
-            margin-bottom: 0.5em;
-            font-weight: bold;
-        }
-        .singer{
-            outline: none;
-            border: 3px solid $purple;
-            border-radius: 0.5em;
-            height: 30px;
-            width: 210px;
-            margin-bottom: 2em;
-        }
-        .descript{
-            outline: none;
-            border: 3px solid $purple;
-            border-radius: 0.5em;
-            resize: none;
-            height: 100px;
-            width: 212px;
-            margin-bottom: 2em;
-        }
+  }
+  .myChat {
+    float: right;
+    max-width: 50%;
+    min-height: 25px;
+    height: auto;
+    overflow: hidden;
+    text-align: center;
+    border-radius: 5px;
+    padding: 0.4rem 0.8rem 0;
+    margin-block-start: 0;
+    margin-block-end: 5px;
+    margin-right: 10px;
+    background-color: #fee500;
+  }
+  .writer {
+    display: block;
+    margin-left: 10px;
+    margin-bottom: 0.5rem;
+  }
+}
 
-        label{
-            padding: 8px 12px;
-            margin-left: 0.5em;
-            color: white;
-            vertical-align: middle;
-            background-color: $purple; 
-            cursor: pointer; 
-            border-radius: .25em;
-        
-        }
+.chatBox {
+  // background: none;//linear-gradient(#4b6cb7, #182848);
+  background-color: $purple;
+  // outline: 4px solid $white;
+  width: 400px;
+  height: 570px;
+  position: relative;
+  border-radius: 0.25rem;
+
+  .chatList {
+    overflow: auto;
+    box-sizing: border-box;
+    padding: 1rem;
+    height: 100%;
+    width: 100%;
+
+    overflow: auto;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+      /* Chrome, Safari, Opera*/
+      width: 6px;
     }
-    
-    
+    &::-webkit-scrollbar-thumb {
+      height: 17%;
+      background-color: rgba(255, 255, 255, 1);
+      border-radius: 10px;
+    }
+  }
+
+  .chatInputSquare {
+    background-color: white;
+    margin-top: 5px;
+    position: absolute;
+    left: 0;
+    bottom: -28px;
+
+    display: flex;
+    border-radius: 4px;
+    width: 100%;
+    height: 40px;
+    .chatInput {
+      margin-top: 5px;
+      width: 100%;
+      height: 30px;
+      border: none;
+    }
+    button {
+      margin-left: 10px;
+      height: 40px;
+      width: 55px;
+      display: hidden;
+      border: none;
+      border-radius: 4px;
+      background-color: #fee500;
+      &:active {
+        background-color: darken($color: #fee500, $amount: 10);
+      }
+    }
+  }
+}
+
+.headerUploadButton {
+  border: 0;
+  background: transparent;
+  color: $purple;
+  width: 140px;
+  height: 120px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: large;
+  cursor: pointer;
+  stroke: none;
+  fill: $purple;
+
+  &:hover {
+    svg {
+      stroke: $semi-white;
+      background-color: $purple;
+      fill: $semi-white;
+    }
+  }
+
+  svg {
+    width: 50px;
+    height: 50px;
+    padding: 0.5rem;
+    border-radius: 999px;
+  }
+}
+.UploadModalInner {
+  position: absolute;
+  width: 300px;
+  height: 530px;
+  background-color: white;
+  z-index: 100;
+  border-radius: 10px;
+  .uploadForm {
+    position: relative;
+    margin-top: 13%;
+    margin-left: 2.5em;
+    .input {
+      display: none;
+    }
+    .submitButton {
+      border: 0;
+      height: 35px;
+      width: 52px;
+      background-color: $purple;
+      color: white;
+      float: right;
+      margin-right: 42px;
+      display: block;
+      border-radius: 0.25em;
+      cursor: pointer;
+    }
+    .musicForm {
+      margin-bottom: 2em;
+    }
+    .thumbnailForm {
+      margin-bottom: 2em;
+    }
+    .musicName {
+      outline: none;
+      border: 3px solid $purple;
+      border-radius: 0.5em;
+      height: 30px;
+      width: 150px;
+    }
+    .thumbnailName {
+      outline: none;
+      border: 3px solid $purple;
+      border-radius: 0.5em;
+      height: 30px;
+      width: 150px;
+    }
+    .title {
+      margin-bottom: 0.5em;
+      font-weight: bold;
+    }
+    .singer {
+      outline: none;
+      border: 3px solid $purple;
+      border-radius: 0.5em;
+      height: 30px;
+      width: 210px;
+      margin-bottom: 2em;
+    }
+    .descript {
+      outline: none;
+      border: 3px solid $purple;
+      border-radius: 0.5em;
+      resize: none;
+      height: 100px;
+      width: 212px;
+      margin-bottom: 2em;
+    }
+
+    label {
+      padding: 8px 12px;
+      margin-left: 0.5em;
+      color: white;
+      vertical-align: middle;
+      background-color: $purple;
+      cursor: pointer;
+      border-radius: 0.25em;
+    }
+  }
 }

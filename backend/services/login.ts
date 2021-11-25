@@ -3,6 +3,7 @@ import * as jwt from 'jsonwebtoken'
 import {authCode} from '../types/index'
 import {client, resultPrint, updateOrDeleteToken} from '../config/redis'
 import {promisify} from 'util'
+const models = require('../models/index.js');
 const githubLoginService = async(code:authCode)=>{
     const access_token = await axios({
         method: 'POST',
@@ -21,10 +22,11 @@ const githubLoginService = async(code:authCode)=>{
     });
     const userID = userResponse.data.login;
     const userEmail = userResponse.data.email;
-    const aToken = jwt.sign({userID:userID}, `${process.env.SALT}`, {
+    const aToken = jwt.sign({userID:userID, userEmail:userEmail}, `${process.env.SALT}`, {
     expiresIn: '30m'
     });
-    const rToken = jwt.sign({}, `${process.env.SALT}`, {expiresIn:'1h'})
+    const rToken = jwt.sign({}, `${process.env.SALT}`, {expiresIn:'2h'})
+    searchOrCreate(userID, userEmail, 'github');
     client.set(aToken, rToken, resultPrint);
     return aToken;
 
@@ -50,10 +52,12 @@ const kakaoLoginService = async(code:authCode)=>{
         },
     });
     const userID = userResponse.data.id;
-    const aToken = jwt.sign({userID:userID},  `${process.env.SALT}`, {
+    const userEmail = userResponse.data.kakao_account.email;
+    searchOrCreate(userID, userEmail, 'kakao');
+    const aToken = jwt.sign({userID:userID, userEmail:userEmail},  `${process.env.SALT}`, {
         expiresIn: '30m'
         });
-    const rToken = jwt.sign({}, `${process.env.SALT}`, {expiresIn:'1h'})
+    const rToken = jwt.sign({}, `${process.env.SALT}`, {expiresIn:'2h'})
     client.set(aToken, rToken, resultPrint);
 
     return aToken;
@@ -66,25 +70,63 @@ const getUserId = (obj:string|jwt.JwtPayload):string =>{
         return obj.userID;
     }
 }
+const getUserEmail = (obj:string|jwt.JwtPayload):string =>{
+    if(typeof obj === 'string'){
+        return obj;
+    }else{
+        return obj.userEmail;
+    }
+}
 
+
+const IDsearchInDB = async(verifyResult:string|jwt.JwtPayload)=>{
+    try{
+        console.log('db searcing');
+        const DBresult = await models.USER.findAll({ID:getUserId(verifyResult)})
+    }catch(DBerr){
+        return false;
+    }
+    return true;
+}
 const verifyToken = async (accessToken:string) =>{
     try{
         const verifyResult = jwt.verify(accessToken, `${process.env.SALT}`);
+        const DBsearchResult = await IDsearchInDB(verifyResult);
+        if(DBsearchResult === false){
+            const returnResult={
+                result:false,
+                userID:null,
+                newToken:null
+            }
+            return returnResult;
+        }
         const returnResult= {
             result:true,
             userID:getUserId(verifyResult),
+            userEmail:getUserEmail(verifyResult),
             newToken:null
         }
         return returnResult
     }catch(err){
         const refrashRes = await refrashToken(accessToken);
         if (refrashRes !== null){
-            const returnResult={
-                result:true,
-                userID:getUserId(jwt.verify(`${refrashRes}`, `${process.env.SALT}`)) ,
-                newToken:refrashRes
+            const DBsearchResult = await IDsearchInDB(`${refrashRes}`);
+            if(DBsearchResult === true){
+                const returnResult={
+                    result:true,
+                    userID:getUserId(jwt.verify(`${refrashRes}`, `${process.env.SALT}`)) ,
+                    userEmail:getUserEmail(jwt.verify(`${refrashRes}`, `${process.env.SALT}`)) ,
+                    newToken:refrashRes
+                }
+                return returnResult
+            }else{
+                const returnResult={
+                    result:false,
+                    userID:null,
+                    newToken:null
+                }
+                return returnResult
             }
-            return returnResult
         }else{
             const returnResult={
                 result:false,
@@ -102,7 +144,7 @@ const refrashToken = async (accessToken:string)=>{
     const rToken = await redisGET(accessToken);
     try{
         const rTokenVerifyResult = jwt.verify(rToken!, `${process.env.SALT}`);
-        const newToken = jwt.sign({userID:jwt.verify(accessToken, `${process.env.SALT}`)}, 
+        const newToken = jwt.sign({userID:getUserId(jwt.decode(accessToken)!), userEmail:getUserEmail(jwt.decode(accessToken)!)}, 
         `${process.env.SALT}`, {expiresIn:'30m'});
         return newToken;
     }catch(err){
@@ -114,12 +156,25 @@ const refrashToken = async (accessToken:string)=>{
 const updateOrDelete = (token:string, updateToken:string|null, option:number) =>{
     updateOrDeleteToken(token, updateToken, option);
 }
+
+const searchOrCreate = (id:string, email:string, platform:string)=>{
+    models.USER.findOrCreate({
+        where: { ID:id, platform:platform },
+        defaults: {
+            ID:id,
+            user_email:email,
+            platform:platform
+        }
+    });
+}
 export const loginServie={
     githubLogin:githubLoginService,
     kakaoLogin:kakaoLoginService,
     verifyToken:verifyToken,
     updateOrDelete:updateOrDelete,
-    getUserId:getUserId
+    getUserId:getUserId,
+    getUserEmail:getUserEmail,
+    searchOrCreate:searchOrCreate
 }
 
 

@@ -1,6 +1,12 @@
 import React, { useEffect, useState, useRef, forwardRef, MutableRefObject } from 'react';
 import config from '../config.host.json';
+import { useInfiniteScroll } from '../hooks/useinfiniteScroll';
 import { musicResultItem } from '../types';
+
+interface ResultState {
+  musicList: musicResultItem[];
+  hasMore: boolean;
+}
 
 function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean }) {
   const musicControl = useRef<HTMLVideoElement | null>(null);
@@ -154,28 +160,64 @@ function SearchResultItem ({ name, singer, thumbnail, description, path } : { na
       </div>
       {playMusic && <SearchedMusicPlayer path={path} isPlay={playMusic} />}
     </div>
-  )
+  );
 }
 
 const ResultPages = (prop: any, ref: any) => {
-  const [resultList, setResultList] = useState<musicResultItem[]>([]);
+  const [resultList, setResultList] = useState<ResultState>({
+    musicList: [],
+    hasMore: false,
+  });
+  const keyword = useRef('');
+  const page = useRef(0);
+
+  const fetchMusics = async (more = true) => {
+    fetch(`${config.localhost}/api/music?keyword=${keyword.current}&page=${page.current}`)
+      .then(res => res.json())
+      .then(data => {
+        if (more) {
+          setResultList({
+            musicList: [...musicList, ...data.result],
+            hasMore: data.hasMore,
+          });
+        } else {
+          setResultList({
+            musicList: data.result,
+            hasMore: data.hasMore,
+          });
+        }
+      });
+  };
+
+  const { musicList, hasMore } = resultList;
 
   useEffect(() => {
-    const keyword = window.location.pathname.match(/[^/]+/gm)![1];
-    fetch(`${config.localhost}/api/result?keyword=${keyword}`)
-      .then(res => res.json())
-      .then(data => setResultList(data.list));
+    page.current = 0;
+    keyword.current = window.location.pathname.match(/[^/]+/gm)![1];
+    fetchMusics(false);
   }, [window.location.pathname]);
+
+  useEffect(() => {
+    page.current = musicList.length;
+  }, [musicList]);
+
+  const setObserveTarget = useInfiniteScroll(fetchMusics);
 
   return (
     <div className="body">
       <div className="main-wrap">
         <div className="search-result-wrap">
-          <p className="search-result-cnt">총 {resultList.length} 개의 검색 결과가 있습니다.</p>
-          {resultList.map(val => {
-            return <SearchResultItem name={val.name} singer={val.singer} thumbnail={val.thumbnail} description={val.description} path={val.path} />;
-          })}
-          <div className="search-result-end">end</div>
+          <p className="search-result-cnt">총 {musicList.length} 개의 검색 결과가 있습니다.</p>
+          {musicList.map(val => (
+            <SearchResultItem
+              name={val.name}
+              singer={val.singer}
+              thumbnail={val.thumbnail}
+              description={val.description}
+              path={val.path}
+            />
+          ))}
+          <div ref={hasMore ? setObserveTarget : null}>&nbsp;</div>
         </div>
       </div>
     </div>
