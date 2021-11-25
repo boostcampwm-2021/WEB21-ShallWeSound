@@ -8,6 +8,7 @@
   margin-bottom: 1rem;
   padding: 1rem;
   box-sizing: border-box;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: auto;
   border-radius: 0.25rem;
 }
