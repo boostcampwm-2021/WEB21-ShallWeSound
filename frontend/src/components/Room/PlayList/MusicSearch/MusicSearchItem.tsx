@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 interface Props {
@@ -11,6 +11,7 @@ interface Props {
 }
 
 const MusicSearchItem = ({ name, singer, thumbnail, description, selected, onClick }: Props) => {
+  const item = useRef<HTMLDivElement | null>(null);
   const [detail, setDetail] = useState(false);
   const onDetail = () => {
     setDetail(true);
@@ -19,11 +20,17 @@ const MusicSearchItem = ({ name, singer, thumbnail, description, selected, onCli
     setDetail(false);
   };
 
+  // const isOverflow = () => {
+  //   if (!item.current) return false;
+  //   // const cloneItem = item.current?.cloneNode(true);
+  //   return item.current.scrollWidth > item.current.clientWidth;
+  // };
+
   return (
-    <SearchResultItem selected={selected} length={name.length} isOverflow={name.length >= 20} onClick={onClick}>
+    <SearchResultItem selected={selected} length={name.length} isOverflow={true} onClick={onClick}>
       <Image src={thumbnail} alt="thumbnail" />
       <TextWrapper>
-        <Title>{name}</Title>
+        <Title ref={item}>{name}</Title>
         <Singer>{singer}</Singer>
       </TextWrapper>
       <DescriptionIcon onMouseEnter={onDetail} onMouseLeave={onDetailOut}>
@@ -40,14 +47,14 @@ const MusicSearchItem = ({ name, singer, thumbnail, description, selected, onCli
 const moveTitle = (length: number, isOverflow: boolean) => {
   if (!isOverflow) return null;
 
-  const point = -(length * 8);
+  const point = -(length * 5);
 
   return keyframes`
       from {
-        transform: translateX(0px)
+        transform: translateX(0%)
       }
       to {
-        transform: translateX(${point}px)
+        transform: translateX(${point}%)
       }
   `;
 };
