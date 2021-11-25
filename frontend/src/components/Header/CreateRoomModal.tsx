@@ -101,9 +101,7 @@ function CreateRoomButton({ history }: { history: RouteComponentProps['history']
   return (
     <div className="modal-container">
       <button className="header-button" onClick={appearModal}>
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
-          <path d="M14 6v15H3v-2h2V3h9v1h5v15h2v2h-4V6h-3zm-4 5v2h2v-2h-2z" />
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px"><g><path d="M19,19V5c0-1.1-0.9-2-2-2H7C5.9,3,5,3.9,5,5v14H3v2h18v-2H19z M15,13h-2v-2h2V13z"/></g></svg>
         <p>방 생성하기</p>
       </button>
       {viewModal && <CreateRoomModal history={history} onClose={disappearModal} />}
