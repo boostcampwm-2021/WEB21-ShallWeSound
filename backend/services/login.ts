@@ -22,7 +22,7 @@ const githubLoginService = async(code:authCode)=>{
     });
     const userID = userResponse.data.login;
     const userEmail = userResponse.data.email;
-    const aToken = jwt.sign({userID:userID}, `${process.env.SALT}`, {
+    const aToken = jwt.sign({userID:userID, userEmail:userEmail}, `${process.env.SALT}`, {
     expiresIn: '30m'
     });
     const rToken = jwt.sign({}, `${process.env.SALT}`, {expiresIn:'2h'})
@@ -52,8 +52,9 @@ const kakaoLoginService = async(code:authCode)=>{
         },
     });
     const userID = userResponse.data.id;
-    searchOrCreate(userID, 'kakaoEmail', 'kakao');
-    const aToken = jwt.sign({userID:userID},  `${process.env.SALT}`, {
+    const userEmail = userResponse.data.kakao_account.email;
+    searchOrCreate(userID, userEmail, 'kakao');
+    const aToken = jwt.sign({userID:userID, userEmail:userEmail},  `${process.env.SALT}`, {
         expiresIn: '30m'
         });
     const rToken = jwt.sign({}, `${process.env.SALT}`, {expiresIn:'2h'})
@@ -69,6 +70,13 @@ const getUserId = (obj:string|jwt.JwtPayload):string =>{
         return obj.userID;
     }
 }
+const getUserEmail = (obj:string|jwt.JwtPayload):string =>{
+    if(typeof obj === 'string'){
+        return obj;
+    }else{
+        return obj.userEmail;
+    }
+}
 
 
 const IDsearchInDB = async(verifyResult:string|jwt.JwtPayload)=>{
@@ -81,7 +89,6 @@ const IDsearchInDB = async(verifyResult:string|jwt.JwtPayload)=>{
     return true;
 }
 const verifyToken = async (accessToken:string) =>{
-    
     try{
         const verifyResult = jwt.verify(accessToken, `${process.env.SALT}`);
         const DBsearchResult = await IDsearchInDB(verifyResult);
@@ -96,6 +103,7 @@ const verifyToken = async (accessToken:string) =>{
         const returnResult= {
             result:true,
             userID:getUserId(verifyResult),
+            userEmail:getUserEmail(verifyResult),
             newToken:null
         }
         return returnResult
@@ -107,6 +115,7 @@ const verifyToken = async (accessToken:string) =>{
                 const returnResult={
                     result:true,
                     userID:getUserId(jwt.verify(`${refrashRes}`, `${process.env.SALT}`)) ,
+                    userEmail:getUserEmail(jwt.verify(`${refrashRes}`, `${process.env.SALT}`)) ,
                     newToken:refrashRes
                 }
                 return returnResult
@@ -135,7 +144,7 @@ const refrashToken = async (accessToken:string)=>{
     const rToken = await redisGET(accessToken);
     try{
         const rTokenVerifyResult = jwt.verify(rToken!, `${process.env.SALT}`);
-        const newToken = jwt.sign({userID:getUserId(jwt.decode(accessToken)!)}, 
+        const newToken = jwt.sign({userID:getUserId(jwt.decode(accessToken)!), userEmail:getUserEmail(jwt.decode(accessToken)!)}, 
         `${process.env.SALT}`, {expiresIn:'30m'});
         return newToken;
     }catch(err){
@@ -164,6 +173,7 @@ export const loginServie={
     verifyToken:verifyToken,
     updateOrDelete:updateOrDelete,
     getUserId:getUserId,
+    getUserEmail:getUserEmail,
     searchOrCreate:searchOrCreate
 }
 
