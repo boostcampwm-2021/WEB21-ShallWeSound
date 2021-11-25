@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 interface Props {
   name: string;
@@ -20,10 +20,8 @@ const MusicSearchItem = ({ name, singer, thumbnail, description, selected, onCli
   };
 
   return (
-    <SearchResultItem selected={selected} onClick={onClick}>
-      <Image src={thumbnail} alt="thumbnail">
-        {/* <img src={thumbnail} alt="thumbnail"></img> */}
-      </Image>
+    <SearchResultItem selected={selected} length={name.length} isOverflow={name.length >= 20} onClick={onClick}>
+      <Image src={thumbnail} alt="thumbnail" />
       <TextWrapper>
         <Title>{name}</Title>
         <Singer>{singer}</Singer>
@@ -39,9 +37,33 @@ const MusicSearchItem = ({ name, singer, thumbnail, description, selected, onCli
   );
 };
 
+const moveTitle = (length: number, isOverflow: boolean) => {
+  if (!isOverflow) return null;
+
+  const point = -(length * 8);
+
+  return keyframes`
+      from {
+        transform: translateX(0px)
+      }
+      to {
+        transform: translateX(${point}px)
+      }
+  `;
+};
+
 interface SearchResultItemProps {
   selected: boolean;
+  length: number;
+  isOverflow: boolean;
 }
+
+const Title = styled.div`
+  font-size: 16px;
+  padding: 0.2rem 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
 
 const SearchResultItem = styled.div<SearchResultItemProps>`
   display: flex;
@@ -59,6 +81,12 @@ const SearchResultItem = styled.div<SearchResultItemProps>`
 
   &:hover {
     background-color: #f2f3f4;
+
+    ${Title} {
+      animation: ${props => moveTitle(props.length, props.isOverflow)} ${props => props.length / 7}s linear infinite;
+      animation-delay: 0.5s;
+      overflow: visible;
+    }
   }
 
   &:active {
@@ -82,13 +110,6 @@ const TextWrapper = styled.div`
   overflow: hidden;
   width: calc(100% * 0.8);
   padding: 0 0.2rem;
-`;
-
-const Title = styled.div`
-  font-size: 16px;
-  padding: 0.2rem 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `;
 
 const Singer = styled.div`
