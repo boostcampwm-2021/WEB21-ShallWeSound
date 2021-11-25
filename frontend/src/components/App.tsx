@@ -40,6 +40,7 @@ function App() {
           <Route
             exact path="/login"
             render={()=>{
+              isAuthenticated();
               if(!authenticate){
                 return <LoginPage/>;
               }else{
@@ -49,6 +50,7 @@ function App() {
           />
           <>
             <HeaderComponent />
+            {/* onLogout={Logout} /> */}
             <Route
             exact path="/"
             render={()=>{

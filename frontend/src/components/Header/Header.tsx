@@ -6,7 +6,7 @@ import CreateRoomButton from './CreateRoomModal';
 import { withRouter } from 'react-router-dom';
 import UserButton from './UserModal';
 
-function HeaderComponent({ history }: { history: RouteComponentProps['history'] }) {
+function HeaderComponent({ history } : { history: RouteComponentProps['history'] }) {
   const timerRef = useRef<timeoutRef>({ timer: setTimeout(() => {}) });
   const [searchInput, setSearchInput] = useState('');
 
@@ -52,7 +52,7 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
           />
           <img src="/icons/search.svg" alt="search" onClick={doSearch} />
         </div>
-        <UserButton />
+        <UserButton history={history}/>
       </div>
     </div>
   );
