@@ -37,8 +37,8 @@ const socketHandler = (io: Server) => {
 
     socket.on('chatMessage', (message: string) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
-      if (targetRoom !== undefined)
-        socket.to(targetRoom.id).emit('chatMessage', { id: userHash[socket.id], msg: message });
+      const userID = utils.getUserBySocketID(targetRoom, socket.id);
+      if (targetRoom !== undefined) socket.to(targetRoom.id).emit('chatMessage', { id: userID, msg: message });
     });
 
     socket.on('responseTime', (data: number) => {
@@ -164,8 +164,18 @@ const socketHandler = (io: Server) => {
       namespace.to(targetRoom.id).emit('changeMusicInfo', targetPlayList.getMusicByName(clickedMusic));
     });
 
-    socket.on('zzz', data => {
-      console.log(data);
+    socket.on('redundancyCheck', data => {
+      const targetRoom: socketInfo = utils.findRoomOnTitle(socketData, data.roomID)!;
+
+      console.log(targetRoom.userId);
+
+      console.log(data.userID);
+
+      const isRedundancy = targetRoom.userId.some(val => val === data.userID);
+
+      console.log(isRedundancy);
+
+      socket.emit('joinRoomClient', { isRedundancy: isRedundancy, roomID: data.roomID });
     });
   });
 };

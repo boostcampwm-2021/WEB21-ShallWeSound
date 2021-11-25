@@ -28,7 +28,9 @@ export const utils = {
 
   updateDisconnectData: function (targetRoom: socketInfo, socketData: socketInfo[], socket: Socket) {
     if (targetRoom !== undefined) {
+      const targetIdx = targetRoom.socketId.indexOf(socket.id);
       targetRoom.socketId = targetRoom.socketId.filter(val => val !== socket.id);
+      targetRoom.userId = targetRoom.userId.filter((val, idx) => idx !== targetIdx);
       if (!targetRoom.socketId.length) {
         const updatedList = this.updateList(socketData, targetRoom);
         socket.broadcast.emit('updateRoomList', { list: updatedList });
@@ -68,6 +70,10 @@ export const utils = {
 
   joinRoom: function (socket: Socket, namespace: any, target: socketInfo) {
     socket.broadcast.to([target.socketId[0]]).emit('requestTime', 'time');
-    namespace.to(target.id).emit('joinRoomClient', `${target.id} 입니다. 누군가가 입장했습니다.`);
+  },
+
+  getUserBySocketID: function (targetRoom: socketInfo, socketID: string) {
+    const targetIdx = targetRoom.socketId.indexOf(socketID);
+    return targetRoom.userId[targetIdx];
   },
 };

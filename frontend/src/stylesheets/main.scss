@@ -335,6 +335,7 @@
 }
 
 .delegate {
+  opacity: 0;
   width: 250px;
   height: 100px;
   box-sizing: border-box;
@@ -351,8 +352,9 @@
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 5;
-  // animation-name: fadeOut;
+  animation-name: fadeOut;
   // animation-duration: 4s;
   // animation-iteration-count: 1;
-  visibility: hidden;
+
+  transition: all 2s ease-in;
 }

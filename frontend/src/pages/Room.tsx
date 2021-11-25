@@ -55,11 +55,12 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
     });
 
     socket.on('delegateHost', (isHostServer: boolean) => {
-      alertRef.current!.style.visibility = 'visible';
       setIsHost(isHostServer);
+      alertRef.current!.style.opacity = '1';
+
       setTimeout(() => {
-        alertRef.current!.style.visibility = 'hidden';
-      }, 3500);
+        if (alertRef.current) alertRef.current!.style.opacity = '0';
+      }, 3000);
     });
 
     return () => {
@@ -84,7 +85,7 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
       </div>
 
       <div className={'delegate'} ref={alertRef}>
-        당신은 이제부터 방장입니다.
+        방장 권한이 위임 되었습니다.
       </div>
     </div>
   );
