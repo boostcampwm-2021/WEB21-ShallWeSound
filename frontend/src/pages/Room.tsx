@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import HeaderComponent from '../components/Header/Header';
+import React, { useEffect, useState, useRef, ReactComponentElement } from 'react';
+import '../stylesheets/main.scss';
 import MusicPlayer from '../components/Room/MusicPlayer/MusicPlayer';
 import PlayList from '../components/Room/PlayList/PlayList';
 import ChatComponent from '../components/Room/Chat/chat';
@@ -9,13 +9,12 @@ import config from '../config.host.json';
 import { useAsync } from '../context/useAsync';
 import { RouteComponentProps } from 'react-router';
 import { fetchState } from '../types';
+import { Cookies } from 'react-cookie';
 
 const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
   const socket: any = useSocket();
-
+  const alertRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const roomData = decodeURI(window.location.pathname.match(/[^/]+/gm)![1]).toString();
-
-  console.log('방번호', roomData);
 
   const [isHost, setIsHost] = useState<boolean>(false);
 
@@ -28,6 +27,8 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
     return result.list;
   };
 
+  const cookie = new Cookies();
+
   const [state, refetchUserList] = useAsync(fetchUserList, []);
   const { loading, data: userList, error } = state as fetchState;
 
@@ -36,7 +37,7 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
       socket.emit('leaveRoom');
     };
 
-    socket.emit('joinRoom', roomData);
+    socket.emit('joinRoom', { roomID: roomData, userID: cookie.get('userID') });
 
     return () => {
       socket.off('leaveRoom');
@@ -45,17 +46,20 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
   }, []);
 
   useEffect(() => {
-    if (socket.id !== undefined && userList[0] === socket.id) setIsHost(true);
+    if (userList[0] === cookie.get('userID')) setIsHost(true);
   }, [userList]);
 
   useEffect(() => {
     socket.on('updateUserList', () => {
-      console.log('유저리스트 업데이트');
       refetchUserList();
     });
 
     socket.on('delegateHost', (isHostServer: boolean) => {
+      alertRef.current!.style.visibility = 'visible';
       setIsHost(isHostServer);
+      setTimeout(() => {
+        alertRef.current!.style.visibility = 'hidden';
+      }, 3500);
     });
 
     return () => {
@@ -63,6 +67,10 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
       socket.off('delegateHost');
     };
   }, []);
+
+  if (userList[0] === 'bad') {
+    return <div>잘못된 요청입니다.</div>;
+  }
 
   return (
     <div className="room-wrap">
@@ -73,6 +81,10 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
       <div>
         <UserList user={userList} />
         <ChatComponent />
+      </div>
+
+      <div className={'delegate'} ref={alertRef}>
+        당신은 이제부터 방장입니다.
       </div>
     </div>
   );

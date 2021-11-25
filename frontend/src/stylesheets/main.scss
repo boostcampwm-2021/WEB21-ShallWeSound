@@ -324,3 +324,35 @@
   position: absolute;
   top: 100%;
 }
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.delegate {
+  width: 250px;
+  height: 100px;
+  box-sizing: border-box;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: $lightgreen;
+  border-radius: 1rem;
+  color: $semi-black;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  // animation-name: fadeOut;
+  // animation-duration: 4s;
+  // animation-iteration-count: 1;
+  visibility: hidden;
+}

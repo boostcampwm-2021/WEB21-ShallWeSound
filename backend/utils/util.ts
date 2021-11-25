@@ -45,6 +45,7 @@ export const utils = {
       id: roomID,
       name: roomData.name,
       socketId: [],
+      userId: [],
       description: roomData.description,
       playList: new PlayList(),
     });
