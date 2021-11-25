@@ -47,9 +47,5 @@ router.post('/authenticate', async (req, res)=>{
     }
 })
 
-router.get('/verifyTest', (req, res)=>{
-})
-
-
 
 export default router;

@@ -70,9 +70,29 @@ const getUserId = (obj:string|jwt.JwtPayload):string =>{
     }
 }
 
+
+const IDsearchInDB = async(verifyResult:string|jwt.JwtPayload)=>{
+    try{
+        console.log('db searcing');
+        const DBresult = await models.USER.findAll({ID:getUserId(verifyResult)})
+    }catch(DBerr){
+        return false;
+    }
+    return true;
+}
 const verifyToken = async (accessToken:string) =>{
+    
     try{
         const verifyResult = jwt.verify(accessToken, `${process.env.SALT}`);
+        const DBsearchResult = await IDsearchInDB(verifyResult);
+        if(DBsearchResult === false){
+            const returnResult={
+                result:false,
+                userID:null,
+                newToken:null
+            }
+            return returnResult;
+        }
         const returnResult= {
             result:true,
             userID:getUserId(verifyResult),
@@ -82,12 +102,22 @@ const verifyToken = async (accessToken:string) =>{
     }catch(err){
         const refrashRes = await refrashToken(accessToken);
         if (refrashRes !== null){
-            const returnResult={
-                result:true,
-                userID:getUserId(jwt.verify(`${refrashRes}`, `${process.env.SALT}`)) ,
-                newToken:refrashRes
+            const DBsearchResult = await IDsearchInDB(`${refrashRes}`);
+            if(DBsearchResult === true){
+                const returnResult={
+                    result:true,
+                    userID:getUserId(jwt.verify(`${refrashRes}`, `${process.env.SALT}`)) ,
+                    newToken:refrashRes
+                }
+                return returnResult
+            }else{
+                const returnResult={
+                    result:false,
+                    userID:null,
+                    newToken:null
+                }
+                return returnResult
             }
-            return returnResult
         }else{
             const returnResult={
                 result:false,
@@ -105,7 +135,7 @@ const refrashToken = async (accessToken:string)=>{
     const rToken = await redisGET(accessToken);
     try{
         const rTokenVerifyResult = jwt.verify(rToken!, `${process.env.SALT}`);
-        const newToken = jwt.sign({userID:jwt.verify(accessToken, `${process.env.SALT}`)}, 
+        const newToken = jwt.sign({userID:getUserId(jwt.decode(accessToken)!)}, 
         `${process.env.SALT}`, {expiresIn:'30m'});
         return newToken;
     }catch(err){
