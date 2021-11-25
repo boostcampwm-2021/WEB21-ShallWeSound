@@ -4,6 +4,7 @@ import styles from '../../../stylesheets/style.module.scss';
 import * as _ from 'lodash';
 // const socket = io();
 import { useSocket } from '../../../context/MyContext';
+import ScrollBar from '../../Util/scrollbar';
 interface chatType {
   id: number;
   msg: string;
@@ -35,7 +36,7 @@ function ChatComponent() {
   function MakeChatList() {
     const chatlist = chats.map((chat, idx) => {
       if (chat.id !== -1) {
-        const writer = `by user${chat.id}`;
+        const writer = `by ${chat.id}`;
         return (
           <div className={styles.msgBallon} key={idx}>
             <div className={styles.writer}>{writer}</div>
@@ -69,9 +70,11 @@ function ChatComponent() {
   };
   return (
     <div className={styles.chatBox}>
+      {/* <ScrollBar> */}
       <div className={styles.chatList} ref={chatListRef}>
         <MakeChatList />
       </div>
+      {/* </ScrollBar> */}
       <div className={styles.chatInputSquare}>
         <input
           className={styles.chatInput}

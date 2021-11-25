@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import '../../../stylesheets/userList.scss';
 import config from '../../../config.host.json';
 import { useSocket } from '../../../context/MyContext';
+import ScrollBar from '../../Util/scrollbar';
+
 const UserList = ({ user }: { user: string[] }) => {
   const socket: any = useSocket();
 
@@ -16,7 +18,9 @@ const UserList = ({ user }: { user: string[] }) => {
     <div className={'userList'}>
       <h3>참가자 {user.length}명</h3>
       <br />
-      <ul>{userList}</ul>
+      <ScrollBar>
+        <ul>{userList}</ul>
+      </ScrollBar>
     </div>
   );
 };

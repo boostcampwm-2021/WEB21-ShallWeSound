@@ -14,7 +14,7 @@ const SearchBar = ({ onKeywordChange }: Props) => {
       (e: React.ChangeEvent<HTMLInputElement>) => {
         onKeywordChange(e.target.value);
       },
-      300,
+      200,
       { leading: false },
     ),
     [],

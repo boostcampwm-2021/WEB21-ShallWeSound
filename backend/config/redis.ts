@@ -8,9 +8,9 @@ export const resultPrint = redis.print;
 export const updateOrDeleteToken = (token:string, updateToken:string|null, option:number)=>{
     if(option === 1){
         client.get(token, (err, data)=>{
-            client.del(token);
             client.set(updateToken!, data!);
         })
+        client.del(token);
     }else{
         client.del(token);
     }

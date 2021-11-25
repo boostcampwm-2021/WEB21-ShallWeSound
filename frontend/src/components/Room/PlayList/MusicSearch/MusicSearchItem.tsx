@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import { useState, useRef } from 'react';
+import styled, { keyframes } from 'styled-components';
 
 interface Props {
   name: string;
@@ -11,6 +11,7 @@ interface Props {
 }
 
 const MusicSearchItem = ({ name, singer, thumbnail, description, selected, onClick }: Props) => {
+  const item = useRef<HTMLDivElement | null>(null);
   const [detail, setDetail] = useState(false);
   const onDetail = () => {
     setDetail(true);
@@ -19,13 +20,17 @@ const MusicSearchItem = ({ name, singer, thumbnail, description, selected, onCli
     setDetail(false);
   };
 
+  // const isOverflow = () => {
+  //   if (!item.current) return false;
+  //   // const cloneItem = item.current?.cloneNode(true);
+  //   return item.current.scrollWidth > item.current.clientWidth;
+  // };
+
   return (
-    <SearchResultItem selected={selected} onClick={onClick}>
-      <Image src={thumbnail} alt="thumbnail">
-        {/* <img src={thumbnail} alt="thumbnail"></img> */}
-      </Image>
+    <SearchResultItem selected={selected} length={name.length} isOverflow={true} onClick={onClick}>
+      <Image src={thumbnail} alt="thumbnail" />
       <TextWrapper>
-        <Title>{name}</Title>
+        <Title ref={item}>{name}</Title>
         <Singer>{singer}</Singer>
       </TextWrapper>
       <DescriptionIcon onMouseEnter={onDetail} onMouseLeave={onDetailOut}>
@@ -39,9 +44,33 @@ const MusicSearchItem = ({ name, singer, thumbnail, description, selected, onCli
   );
 };
 
+const moveTitle = (length: number, isOverflow: boolean) => {
+  if (!isOverflow) return null;
+
+  const point = -(length * 5);
+
+  return keyframes`
+      from {
+        transform: translateX(0%)
+      }
+      to {
+        transform: translateX(${point}%)
+      }
+  `;
+};
+
 interface SearchResultItemProps {
   selected: boolean;
+  length: number;
+  isOverflow: boolean;
 }
+
+const Title = styled.div`
+  font-size: 16px;
+  padding: 0.2rem 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
 
 const SearchResultItem = styled.div<SearchResultItemProps>`
   display: flex;
@@ -59,6 +88,12 @@ const SearchResultItem = styled.div<SearchResultItemProps>`
 
   &:hover {
     background-color: #f2f3f4;
+
+    ${Title} {
+      animation: ${props => moveTitle(props.length, props.isOverflow)} ${props => props.length / 7}s linear infinite;
+      animation-delay: 0.5s;
+      overflow: visible;
+    }
   }
 
   &:active {
@@ -82,13 +117,6 @@ const TextWrapper = styled.div`
   overflow: hidden;
   width: calc(100% * 0.8);
   padding: 0 0.2rem;
-`;
-
-const Title = styled.div`
-  font-size: 16px;
-  padding: 0.2rem 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `;
 
 const Singer = styled.div`
