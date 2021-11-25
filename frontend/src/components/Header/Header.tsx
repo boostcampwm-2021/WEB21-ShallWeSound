@@ -5,6 +5,7 @@ import { RouteComponentProps } from 'react-router';
 import CreateRoomButton from './CreateRoomModal';
 import { withRouter } from 'react-router-dom';
 import { useSocket } from '../../context/MyContext';
+import UserButton from './UserModal';
 
 function HeaderComponent({ history }: { history: RouteComponentProps['history'] }) {
   const socket: any = useSocket();
@@ -17,7 +18,7 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
     }
     const searchTimer = setTimeout(() => {
       setSearchInput(e.target.value);
-    }, 200);
+    }, 17);
     timerRef.current.timer = searchTimer;
   }
 
@@ -46,15 +47,18 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
         <CreateRoomButton history={history} />
       </div>
       <img className="header-logo" src="/images/logo.png" alt="logo" onClick={goMain}/>
-      <div className="header-search">
-        <input
-          className="header-search-input"
-          type="text"
-          placeholder="검색어를 입력하세요"
-          onChange={searchInputChange}
-          onKeyPress={searchInputSubmit}
-        />
-        <img src="/icons/search.svg" alt="search" onClick={doSearch} />
+      <div className="header-right-wrap">
+        <div className="header-search">
+          <input
+            className="header-search-input"
+            type="text"
+            placeholder="검색어를 입력하세요"
+            onChange={searchInputChange}
+            onKeyPress={searchInputSubmit}
+          />
+          <img src="/icons/search.svg" alt="search" onClick={doSearch} />
+        </div>
+        <UserButton history={history}/>
       </div>
     </div>
   );

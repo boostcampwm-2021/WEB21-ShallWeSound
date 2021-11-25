@@ -52,6 +52,7 @@ function App() {
           />
           <>
             <HeaderComponent />
+            {/* onLogout={Logout} /> */}
             <Route
               exact
               path="/"
