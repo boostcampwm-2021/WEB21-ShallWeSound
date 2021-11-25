@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Socket } from 'socket.io-client';
 import { useSocket } from '../../context/MyContext';
@@ -9,6 +9,7 @@ import { Room } from '../../types';
 function CreateRoomModal({ history, onClose }: { history: RouteComponentProps['history']; onClose: () => void }) {
   const socket: Socket = useSocket()!;
   const [nextRoomIndex, setNextRoomIndex] = useState(1);
+
   const [dialogInput, setDialogInput] = useState<Room>({
     id: '',
     name: '',
@@ -89,22 +90,52 @@ function CreateRoomModal({ history, onClose }: { history: RouteComponentProps['h
 
 function CreateRoomButton({ history }: { history: RouteComponentProps['history'] }) {
   const [viewModal, setViewModal] = useState(false);
-
+  const socket: any = useSocket();
+  const [locations, setLocation] = useState<string>(window.location.pathname);
   function appearModal() {
-    setViewModal(true);
+    if (!window.location.pathname.includes('room')) {
+      setViewModal(true);
+    } else {
+      socket.emit('leaveRoom');
+      history.push('/main');
+    }
   }
 
   function disappearModal() {
     setViewModal(false);
   }
 
+  useEffect(() => {
+    setLocation(window.location.pathname);
+  });
+
   return (
     <div className="modal-container">
       <button className="header-button" onClick={appearModal}>
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
-          <path d="M14 6v15H3v-2h2V3h9v1h5v15h2v2h-4V6h-3zm-4 5v2h2v-2h-2z" />
-        </svg>
-        <p>방 생성하기</p>
+        {locations.includes('room') ? (
+          <>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
+              <path d="M14 6v15H3v-2h2V3h9v1h5v15h2v2h-4V6h-3zm-4 5v2h2v-2h-2z" />
+            </svg>
+            <p>방 나가기</p>
+          </>
+        ) : (
+          <>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              enable-background="new 0 0 24 24"
+              height="24px"
+              viewBox="0 0 24 24"
+              width="24px"
+            >
+              <g>
+                <path d="M19,19V5c0-1.1-0.9-2-2-2H7C5.9,3,5,3.9,5,5v14H3v2h18v-2H19z M15,13h-2v-2h2V13z" />
+              </g>
+            </svg>
+
+            <p>방 생성하기</p>
+          </>
+        )}
       </button>
       {viewModal && <CreateRoomModal history={history} onClose={disappearModal} />}
     </div>
