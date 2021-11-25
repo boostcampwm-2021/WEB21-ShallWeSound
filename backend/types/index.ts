@@ -1,6 +1,6 @@
 import { PlayList } from '../socket/music';
 
-type authCode= string | qs.ParsedQs | string[] | qs.ParsedQs[] | undefined;
+type authCode = string | qs.ParsedQs | string[] | qs.ParsedQs[] | undefined;
 
 type Music = {
   MID: number;
@@ -16,6 +16,7 @@ type socketInfo = {
   id: string;
   name: string;
   socketId: string[];
+  userId: string[];
   description: string;
   playList: PlayList;
 };

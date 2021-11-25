@@ -6,6 +6,7 @@ import CircleButton from '../../Util/CircleButton';
 import Modal from '../../Util/Modal';
 import MusicSearch from './MusicSearch/MusicSearch';
 import { useSocket } from '../../../context/MyContext';
+import ScrollBar from '../../Util/scrollbar';
 
 const PlayList = ({ isHost }: { isHost: boolean }) => {
   const socket: any = useSocket();
@@ -36,7 +37,8 @@ const PlayList = ({ isHost }: { isHost: boolean }) => {
   return (
     <Container>
       <Title>P L A Y &nbsp; L I S T</Title>
-      <PlayListWrapper>
+      {/* <PlayListWrapper> */}
+      <ScrollBar>
         {playList.length !== 0 ? (
           playList.map((music: Music, i: number) => (
             <PlayListItem
@@ -51,7 +53,8 @@ const PlayList = ({ isHost }: { isHost: boolean }) => {
         ) : (
           <Title>방장이 아직 곡을 추가하지 않았습니다. 잠시만 기다려주세요! </Title>
         )}
-      </PlayListWrapper>
+      </ScrollBar>
+      {/* </PlayListWrapper> */}
       <ButtonWrapper>
         {isHost && (
           <CircleButton size="45px" colorP="#ffffff" onClick={toggleModal}>
@@ -91,22 +94,21 @@ const Title = styled.div`
   margin: 10px 0px;
 `;
 
-const PlayListWrapper = styled.div`
-  height: 80%;
-  overflow: auto;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+// const PlayListWrapper = styled.div`
+//   height: 80%;
+//   overflow: auto;
+//   -ms-overflow-style: none;
+//   scrollbar-width: none;
 
-  &::-webkit-scrollbar {
-    /* Chrome, Safari, Opera*/
-    width: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    height: 17%;
-    background-color: rgba(255, 255, 255, 1);
-    border-radius: 10px;
-  }
-`;
+//   &::-webkit-scrollbar {
+//     width: 6px;
+//   }
+//   &::-webkit-scrollbar-thumb {
+//     height: 17%;
+//     background-color: rgba(255, 255, 255, 1);
+//     border-radius: 10px;
+//   }
+// `;
 
 const ButtonWrapper = styled.div`
   position: absolute;

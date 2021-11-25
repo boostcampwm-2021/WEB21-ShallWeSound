@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Socket } from 'socket.io-client';
 import { useSocket } from '../context/MyContext';
 import config from '../config.host.json';
 import { useAsync } from '../context/useAsync';
 import { RouteComponentProps } from 'react-router';
+import { Cookies } from 'react-cookie';
 
 import '../stylesheets/main.scss';
 import { fetchState, Room } from '../types';
 
 export const MainPage = ({ history }: { history: RouteComponentProps['history'] }) => {
   const socket: Socket = useSocket()!;
+  const cookies = new Cookies();
+  const alertRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
   const listFetch = async () => {
     const result = await fetch(`${config.localhost}/api/room`, {
@@ -21,7 +24,7 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
 
   function Room({ id, name, description, total }: { id: string; name: string; description: string; total: string }) {
     const joinRoom = (e: React.MouseEvent<HTMLElement>) => {
-      history.push(`/room/${id}`);
+      socket.emit('redundancyCheck', { userID: cookies.get('userID'), roomID: id });
     };
 
     return (
@@ -38,7 +41,14 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
 
   useEffect(() => {
     socket.on('joinRoomClient', data => {
-      console.log(data);
+      if (!data.isRedundancy) history.push(`/room/${data.roomID}`);
+      else {
+        alertRef.current!.style.opacity = '1';
+
+        setTimeout(() => {
+          if (alertRef.current) alertRef.current!.style.opacity = '0';
+        }, 3000);
+      }
     });
 
     socket.on('createRoomRoute', (roomNumber: number) => {
@@ -79,6 +89,9 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
             </p>
           </div>
         )}
+        <div className={'delegate'} ref={alertRef}>
+          이미 접속해 있는 방입니다.
+        </div>
       </div>
     </div>
   );

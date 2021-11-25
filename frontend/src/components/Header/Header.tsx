@@ -4,10 +4,10 @@ import { timeoutRef } from '../../types';
 import { RouteComponentProps } from 'react-router';
 import CreateRoomButton from './CreateRoomModal';
 import { withRouter } from 'react-router-dom';
-import {Cookies} from 'react-cookie'
+import { useSocket } from '../../context/MyContext';
 
 function HeaderComponent({ history }: { history: RouteComponentProps['history'] }) {
-  const cookie = new Cookies();
+  const socket: any = useSocket();
   const timerRef = useRef<timeoutRef>({ timer: setTimeout(() => {}) });
   const [searchInput, setSearchInput] = useState('');
 
@@ -22,10 +22,14 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
   }
 
   function goMain() {
+    if (window.location.pathname.includes('room')) socket.emit('leaveRoom');
+
     history.push(`/main`);
   }
 
   function doSearch() {
+    if (window.location.pathname.includes('room')) socket.emit('leaveRoom');
+
     history.push(`/result/${searchInput}`);
   }
 
@@ -35,18 +39,12 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
     }
   }
 
-  function logout(){
-    cookie.set('jwt', null);
-    cookie.set('userID', null);
-    window.location.href='http://localhost:3001/login';
-  }
   return (
     <div className="header">
       <div className="header-left-wrap">
         <UploadModal />
         <CreateRoomButton history={history} />
       </div>
-      
       <img className="header-logo" src="/images/logo.png" alt="logo" onClick={goMain}/>
       <div className="header-search">
         <input

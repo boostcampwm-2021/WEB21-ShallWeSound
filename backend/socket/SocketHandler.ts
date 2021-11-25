@@ -21,10 +21,14 @@ const socketHandler = (io: Server) => {
 
     socket.on('disconnect', () => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
+      const leaveUser = targetRoom?.socketId[0];
       utils.updateDisconnectData(targetRoom, socketData, socket);
 
       if (targetRoom && targetRoom.socketId.length > 0) {
-        namespace.to(targetRoom.socketId[0]).emit('delegateHost', true);
+        if (leaveUser === socket.id) {
+          namespace.to(targetRoom.socketId[0]).emit('delegateHost', true);
+        }
+
         namespace.to(targetRoom.id).emit('updateUserList');
         const roomList = utils.getRoomListForClient(socketData);
         socket.broadcast.emit('updateRoomList', { list: roomList });
@@ -33,8 +37,8 @@ const socketHandler = (io: Server) => {
 
     socket.on('chatMessage', (message: string) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
-      if (targetRoom !== undefined)
-        socket.to(targetRoom.id).emit('chatMessage', { id: userHash[socket.id], msg: message });
+      const userID = utils.getUserBySocketID(targetRoom, socket.id);
+      if (targetRoom !== undefined) socket.to(targetRoom.id).emit('chatMessage', { id: userID, msg: message });
     });
 
     socket.on('responseTime', (data: number) => {
@@ -122,11 +126,15 @@ const socketHandler = (io: Server) => {
       roomNumber++;
     });
 
-    socket.on('joinRoom', roomName => {
-      socket.join(roomName);
-      if (utils.isRoomExist(socketData, roomName)) {
-        const target = utils.findRoomOnTitle(socketData, roomName);
+    socket.on('joinRoom', roomInfo => {
+      socket.join(roomInfo.roomID);
+      if (utils.isRoomExist(socketData, roomInfo.roomID)) {
+        const target = utils.findRoomOnTitle(socketData, roomInfo.roomID);
         target?.socketId.push(socket.id);
+        target?.userId.push(roomInfo.userID);
+        // else {
+        //   namespace.to(socket.id).emit('delegateHost', true);
+        // }
         if (target?.socketId.length) utils.joinRoom(socket, namespace, target);
         namespace.to(target?.id!).emit('updateUserList');
         const roomList = utils.getRoomListForClient(socketData);
@@ -136,10 +144,12 @@ const socketHandler = (io: Server) => {
 
     socket.on('leaveRoom', data => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
+      const leaveUser = targetRoom?.socketId[0];
       utils.updateDisconnectData(targetRoom, socketData, socket);
 
       if (targetRoom !== undefined) {
-        namespace.to(targetRoom.socketId[0]).emit('delegateHost', true);
+        if (leaveUser === socket.id) namespace.to(targetRoom.socketId[0]).emit('delegateHost', true);
+
         namespace.to(targetRoom.id).emit('updateUserList');
         const roomList = utils.getRoomListForClient(socketData);
         socket.broadcast.emit('updateRoomList', { list: roomList });
@@ -154,8 +164,18 @@ const socketHandler = (io: Server) => {
       namespace.to(targetRoom.id).emit('changeMusicInfo', targetPlayList.getMusicByName(clickedMusic));
     });
 
-    socket.on('zzz', data => {
-      console.log(data);
+    socket.on('redundancyCheck', data => {
+      const targetRoom: socketInfo = utils.findRoomOnTitle(socketData, data.roomID)!;
+
+      console.log(targetRoom.userId);
+
+      console.log(data.userID);
+
+      const isRedundancy = targetRoom.userId.some(val => val === data.userID);
+
+      console.log(isRedundancy);
+
+      socket.emit('joinRoomClient', { isRedundancy: isRedundancy, roomID: data.roomID });
     });
   });
 };

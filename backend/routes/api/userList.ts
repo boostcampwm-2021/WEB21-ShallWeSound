@@ -6,10 +6,12 @@ const router = express.Router();
 
 router.get('/', (req, res, next) => {
   const roomTitle = `${req.query.roomTitle}`;
-  console.log('방제목', roomTitle);
   const targetRoom = utils.findRoomOnTitle(socketData, roomTitle);
-  console.log(targetRoom);
-  res.json({ list: targetRoom?.socketId });
+  const userList = targetRoom?.userId.filter((val, idx, arr) => arr.indexOf(val) === idx);
+  console.log(userList);
+  if (!targetRoom) res.json({ list: ['bad'] });
+
+  res.json({ list: userList });
 });
 
 export default router;
