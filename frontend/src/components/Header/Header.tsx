@@ -16,7 +16,7 @@ function HeaderComponent({ history } : { history: RouteComponentProps['history']
     }
     const searchTimer = setTimeout(() => {
       setSearchInput(e.target.value);
-    }, 200);
+    }, 17);
     timerRef.current.timer = searchTimer;
   }
 
