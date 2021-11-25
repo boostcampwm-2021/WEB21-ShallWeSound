@@ -81,7 +81,6 @@ const getUserEmail = (obj:string|jwt.JwtPayload):string =>{
 
 const IDsearchInDB = async(verifyResult:string|jwt.JwtPayload)=>{
     try{
-        console.log('db searcing');
         const DBresult = await models.USER.findAll({ID:getUserId(verifyResult)})
     }catch(DBerr){
         return false;

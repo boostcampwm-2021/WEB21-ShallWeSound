@@ -56,7 +56,6 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
     });
 
     socket.on('updateRoomList', data => {
-      console.log('업데이트리스트');
       fetchUser();
     });
 

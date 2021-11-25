@@ -30,7 +30,6 @@ router.get('/kakao/callback' , async (req, res)=>{
 
 router.post('/authenticate', async (req, res)=>{
     const curToken = req.body.jwt;
-    console.log(curToken);
     const authenticateResult = await loginServie.verifyToken(curToken);
     if(authenticateResult.result === true){
         if(authenticateResult.newToken === null){
