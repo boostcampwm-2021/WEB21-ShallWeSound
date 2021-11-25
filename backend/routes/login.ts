@@ -16,6 +16,7 @@ router.get('/github/callback', async (req, res)=>{
     const { code } = req.query;
     const token = await loginServie.githubLogin(code);
     res.cookie('userID', loginServie.getUserId( jwt.verify(token, `${process.env.SALT}`)))
+    res.cookie('userEmail', loginServie.getUserEmail( jwt.verify(token, `${process.env.SALT}`)))
     res.cookie('jwt', token).redirect('http://localhost:3001/');
 
 })
@@ -23,6 +24,7 @@ router.get('/github/callback', async (req, res)=>{
 router.get('/kakao/callback' , async (req, res)=>{
     const token = await loginServie.kakaoLogin(req.query.code);
     res.cookie('userID', loginServie.getUserId( jwt.verify(token, `${process.env.SALT}`)))
+    res.cookie('userEmail', loginServie.getUserEmail( jwt.verify(token, `${process.env.SALT}`)))
     res.cookie('jwt', token).redirect('http://localhost:3001/');
 })
 
@@ -37,19 +39,17 @@ router.post('/authenticate', async (req, res)=>{
             loginServie.updateOrDelete(curToken, authenticateResult.newToken, 1);
             res.cookie('jwt', authenticateResult.newToken);
             res.cookie('userID', authenticateResult.userID);
+            res.cookie('userEmail', authenticateResult.userEmail);
             res.json({isOK:true});
         }
     }else{
         loginServie.updateOrDelete(curToken, null, 2);
         res.cookie('jwt', null);
         res.cookie('userID', null);
+        res.cookie('userEmail',null);
         res.json({isOK:false});
     }
 })
-
-router.get('/verifyTest', (req, res)=>{
-})
-
 
 
 export default router;

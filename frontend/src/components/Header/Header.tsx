@@ -45,7 +45,7 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
         <UploadModal />
         <CreateRoomButton history={history} />
       </div>
-      <img className="header-logo" src="/images/logo.png" alt="logo" onClick={goMain} />
+      <img className="header-logo" src="/images/logo.png" alt="logo" onClick={goMain}/>
       <div className="header-search">
         <input
           className="header-search-input"
