@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import type { Music } from '../../../types';
 import PlayListItem from './PlayListItem';
 import CircleButton from '../../Util/CircleButton';
-import Modal from '../Modal';
-import MusicSearch from '../MusicSearch';
+import Modal from '../../Util/Modal';
+import MusicSearch from './MusicSearch/MusicSearch';
 import { useSocket } from '../../../context/MyContext';
+import ScrollBar from '../../Util/scrollbar';
 
-const PlayList = () => {
+const PlayList = ({ isHost }: { isHost: boolean }) => {
   const socket: any = useSocket();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [playList, setPlayList] = useState<Music[]>([]);
@@ -36,15 +37,30 @@ const PlayList = () => {
   return (
     <Container>
       <Title>P L A Y &nbsp; L I S T</Title>
-      <PlayListWrapper>
-        {playList.map((music: Music, i: number) => (
-          <PlayListItem key={i} MID={music.MID} title={music.name} singer={music.singer} isPlayed={music.isPlayed} />
-        ))}
-      </PlayListWrapper>
+      {/* <PlayListWrapper> */}
+      <ScrollBar>
+        {playList.length !== 0 ? (
+          playList.map((music: Music, i: number) => (
+            <PlayListItem
+              key={i}
+              MID={music.MID}
+              title={music.name}
+              singer={music.singer}
+              isPlayed={music.isPlayed}
+              isHost={isHost}
+            />
+          ))
+        ) : (
+          <Title>방장이 아직 곡을 추가하지 않았습니다. 잠시만 기다려주세요! </Title>
+        )}
+      </ScrollBar>
+      {/* </PlayListWrapper> */}
       <ButtonWrapper>
-        <CircleButton size="45px" colorP="#ffffff" onClick={toggleModal}>
-          +
-        </CircleButton>
+        {isHost && (
+          <CircleButton size="45px" colorP="#ffffff" onClick={toggleModal}>
+            +
+          </CircleButton>
+        )}
       </ButtonWrapper>
 
       {modalVisible ? (
@@ -57,14 +73,14 @@ const PlayList = () => {
 };
 
 const Container = styled.div`
-  background: none;
-  outline: 4px solid #fff;
+  background: #beaee2;
   border-radius: 10px;
-  box-shadow: rgb(0 0 0 / 50%) 0px 10px 25px;
-  width: 280px;
-  height: 816px;
+  /* box-shadow: rgb(0 0 0 / 50%) 0px 10px 25px; */
+  width: 400px;
+  height: 300px;
   float: right;
   position: relative;
+  margin-right: 2rem;
 `;
 
 const Title = styled.div`
@@ -78,22 +94,21 @@ const Title = styled.div`
   margin: 10px 0px;
 `;
 
-const PlayListWrapper = styled.div`
-  height: 80%;
-  overflow: auto;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+// const PlayListWrapper = styled.div`
+//   height: 80%;
+//   overflow: auto;
+//   -ms-overflow-style: none;
+//   scrollbar-width: none;
 
-  &::-webkit-scrollbar {
-    /* Chrome, Safari, Opera*/
-    width: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    height: 17%;
-    background-color: rgba(255, 255, 255, 1);
-    border-radius: 10px;
-  }
-`;
+//   &::-webkit-scrollbar {
+//     width: 6px;
+//   }
+//   &::-webkit-scrollbar-thumb {
+//     height: 17%;
+//     background-color: rgba(255, 255, 255, 1);
+//     border-radius: 10px;
+//   }
+// `;
 
 const ButtonWrapper = styled.div`
   position: absolute;

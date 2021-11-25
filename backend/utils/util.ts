@@ -28,7 +28,9 @@ export const utils = {
 
   updateDisconnectData: function (targetRoom: socketInfo, socketData: socketInfo[], socket: Socket) {
     if (targetRoom !== undefined) {
+      const targetIdx = targetRoom.socketId.indexOf(socket.id);
       targetRoom.socketId = targetRoom.socketId.filter(val => val !== socket.id);
+      targetRoom.userId = targetRoom.userId.filter((val, idx) => idx !== targetIdx);
       if (!targetRoom.socketId.length) {
         const updatedList = this.updateList(socketData, targetRoom);
         socket.broadcast.emit('updateRoomList', { list: updatedList });
@@ -40,12 +42,12 @@ export const utils = {
     return socketData.find(val => val.socketId[0] === socketID);
   },
 
-  updateNewRoom: function (socketData: socketInfo[], socket: Socket, roomData: any) {
-    socket.join(roomData.name);
+  updateNewRoom: function (socketData: socketInfo[], socket: Socket, roomData: any, roomID: string) {
     socketData.push({
-      id: roomData.id,
+      id: roomID,
       name: roomData.name,
-      socketId: [socket.id],
+      socketId: [],
+      userId: [],
       description: roomData.description,
       playList: new PlayList(),
     });
@@ -53,21 +55,25 @@ export const utils = {
 
   getRoomListForClient: function (socketData: socketInfo[]) {
     return socketData.map(val => {
-      return { id: val.id, name: val.name, description: val.description };
+      return { id: val.id, name: val.name, description: val.description, totalUesr: val.socketId.length };
     }); // utils로 기능 빼기
   },
 
   isRoomExist: function (socketData: socketInfo[], roomName: string) {
     return socketData.some(val => {
-      return val.name === roomName;
+      return val.id === roomName;
     });
   },
   findRoomOnTitle: function (socketData: socketInfo[], roomName: string) {
-    return socketData.find(val => val.name === roomName);
+    return socketData.find(val => val.id === roomName);
   },
 
   joinRoom: function (socket: Socket, namespace: any, target: socketInfo) {
     socket.broadcast.to([target.socketId[0]]).emit('requestTime', 'time');
-    namespace.to(target.name).emit('joinRoomClient', `${target.name} 입니다. 누군가가 입장했습니다.`);
+  },
+
+  getUserBySocketID: function (targetRoom: socketInfo, socketID: string) {
+    const targetIdx = targetRoom.socketId.indexOf(socketID);
+    return targetRoom.userId[targetIdx];
   },
 };

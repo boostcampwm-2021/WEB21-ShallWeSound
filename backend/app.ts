@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import http from 'http';
 import dotenv from 'dotenv';
+import MusicService from './services/music';
 dotenv.config({ path: __dirname + '/config/.env' });
 
 import socket from './socket';
@@ -11,6 +12,8 @@ import audioRouter from './routes/audio';
 import apiRouter from './routes/api/';
 import uploadRouter from './routes/upload';
 import downloadRouter from './routes/download';
+import loginRouter from './routes/login';
+
 
 const models = require('./models/index.js');
 const app: express.Application = express();
@@ -19,13 +22,10 @@ const server: http.Server = http.createServer(app);
 const sequelize = require('sequelize');
 const SequelizeAuto = require('sequelize-auto');
 
-// models.sequelize.sync().then(() => {
-//   console.log('연결 성공');
-// });
 
 app.use(
   cors({
-    origin: 'http://101.101.209.122:3001',
+    origin: 'http://localhost:3001',
     credentials: true,
   }),
 );
@@ -33,6 +33,8 @@ app.use(
 app.use('/api', apiRouter);
 
 app.get('/', (req, res) => {
+  // client.set("key", "value", redis.print);
+  // console.log(client.get("key", redis.print));
   res.send('hello');
 });
 
@@ -40,6 +42,7 @@ app.use('/room', roomRouter);
 app.use('/audio', audioRouter);
 app.use('/upload', uploadRouter);
 app.use('/download', downloadRouter);
+app.use('/oauth', loginRouter);
 
 app.use(express.static(path.join(__dirname, 'videos')));
 

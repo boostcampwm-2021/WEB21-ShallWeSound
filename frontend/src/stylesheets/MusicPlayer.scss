@@ -7,13 +7,14 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  outline: 4px solid $white;
+  // outline: 4px solid $semi-white;
+  background-color: $purple;
   padding: 1.5rem;
   margin-right: 2rem;
   margin-bottom: 1rem;
   width: 400px;
   height: 420px;
-  background: none;//linear-gradient(#4b6cb7, #182848);//$white;
+  // background: none;//linear-gradient(#4b6cb7, #182848);//$white;
   border-radius: 0.25rem;
 
   .hover {
@@ -35,7 +36,6 @@
       z-index: 5;
       cursor: pointer;
     }
-
   }
 
   video {
@@ -49,9 +49,9 @@
 
   &-title-area {
     box-sizing: border-box;
-    outline: thick double $white;
+    outline: thick double $semi-white;
     border-radius: 0.5rem;
-    color: $white;
+    color: $semi-white;
     padding: 0.5rem;
     width: 100%;
     text-align: center;
@@ -78,13 +78,13 @@
     justify-content: space-around;
     align-items: center;
 
-    .icon { 
+    .icon {
       cursor: pointer;
     }
   }
 
   .no-thumbnail {
-    border: 10px solid $white;
+    border: 10px solid $semi-white;
     border-radius: 999px;
     box-sizing: border-box;
   }
@@ -125,22 +125,20 @@
         position: absolute;
         top: 0;
         left: 0;
-        background-color: $black;
+        background-color: $purple;
         opacity: 0.3;
       }
     }
 
     &:hover {
       background-color: lighten($color: $black, $amount: 30);
-      
     }
-    
   }
 
   &-timer {
     width: 100%;
     font-weight: 700;
-    color: $white;
+    color: $semi-white;
     display: flex;
     justify-content: space-between;
   }
@@ -148,7 +146,7 @@
   .progress {
     width: 100%;
     height: 6px;
-    outline: 1px solid $white;
+    outline: 1px solid $semi-white;
     border-radius: 50px;
     cursor: pointer;
     position: relative;
@@ -157,12 +155,12 @@
       height: inherit;
       width: 0%;
       position: relative;
-      border: 0.5px solid $white;
+      border: 0.5px solid $semi-white;
       border-radius: inherit;
-      background-color: $white;
-      
+      background-color: $semi-white;
+
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         height: 18px;
         width: 18px;
@@ -171,7 +169,7 @@
         top: -6px;
         right: -5px;
         z-index: 2;
-        background-color: $white;
+        background-color: $semi-white;
       }
     }
   }
@@ -181,22 +179,22 @@
     width: 100%;
     height: 6px;
     border-radius: 999px;
-    background: $background;
-    background-image: linear-gradient($white, $white);
+    background: $purple;
+    background-image: linear-gradient($semi-white, $semi-white);
     background-size: 0% 100%;
     background-repeat: no-repeat;
-    outline: 1px solid $white;
+    outline: 1px solid $semi-white;
     cursor: pointer;
 
     &::-webkit-slider-thumb {
       appearance: none;
       width: 12px;
       height: 12px;
-      background: $white;
+      background: $semi-white;
       border-radius: 999px;
     }
   }
-  
+
   output {
     width: 200px;
     height: 200px;
@@ -224,6 +222,7 @@
 
     .volume-wrap {
       display: flex;
+      justify-content: flex-start;
     }
 
     .progress-wrap {

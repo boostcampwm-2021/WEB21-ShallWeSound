@@ -1,30 +1,31 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import searchIcon from '../../images/search.png';
+import { throttle } from 'lodash';
 
 interface Props {
-  keyword: string;
   onKeywordChange: (value: string) => void;
 }
 
-const SearchBar = ({ keyword, onKeywordChange }: Props) => {
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onKeywordChange(e.target.value);
-  };
+const SearchBar = ({ onKeywordChange }: Props) => {
+  //eslint-disable-next-line react-hooks/exhaustive-deps
+  const onChange = useCallback(
+    throttle(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        onKeywordChange(e.target.value);
+      },
+      200,
+      { leading: false },
+    ),
+    [],
+  );
 
   return (
     <>
       <Container>
         <img src={searchIcon} alt="검색"></img>
         <label htmlFor="keyword"></label>
-        <StyledInput
-          type="text"
-          id="keyword"
-          value={keyword}
-          onChange={onChange}
-          placeholder="가수, 제목"
-          autoComplete="off"
-        />
+        <StyledInput type="text" id="keyword" onChange={onChange} placeholder="가수, 제목" autoComplete="off" />
       </Container>
     </>
   );

@@ -1,56 +1,80 @@
 @import './global.scss';
 
-.body {
-  background: $background;
-  width: 100vw;
-  height: calc(100vh - 40px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .main-wrap {
   width: 80%;
-  height: 80%;
-  border: 4px double $white;
-  padding: 4rem;
+  height: 100%;
+  background-color: $semi-white;
+  color: $purple;
+  // border: 4px double $white;
+  box-sizing: border-box;
+  padding: 2rem;
   border-radius: 3rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
+  h2 {
+    width: 100%;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-align: start;
+  }
+
   .room-empty-notice {
-    color: $white;
-    font-size: 4rem;
-    font-style: italic;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    color: $purple;
+    font-size: 3rem;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 10rem;
+      height: 10rem;
+      margin-bottom: 3rem;
+    }
+
+    &-detail {
+      margin-top: 1.5rem;
+      font-size: 1.5rem;
+      text-align: center;
+    }
   }
 }
 
 .roomList {
   width: 100%;
   height: 90%;
+  box-sizing: border-box;
   padding: 2rem;
-  margin: 0.5rem 1rem;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
 
   * + * {
-    margin-top: 1.5rem;
+    margin-left: 1rem;
     // margin-bottom: 0.5rem;
   }
 
   .room {
-    width: 50%;
-    border: 4px solid $white;
+    display: inline-block;
+    width: 25%;
+    border: 4px solid $purple;
     border-radius: 1rem;
-    color: $white;
+    color: $purple;
     padding: 2rem;
     display: flex;
     flex-direction: column;
     cursor: pointer;
+
+    &:hover {
+      background-color: $purple;
+      color: $semi-white;
+    }
 
     p {
       display: inline-block;
@@ -62,6 +86,7 @@
 
     .room-name {
       font-size: 1.5rem;
+      text-align: center;
     }
 
     .room-descripton {
@@ -76,46 +101,92 @@
   }
 }
 
-.dark-background {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  position: fixed;
-  left: 0;
-  top: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.dialog {
+.modal {
+  position: absolute;
+  top: calc(130px); // 130px: header height
+  left: -124px; // 124px: (modal width - button width) / 2
   width: 20rem;
-  height: 25rem;
-  background-color: $white;
+  min-height: fit-content;
+  background-color: $semi-white;
+  border: 2px solid $purple;
   padding: 2rem;
   border-radius: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 9999;
 
   *:nth-child(n) {
-    margin-bottom: 1rem;
+    margin: 0.5rem 0 0.5rem;
+
+    button {
+      margin: 0.5rem;
+    }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    fill: $purple;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+
+    svg {
+      fill: inherit;
+      margin: 0;
+    }
+
+    &:hover {
+      fill: $semi-white;
+      background-color: $purple;
+    }
+
+    .button {
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .modal-title {
+    font-size: 1.75rem;
+    text-align: center;
+  }
+
+  label {
+    font-size: 1.25rem;
   }
 
   input {
     padding: 0.5rem;
-    border: 1px solid $black;
-    border-radius: 0.5rem;
+    border: 4px solid $purple;
+    outline: none;
+    font: inherit;
   }
 
   textarea {
     padding: 0.5rem;
-    border: 1px solid $black;
-    border-radius: 0.5rem;
+    border: 4px solid $purple;
+    outline: none;
+    font: inherit;
+    font-size: 1rem;
+    resize: none;
+
+    &::placeholder {
+      font-size: 1rem;
+      font-weight: 400;
+    }
   }
 
   .input-wrap {
+    width: 100%;
     display: flex;
     flex-direction: column;
   }
@@ -132,11 +203,309 @@
   height: 50px;
   box-sizing: border-box;
   padding: 0.75rem 1rem;
-  color: gray;
-  background-color: $white;
+  color: $purple;
+  background-color: $semi-white;
   font-weight: 700;
-  border: 4px solid gray;
+  border: 4px solid $purple;
   border-radius: 1rem;
   cursor: pointer;
-  margin: 0 0.5rem;
+
+  &:hover {
+    color: $semi-white;
+    background-color: $purple;
+  }
+}
+
+.room-wrap {
+  width: 80%;
+  height: 100%;
+  background-color: $semi-white;
+  color: $purple;
+  box-sizing: border-box;
+  padding: 2rem;
+  border-radius: 3rem;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-main-wrap {
+  width: 80%;
+  height: 100%;
+  background-color: $semi-white;
+  color: $purple;
+  position: relative;
+  box-sizing: border-box;
+  padding: 2rem;
+  border-radius: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: scroll;
+
+  h2 {
+    width: 100%;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-align: start;
+  }
+
+  .room-empty-notice {
+    color: $purple;
+    font-size: 4rem;
+    font-style: italic;
+  }
+}
+
+.search-result {
+  width: 70%;
+  min-height: fit-content;
+  border: 4px solid $purple;
+  border-radius: 1rem;
+  padding: 1rem;
+  position: relative;
+
+  video {
+    width: 0;
+    height: 0;
+  }
+
+  &-wrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+
+    * + * {
+      margin-top: 0.75rem;
+    }
+  }
+
+  &-cnt {
+    width: 100%;
+    padding-bottom: 0.75rem;
+    border-bottom: 4px double $purple;
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  &-item {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+  
+    // &:last-child {
+    //   margin-bottom: 1rem;
+    // }
+  }
+  
+  &-thumbnail {
+    width: 100px;
+    height: 100px;
+    padding-right: 1rem;
+    border-right: 2px solid $purple;
+    margin-right: 1rem;
+  }
+
+  &-words {
+    * + * {
+      margin-bottom: 1rem;
+    }
+  }
+
+  &-name {
+    font-size: 1.5rem;
+  }
+
+  &-singer {
+    font-size: 1.125rem;
+    font-style: italic;
+  }
+
+  &-play {
+    position: absolute;
+    top: center;
+    right: 2rem;
+    cursor: pointer;
+    
+    svg {
+      width: 40px;
+      height: 40px;
+      // padding: 0.5rem;
+      border: 8px solid $purple;
+      border-radius: 999px;
+      fill: $purple;
+  
+      &:hover {
+        fill: $semi-white;
+        background-color: $purple;
+      }
+    }
+  }
+
+  &-end {
+    color: $semi-white;
+  }
+}
+
+.searched-musicplayer {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: $purple;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  width: 100%;
+
+  .musicplayer {
+    &-timer {
+      width: 100%;
+      font-weight: 700;
+      color: $semi-white;
+      display: flex;
+      justify-content: space-between;
+
+      .max-duration {
+        margin-top: 0;
+      }
+    }
+  
+    .progress {
+      width: 100%;
+      height: 6px;
+      outline: 1px solid $semi-white;
+      border-radius: 50px;
+      cursor: pointer;
+      position: relative;
+  
+      &-bar {
+        height: inherit;
+        width: 0%;
+        position: relative;
+        border: 0.5px solid $semi-white;
+        border-radius: inherit;
+        background-color: $semi-white;
+  
+        &::before {
+          content: '';
+          position: absolute;
+          height: 18px;
+          width: 18px;
+          box-sizing: border-box;
+          border-radius: 50%;
+          top: -6px;
+          right: -5px;
+          z-index: 2;
+          background-color: $semi-white;
+        }
+      }
+    }
+  
+    output {
+      width: 200px;
+      height: 200px;
+    }
+  
+    .width-half {
+      width: 50%;
+      box-sizing: border-box;
+    }
+  
+    .width-quarter {
+      width: 25%;
+      box-sizing: border-box;
+    }
+  }
+}
+
+input[type='range'] {
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: $purple;
+  background-image: linear-gradient($semi-white, $semi-white);
+  background-size: 0% 100%;
+  background-repeat: no-repeat;
+  outline: 1px solid $semi-white;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: $semi-white;
+    border-radius: 999px;
+  }
+}
+
+.serveral-icons {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .icon {
+    cursor: pointer;
+  }
+
+  .volume-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  .progress-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+    margin-left: 1rem;
+  }
+
+  .icon + .icon {
+    margin-left: 1rem;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.delegate {
+  opacity: 0;
+  width: 250px;
+  height: 100px;
+  box-sizing: border-box;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: $lightgreen;
+  border-radius: 1rem;
+  color: $semi-black;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  animation-name: fadeOut;
+  // animation-duration: 4s;
+  // animation-iteration-count: 1;
+
+  transition: all 2s ease-in;
 }
