@@ -87,10 +87,6 @@ $color-chatbox: #9bbbd4;
   }
 
   .header-logo {
-    position: absolute;
-    top: -35px; // (logo 크기 200px - height 130px) / 2
-    left: calc(50% - 100px);
-    z-index: 1;
     cursor: pointer;
   }
 

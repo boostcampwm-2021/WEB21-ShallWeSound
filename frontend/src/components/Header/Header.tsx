@@ -42,12 +42,11 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
 
   return (
     <div className="header">
+      <img className="header-logo" src="/images/logo.png" alt="logo" onClick={goMain}/>
       <div className="header-left-wrap">
+        <UserButton history={history}/>
         <UploadModal />
         <CreateRoomButton history={history} />
-      </div>
-      <img className="header-logo" src="/images/logo.png" alt="logo" onClick={goMain}/>
-      <div className="header-right-wrap">
         <div className="header-search">
           <input
             className="header-search-input"
@@ -58,7 +57,6 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
           />
           <img src="/icons/search.svg" alt="search" onClick={doSearch} />
         </div>
-        <UserButton history={history}/>
       </div>
     </div>
   );
