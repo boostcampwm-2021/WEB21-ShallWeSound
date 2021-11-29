@@ -36,7 +36,7 @@ export default {
   },
   async findMusicsBy(MIDS: number[]) {
     const result = await MusicModel.findAll({
-      attribute: ['MID', 'name', 'singer', 'path'],
+      attribute: ['MID', 'name', 'singer', 'description', 'thumbnail', 'path'],
       where: {
         MID: {
           [Op.or]: MIDS,
@@ -45,14 +45,7 @@ export default {
     });
 
     return result.map(
-      (res: {
-        MID: number;
-        name: string;
-        singer: string;
-        description: string;
-        thumbnail: string;
-        path: string;
-      }): Music => ({
+      (res: Music): Music => ({
         MID: res.MID,
         name: res.name,
         singer: res.singer,
