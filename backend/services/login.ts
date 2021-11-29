@@ -23,7 +23,7 @@ const githubLoginService = async(code:authCode)=>{
         },
     });
     const userID = userResponse.data.login;
-    const userEmail = userResponse.data.email;
+    const userEmail = userResponse.data.email === null || userResponse.data.email === undefined ? '':userResponse.data.email;
     const aToken = jwt.sign({userID:userID, userEmail:userEmail}, `${process.env.SALT}`, {
     expiresIn: '30m'
     });
@@ -54,7 +54,8 @@ const kakaoLoginService = async(code:authCode)=>{
         },
     });
     const userID = userResponse.data.id;
-    const userEmail = userResponse.data.kakao_account.email;
+    const curEmail = userResponse.data.kakao_account.email;
+    const userEmail = curEmail === null || curEmail == undefined ? '' : curEmail;
     searchOrCreate(userID, userEmail, 'kakao');
     const aToken = jwt.sign({userID:userID, userEmail:userEmail},  `${process.env.SALT}`, {
         expiresIn: '30m'
@@ -97,6 +98,7 @@ const verifyToken = async (accessToken:string) =>{
             const returnResult={
                 result:false,
                 userID:null,
+                userEmail:null,
                 newToken:null
             }
             return returnResult;
@@ -124,6 +126,7 @@ const verifyToken = async (accessToken:string) =>{
                 const returnResult={
                     result:false,
                     userID:null,
+                    userEmall:null,
                     newToken:null
                 }
                 return returnResult
@@ -132,6 +135,7 @@ const verifyToken = async (accessToken:string) =>{
             const returnResult={
                 result:false,
                 userID:null,
+                userEmail:null,
                 newToken:null
             }
             return returnResult
