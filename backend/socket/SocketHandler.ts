@@ -122,7 +122,7 @@ const socketHandler = (io: Server) => {
 
     socket.on('createRoom', data => {
       utils.updateNewRoom(socketData, socket, data, roomNumber.toString());
-      namespace.to(socket.id).emit('createRoomRoute', roomNumber.toString());
+      namespace.to(socket.id).emit('routingAfterCreateRoom', roomNumber.toString());
       roomNumber++;
     });
 
@@ -132,17 +132,13 @@ const socketHandler = (io: Server) => {
         const target = utils.findRoomOnTitle(socketData, roomInfo.roomID);
         target?.socketId.push(socket.id);
         target?.userId.push(roomInfo.userID);
-        // else {
-        //   namespace.to(socket.id).emit('delegateHost', true);
-        // }
         if (target?.socketId.length) utils.joinRoom(socket, namespace, target);
         namespace.to(target?.id!).emit('updateUserList');
-        const roomList = utils.getRoomListForClient(socketData);
         socket.broadcast.emit('updateRoomList');
       }
     });
 
-    socket.on('leaveRoom', data => {
+    socket.on('leaveRoom', () => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       const leaveUser = targetRoom?.socketId[0];
       utils.updateDisconnectData(targetRoom, socketData, socket);
@@ -164,10 +160,10 @@ const socketHandler = (io: Server) => {
       namespace.to(targetRoom.id).emit('changeMusicInfo', targetPlayList.getMusicByName(clickedMusic));
     });
 
-    socket.on('redundancyCheck', data => {
-      const targetRoom: socketInfo = utils.findRoomOnTitle(socketData, data.roomID)!;
-      const isRedundancy = targetRoom.userId.some(val => val === data.userID);
-      socket.emit('joinRoomClient', { isRedundancy: isRedundancy, roomID: data.roomID });
+    socket.on('redundancyCheck', userInfo => {
+      const targetRoom: socketInfo = utils.findRoomOnTitle(socketData, userInfo.roomID)!;
+      const isRedundancy = targetRoom.userId.some(val => val === userInfo.userID);
+      socket.emit('redundancyCheck', { isRedundancy: isRedundancy, roomID: userInfo.roomID });
     });
   });
 };

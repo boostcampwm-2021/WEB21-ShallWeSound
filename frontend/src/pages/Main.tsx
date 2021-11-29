@@ -3,7 +3,7 @@ import { Socket } from 'socket.io-client';
 import { useSocket } from '../context/MyContext';
 import { useAsync } from '../context/useAsync';
 import { RouteComponentProps } from 'react-router';
-import { listFetch, fadeOut } from '../hooks/utils';
+import { apiFetch, fadeOut } from '../hooks/utils';
 import RoomItem from '../components/Main/RoomItem';
 import '../stylesheets/main.scss';
 import { fetchState, Room, joinData } from '../types';
@@ -11,26 +11,26 @@ import { fetchState, Room, joinData } from '../types';
 export const MainPage = ({ history }: { history: RouteComponentProps['history'] }) => {
   const socket: Socket = useSocket()!;
   const alertRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
-
-  const roomExistModalBlink = (joinData: joinData) => {
-    if (!joinData.isRedundancy) history.push(`/room/${joinData.roomID}`);
-    else fadeOut(alertRef.current!);
-  };
-
-  const [state, fetchUser] = useAsync(listFetch, []);
+  const [state, fetchUser] = useAsync(apiFetch, 'room', []);
   const { loading, data: roomList, error } = state as fetchState;
 
+  const userRedundancyModalBlink = (joinData: joinData) => {
+    if (!joinData.isRedundancy) {
+      history.push(`/room/${joinData.roomID}`);
+    } else fadeOut(alertRef.current!);
+  };
+
   useEffect(() => {
-    socket.on('joinRoomClient', roomExistModalBlink);
-    socket.on('createRoomRoute', (roomNumber: number) => {
+    socket.on('redundancyCheck', userRedundancyModalBlink);
+    socket.on('routingAfterCreateRoom', (roomNumber: number) => {
       history.push(`/room/${roomNumber}`);
     });
     socket.on('updateRoomList', fetchUser);
 
     return () => {
-      socket.off('joinRoomClient');
+      socket.off('redundancyCheck');
       socket.off('updateRoomList');
-      socket.off('createRoomRoute');
+      socket.off('routingAfterCreateRoom');
     };
   }, []);
 
