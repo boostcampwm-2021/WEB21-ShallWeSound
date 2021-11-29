@@ -87,17 +87,18 @@ const socketHandler = (io: Server) => {
       // }
     });
 
-    socket.on('addMusicInPlayListReq', async (MIDS: number[]) => {
+    socket.on('addMusicInPlayListReq', async (MIDs: number[]) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       if (!targetRoom) {
         return;
       }
 
-      const musics: Music[] = await musicService.findMusicsBy(MIDS);
-      if (targetRoom.playList.isExist(musics)) {
+      if (targetRoom.playList.isExist(MIDs)) {
         namespace.to(socket.id).emit('duplicatedMusicInPlayList');
         return;
       }
+
+      const musics: Music[] = await musicService.findMusicsBy(MIDs);
       targetRoom.playList.addMusics(musics);
       namespace.to(socket.id).emit('successAddMusic');
 
@@ -121,7 +122,7 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('createRoom', data => {
-	console.log('AddRoom Socket: ', data);
+      console.log('AddRoom Socket: ', data);
       utils.updateNewRoom(socketData, socket, data, roomNumber.toString());
       namespace.to(socket.id).emit('createRoomRoute', roomNumber.toString());
       roomNumber++;
