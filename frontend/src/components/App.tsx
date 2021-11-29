@@ -6,6 +6,7 @@ import { LoginPage } from '../pages/Login';
 import '../stylesheets/reset.css';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
+import config from '../config.host.json';
 import HeaderComponent from '../components/Header/Header';
 
 function App() {
@@ -16,9 +17,9 @@ function App() {
     if (!jwt || jwt === undefined) {
       return false;
     } else {
-      fetch('https://shallwesound.p-e.kr/oauth/authenticate', {
+      fetch(`${config.localhost}/oauth/authenticate`, {
         method: 'POST',
-	credentials: 'include',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -40,13 +41,14 @@ function App() {
       <Router>
         <Switch>
           <Route
-            exact path="/login"
-            render={()=>{
+            exact
+            path="/login"
+            render={() => {
               isAuthenticated();
-              if(!authenticate){
-                return <LoginPage/>;
-              }else{
-                return <Redirect to={{ pathname: "/main" }} />;
+              if (!authenticate) {
+                return <LoginPage />;
+              } else {
+                return <Redirect to={{ pathname: '/main' }} />;
               }
             }}
           />
