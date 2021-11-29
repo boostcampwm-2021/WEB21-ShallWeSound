@@ -48,4 +48,9 @@ type Action =
   | { type: 'ERROR'; error: Error }
   | { type: null };
 
-export type { Music, FileType, timeoutRef, fetchState, Room, Action, musicResultItem };
+type joinData = {
+  isRedundancy: boolean;
+  roomID: string;
+};
+
+export type { Music, FileType, timeoutRef, fetchState, Room, Action, musicResultItem, joinData };

@@ -121,7 +121,6 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('createRoom', data => {
-	console.log('AddRoom Socket: ', data);
       utils.updateNewRoom(socketData, socket, data, roomNumber.toString());
       namespace.to(socket.id).emit('createRoomRoute', roomNumber.toString());
       roomNumber++;
@@ -139,7 +138,7 @@ const socketHandler = (io: Server) => {
         if (target?.socketId.length) utils.joinRoom(socket, namespace, target);
         namespace.to(target?.id!).emit('updateUserList');
         const roomList = utils.getRoomListForClient(socketData);
-        socket.broadcast.emit('updateRoomList', { list: roomList });
+        socket.broadcast.emit('updateRoomList');
       }
     });
 
@@ -167,15 +166,7 @@ const socketHandler = (io: Server) => {
 
     socket.on('redundancyCheck', data => {
       const targetRoom: socketInfo = utils.findRoomOnTitle(socketData, data.roomID)!;
-
-      console.log(targetRoom.userId);
-
-      console.log(data.userID);
-
       const isRedundancy = targetRoom.userId.some(val => val === data.userID);
-
-      console.log(isRedundancy);
-
       socket.emit('joinRoomClient', { isRedundancy: isRedundancy, roomID: data.roomID });
     });
   });
