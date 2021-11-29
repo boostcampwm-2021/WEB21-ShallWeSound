@@ -31,8 +31,29 @@ function UploadModalInner() {
     curObj.thumbnailName = e.target.files![0].name;
     setUploadedFile(curObj);
   };
-
+  const checkSingerAndDescript = () => {
+    if(descriptionRef.current!.value === null || descriptionRef.current!.value === '' || singerRef.current!.value === null || singerRef.current!.value === ''){
+      return false;
+    }else{
+      return true;
+    }
+  }
+  const checkFile = () =>{
+    if(musicFileRef.current!.value ===null || musicFileRef.current!.value==='' || thumbnailFileRef.current!.value === null || thumbnailFileRef.current!.value === '' ){
+      return false;
+    }else{
+      return true;
+    }
+  }
   const fileUploadMethod = () => {
+    if(!checkSingerAndDescript()){
+      alert('아티스트 이름과 곡 설명은 반드시 적어주셔야 합니다!')
+      return;
+    }
+    if(!checkFile()){
+      alert('mp3 파일과 썸네일 이미지 파일를 반드시 첨부해주셔야 합니다!')
+      return;
+    }
     if(timerRef.current){
       clearTimeout(timerRef.current.timer!);
     }
@@ -56,6 +77,7 @@ function UploadModalInner() {
       thumbnailFileRef.current!.value='';
     }, 200);
     timerRef.current.timer = uploadTimer;
+    return;
   };
 
   const resetFileState = (curObj:FileType):FileType => {
