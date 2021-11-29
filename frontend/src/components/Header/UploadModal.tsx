@@ -4,7 +4,6 @@ import * as _ from 'lodash';
 import {FileType, timeoutRef} from '../../types'
 
 function UploadModalInner() {
-  console.log('render');
   const singerRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const musicFileRef = useRef<HTMLInputElement>(null);
@@ -24,8 +23,6 @@ function UploadModalInner() {
     curObj.musicFile = e.target.files!
     curObj.musicName = e.target.files![0].name;
     setUploadedFile(curObj);
-    console.log(curObj);
-    // e.target.value='';
   };
 
   const isThumbUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,12 +30,9 @@ function UploadModalInner() {
     curObj.thumbnailFile = e.target.files!;
     curObj.thumbnailName = e.target.files![0].name;
     setUploadedFile(curObj);
-    console.log(curObj)
-    // e.target.value='';
   };
 
   const fileUploadMethod = () => {
-    console.log(uploadedFile);
     if(timerRef.current){
       clearTimeout(timerRef.current.timer!);
     }
@@ -83,7 +77,6 @@ function UploadModalInner() {
     const timer = setTimeout(function(){
       const curObj = _.cloneDeep(uploadedFile);
       curObj.singer=e.target.value;
-      console.log(curObj)
       setUploadedFile(curObj);
     }, 200);
     timerRef.current!.timer = timer;
@@ -96,7 +89,6 @@ function UploadModalInner() {
     const timer = setTimeout(function(){
       const curObj = _.cloneDeep(uploadedFile);
       curObj.descript=e.target.value;
-      console.log(curObj)
       setUploadedFile(curObj);
     }, 400);
     timerRef.current!.timer = timer;
@@ -105,7 +97,6 @@ function UploadModalInner() {
   const dropListener = (event: React.DragEvent<HTMLDivElement>) => {
     overrideEventDefaults(event);
     const curObj = _.cloneDeep(uploadedFile);
-    console.log(event.dataTransfer.files[0].type);
     const imageType=['image/jpeg', 'image/png']
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
       if(event.dataTransfer.files[0].type in imageType){
