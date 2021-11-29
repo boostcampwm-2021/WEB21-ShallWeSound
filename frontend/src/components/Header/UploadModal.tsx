@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import {FileType, timeoutRef} from '../../types'
 
 function UploadModalInner() {
+  const alertRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const singerRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const musicFileRef = useRef<HTMLInputElement>(null);
@@ -128,7 +129,11 @@ function UploadModalInner() {
         curObj.musicFile = event.dataTransfer.files;
         curObj.musicName = event.dataTransfer.files[0].name;
       }else{
-        alert('음악은 mp3, 썸네일은 jpeg, png만 업로드 가능합니다!')
+        alertRef.current!.style.opacity = '1';
+
+        setTimeout(() => {
+          if (alertRef.current) alertRef.current!.style.opacity = '0';
+        }, 3000);
       }
     }
     setUploadedFile(curObj);
@@ -222,6 +227,9 @@ function UploadModalInner() {
         <button className={styles.submitButton} onClick={fileUploadMethod}>
           업로드
         </button>
+      </div>
+      <div className={'delegate'} ref={alertRef}>
+        음악은 mp3, 썸네일은 jpeg, png만 업로드 가능합니다!
       </div>
     </div>
   );
