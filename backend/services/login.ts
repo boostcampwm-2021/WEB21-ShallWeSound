@@ -3,25 +3,66 @@ import * as jwt from 'jsonwebtoken'
 import {authCode} from '../types/index'
 import {client, resultPrint, updateOrDeleteToken} from '../config/redis'
 import {promisify} from 'util'
+import {userProfileRequestHeader} from '../types/index'
 const models = require('../models/index.js');
+
+const makeOauthAccessToken = async (platform:string, cururl:string, curheaders:string)=>{
+    if(platform === 'github'){
+        return await await axios({
+            method: `POST`,
+            withCredentials: true,
+            url: cururl,
+            headers: {
+            'content-type': curheaders,
+            },
+        })
+    }else{
+        return await await axios({
+            method: `POST`,
+            url: cururl,
+            headers: {
+            'content-type': curheaders,
+            },
+        })
+    }
+}
+
+
+const getUserProfileFromOauth = async (platform:string, url:string, headers:userProfileRequestHeader) =>{
+    if(platform === 'github'){
+        return await axios({
+            method:'GET',
+            withCredentials:true,
+            url: url,
+            headers:{
+                Authorization: headers.Authorization
+            }
+        })
+    }else{
+        return await axios({
+            method:'POST',
+            withCredentials:true,
+            url: url,
+            data:{
+                property_keys: ["kakao_account.email"]
+            },
+            headers: {
+            'Authorization': headers.Authorization,
+            'content-type': headers.contentType!,
+            },
+        })
+    }
+
+}
 const githubLoginService = async(code:authCode)=>{
-    const access_token = await axios({
-        method: 'POST',
-	withCredentials: true,
-        url: `https://github.com/login/oauth/access_token?client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}&code=${code}`,
-        headers: {
-        'content-type': 'application/json',
-        },
-    })
+    const tokenURL = `https://github.com/login/oauth/access_token?client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}&code=${code}`;
+    const access_token = await makeOauthAccessToken('github', tokenURL, 'application/json');
     let access_token_split = access_token.data.split('&')[0].split('=')[1];
-    const userResponse = await axios({
-        method: 'GET',
-	withCredentials: true,
-        url: 'https://api.github.com/user',
-        headers: {
-        Authorization: `token ${access_token_split}`,
-        },
-    });
+    const requestHeader:userProfileRequestHeader={
+        Authorization:`token ${access_token_split}`,
+        contentType:null
+    }
+    const userResponse = await getUserProfileFromOauth('github','https://api.github.com/user', requestHeader )
     const userID = userResponse.data.login;
     const userEmail = userResponse.data.email === null || userResponse.data.email === undefined ? '':userResponse.data.email;
     const aToken = jwt.sign({userID:userID, userEmail:userEmail}, `${process.env.SALT}`, {
@@ -34,25 +75,14 @@ const githubLoginService = async(code:authCode)=>{
 
 }
 const kakaoLoginService = async(code:authCode)=>{
-    const tokenObj = await axios({
-        method: 'POST',
-        url: `https://kauth.kakao.com/oauth/token?client_id=${process.env.KAKAO_CLIENT_KEY}&grant_type=authorization_code&redirect_uri=${process.env.KAKAO_CALLBACK_URL}&code=${code}`,
-        headers: {
-        'content-type': 'application/x-www-form-urlencoded',
-        },
-    })
+    const tokenURL=`https://kauth.kakao.com/oauth/token?client_id=${process.env.KAKAO_CLIENT_KEY}&grant_type=authorization_code&redirect_uri=${process.env.KAKAO_CALLBACK_URL}&code=${code}`;
+    const tokenObj = await makeOauthAccessToken('kakao', tokenURL, 'application/x-www-form-urlencoded');
     const accessToken = tokenObj.data.access_token;
-    const userResponse = await axios({
-        method: 'POST',
-        url: 'https://kapi.kakao.com/v2/user/me',
-        data:{
-            property_keys: ["kakao_account.email"]
-        },
-        headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'content-type': 'application/x-www-form-urlencoded',
-        },
-    });
+    const requestHeader:userProfileRequestHeader={
+        Authorization:`Bearer ${accessToken}`,
+        contentType:'application/x-www-form-urlencoded'
+    }
+    const userResponse = await getUserProfileFromOauth('kakao','https://kapi.kakao.com/v2/user/me', requestHeader);
     const userID = userResponse.data.id;
     const curEmail = userResponse.data.kakao_account.email;
     const userEmail = curEmail === null || curEmail == undefined ? '' : curEmail;
@@ -90,55 +120,37 @@ const IDsearchInDB = async(verifyResult:string|jwt.JwtPayload)=>{
     }
     return true;
 }
+
+const makeReturnResultOfVerifyToken = (result:boolean, userID:string|null, userEmail:string|null, newToken:string|null) =>{
+    return {
+        result:result,
+        userID:userID,
+        userEmail:userEmail,
+        newToken:newToken
+    }
+}
 const verifyToken = async (accessToken:string) =>{
     try{
         const verifyResult = jwt.verify(accessToken, `${process.env.SALT}`);
         const DBsearchResult = await IDsearchInDB(verifyResult);
         if(DBsearchResult === false){
-            const returnResult={
-                result:false,
-                userID:null,
-                userEmail:null,
-                newToken:null
-            }
-            return returnResult;
+            return makeReturnResultOfVerifyToken(false, null, null, null);
         }
-        const returnResult= {
-            result:true,
-            userID:getUserId(verifyResult),
-            userEmail:getUserEmail(verifyResult),
-            newToken:null
-        }
-        return returnResult
+        return makeReturnResultOfVerifyToken(true, getUserId(verifyResult), getUserEmail(verifyResult), null);
     }catch(err){
         const refrashRes = await refrashToken(accessToken);
         if (refrashRes !== null){
             const DBsearchResult = await IDsearchInDB(`${refrashRes}`);
             if(DBsearchResult === true){
-                const returnResult={
-                    result:true,
-                    userID:getUserId(jwt.verify(`${refrashRes}`, `${process.env.SALT}`)) ,
-                    userEmail:getUserEmail(jwt.verify(`${refrashRes}`, `${process.env.SALT}`)) ,
-                    newToken:refrashRes
-                }
-                return returnResult
+                return makeReturnResultOfVerifyToken(true, 
+                    getUserId(jwt.verify(`${refrashRes}`, `${process.env.SALT}`)),
+                    getUserEmail(jwt.verify(`${refrashRes}`, `${process.env.SALT}`)) ,
+                    refrashRes);
             }else{
-                const returnResult={
-                    result:false,
-                    userID:null,
-                    userEmall:null,
-                    newToken:null
-                }
-                return returnResult
+                return makeReturnResultOfVerifyToken(false, null, null, null);
             }
         }else{
-            const returnResult={
-                result:false,
-                userID:null,
-                userEmail:null,
-                newToken:null
-            }
-            return returnResult
+            return makeReturnResultOfVerifyToken(false, null, null, null);
         }
     }
     
