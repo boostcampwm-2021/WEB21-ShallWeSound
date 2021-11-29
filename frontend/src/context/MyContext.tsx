@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 import io from 'socket.io-client';
 import config from '../config.host.json';
 
-const socket: any = io(`${config.localhost}/music`);
+const socket: any = io(`https://shallwesound.p-e.kr/music`);
 const SocketContext = createContext(null);
 
 const ContextProvider = ({ children }: { children: any }) => {

@@ -4,6 +4,22 @@ import * as jwt from 'jsonwebtoken'
 
 const router = express.Router();
 router.use(express.json());
+
+router.get('/', (req,res) =>{
+
+   res.send('test complete');
+
+})
+
+router.get('/test', (req,res) => {
+
+   res.send('test test complete');
+
+})
+
+
+
+
 router.get('/kakao' ,(req, res)=>{
     res.redirect(`https://kauth.kakao.com/oauth/authorize?client_id=${process.env.KAKAO_CLIENT_KEY}&redirect_uri=${process.env.KAKAO_CALLBACK_URL}&response_type=code`)
 
@@ -15,9 +31,10 @@ router.get("/github", (req, res)=>{
 router.get('/github/callback', async (req, res)=>{
     const { code } = req.query;
     const token = await loginServie.githubLogin(code);
-    res.cookie('userID', loginServie.getUserId( jwt.verify(token, `${process.env.SALT}`)))
-    res.cookie('userEmail', loginServie.getUserEmail( jwt.verify(token, `${process.env.SALT}`)))
-    res.cookie('jwt', token).redirect('http://localhost:3001/');
+	console.log('data', code);
+    res.cookie('userID', loginServie.getUserId( jwt.verify(token, `${process.env.SALT}`)));
+    res.cookie('userEmail', loginServie.getUserEmail( jwt.verify(token, `${process.env.SALT}`)));
+    res.cookie('jwt', token).redirect('https://shallwesound.p-e.kr/');
 
 })
 
@@ -25,7 +42,7 @@ router.get('/kakao/callback' , async (req, res)=>{
     const token = await loginServie.kakaoLogin(req.query.code);
     res.cookie('userID', loginServie.getUserId( jwt.verify(token, `${process.env.SALT}`)))
     res.cookie('userEmail', loginServie.getUserEmail( jwt.verify(token, `${process.env.SALT}`)))
-    res.cookie('jwt', token).redirect('http://localhost:3001/');
+    res.cookie('jwt', token).redirect('http://www.sws.p-e.kr/');
 })
 
 router.post('/authenticate', async (req, res)=>{

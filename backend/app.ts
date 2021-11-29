@@ -1,11 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
-import http from 'http';
+import http from 'http'
+import https from 'https';
 import dotenv from 'dotenv';
 import MusicService from './services/music';
 dotenv.config({ path: __dirname + '/config/.env' });
-
+import fs from 'fs'
 import socket from './socket';
 import roomRouter from './routes/room';
 import audioRouter from './routes/audio';
@@ -25,10 +26,11 @@ const SequelizeAuto = require('sequelize-auto');
 
 app.use(
   cors({
-    origin: 'http://localhost:3001',
+    origin: true,
     credentials: true,
   }),
 );
+
 
 app.use('/api', apiRouter);
 

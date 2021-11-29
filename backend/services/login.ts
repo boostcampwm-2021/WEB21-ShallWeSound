@@ -7,6 +7,7 @@ const models = require('../models/index.js');
 const githubLoginService = async(code:authCode)=>{
     const access_token = await axios({
         method: 'POST',
+	withCredentials: true,
         url: `https://github.com/login/oauth/access_token?client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}&code=${code}`,
         headers: {
         'content-type': 'application/json',
@@ -15,6 +16,7 @@ const githubLoginService = async(code:authCode)=>{
     let access_token_split = access_token.data.split('&')[0].split('=')[1];
     const userResponse = await axios({
         method: 'GET',
+	withCredentials: true,
         url: 'https://api.github.com/user',
         headers: {
         Authorization: `token ${access_token_split}`,

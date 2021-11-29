@@ -8,7 +8,7 @@ function UserModal({ onClose, history }: { onClose: () => void, history: RouteCo
   function Logout () {
     cookies.remove('jwt');
     cookies.remove('userID');
-    window.location.href="http://localhost:3001/login";
+    window.location.href="https://shallwesound.p-e.kr/login";
   }
 
   return (

@@ -1,10 +1,14 @@
 import  '../stylesheets/login.scss'
+
 const LoginPage = () => {
-    const kakaoLogin = ()=>{
-        window.location.href='http://localhost:3000/oauth/kakao';
+    const kakaoLogin = async ()=>{ 
+       const data = await fetch('http://49.50.166.128:3000/oauth/github',{
+		     credentials :'include',
+                     }).then(res=>res.json());
+       console.log('print: ', data);
     }
-    const githubLogin = () =>{
-        window.location.href='http://localhost:3000/oauth/github';
+    const githubLogin = async () =>{
+     window.location.href='https://shallwesound.p-e.kr/oauth/github';
     }
     return(
         <>

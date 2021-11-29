@@ -121,6 +121,7 @@ const socketHandler = (io: Server) => {
     });
 
     socket.on('createRoom', data => {
+	console.log('AddRoom Socket: ', data);
       utils.updateNewRoom(socketData, socket, data, roomNumber.toString());
       namespace.to(socket.id).emit('createRoomRoute', roomNumber.toString());
       roomNumber++;

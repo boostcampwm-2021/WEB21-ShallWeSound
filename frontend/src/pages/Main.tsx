@@ -52,6 +52,7 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
     });
 
     socket.on('createRoomRoute', (roomNumber: number) => {
+      console.log("방 번호", roomNumber);
       history.push(`/room/${roomNumber}`);
     });
 

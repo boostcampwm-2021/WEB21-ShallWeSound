@@ -41,6 +41,8 @@ function CreateRoomModal({ history, onClose }: { history: RouteComponentProps['h
     }
 
     if (dialogInput.name && dialogInput.description) {
+      
+      console.log('add Room');
       socket.emit('createRoom', {
         id: nextRoomIndex,
         name: dialogInput.name,

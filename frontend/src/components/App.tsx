@@ -16,8 +16,9 @@ function App() {
     if (!jwt || jwt === undefined) {
       return false;
     } else {
-      fetch('/oauth/authenticate', {
+      fetch('https://shallwesound.p-e.kr/oauth/authenticate', {
         method: 'POST',
+	credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
