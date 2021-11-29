@@ -105,13 +105,17 @@ function UploadModalInner() {
   const dropListener = (event: React.DragEvent<HTMLDivElement>) => {
     overrideEventDefaults(event);
     const curObj = _.cloneDeep(uploadedFile);
+    console.log(event.dataTransfer.files[0].type);
+    const imageType=['image/jpeg', 'image/png']
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
-      if(event.dataTransfer.files[0].type === 'image/jpeg'){
+      if(event.dataTransfer.files[0].type in imageType){
         curObj.thumbnailFile = event.dataTransfer.files;
         curObj.thumbnailName = event.dataTransfer.files[0].name;
-      }else{
+      }else if(event.dataTransfer.files[0].type=== 'audio/mpeg'){
         curObj.musicFile = event.dataTransfer.files;
         curObj.musicName = event.dataTransfer.files[0].name;
+      }else{
+        alert('음악은 mp3, 썸네일은 이미지 파일만 업로드 가능합니다!')
       }
     }
     setUploadedFile(curObj);
@@ -170,6 +174,7 @@ function UploadModalInner() {
             name="userFile1"
             ref={musicFileRef}
             onChange={isFileUpload}
+            accept="audio/mp3"
           />
         </div>
         <div className={styles.thumbnailForm}
@@ -197,6 +202,7 @@ function UploadModalInner() {
             name="userFile2"
             ref={thumbnailFileRef}
             onChange={isThumbUpload}
+            accept='image/*'
           />
         </div>
 
