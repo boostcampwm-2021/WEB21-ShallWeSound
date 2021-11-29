@@ -33,6 +33,7 @@ function App() {
             setAuthenticate(res.isOK);
           }
         });
+      return true;
     }
   }
 

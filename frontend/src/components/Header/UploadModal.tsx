@@ -115,7 +115,7 @@ function UploadModalInner() {
         curObj.musicFile = event.dataTransfer.files;
         curObj.musicName = event.dataTransfer.files[0].name;
       }else{
-        alert('음악은 mp3, 썸네일은 이미지 파일만 업로드 가능합니다!')
+        alert('음악은 mp3, 썸네일은 jpeg, png만 업로드 가능합니다!')
       }
     }
     setUploadedFile(curObj);
@@ -202,7 +202,7 @@ function UploadModalInner() {
             name="userFile2"
             ref={thumbnailFileRef}
             onChange={isThumbUpload}
-            accept='image/*'
+            accept='image/jpeg, image/png'
           />
         </div>
 
