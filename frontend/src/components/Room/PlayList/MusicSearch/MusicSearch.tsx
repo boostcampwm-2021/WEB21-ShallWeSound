@@ -46,7 +46,7 @@ const MusicSearch = () => {
           dispatchSearchResult({ type: 'FETCH_SUCCESS', result: musics, hasMore: json.hasMore });
         }
       } catch (e) {
-        dispatchSearchResult({ type: 'FETCH_FAILURE' });
+        dispatchSearchResult({ type: 'INIT' });
       }
     },
     [keyword],
@@ -96,7 +96,7 @@ const MusicSearch = () => {
   const onSelectMusic = (MID: number) => {
     if (isSelected(MID)) {
       const newSelectedList = selectedMusicInResult.filter((id: number) => id !== MID);
-      dispatchSearchResult({ type: 'UNSELECT_MUSIC', selectedInResult: newSelectedList });
+      dispatchSearchResult({ type: 'SELECT_MUSIC', selectedInResult: newSelectedList });
     } else {
       dispatchSearchResult({ type: 'SELECT_MUSIC', selectedInResult: [...selectedMusicInResult, MID] });
     }

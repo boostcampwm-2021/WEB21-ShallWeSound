@@ -43,13 +43,6 @@ export const reducer = (state: State, action: Action) => {
         hasMore: action.hasMore,
         loading: false,
       };
-    case 'FETCH_FAILURE':
-      return {
-        result: [],
-        selectedMusicInResult: [],
-        hasMore: false,
-        loading: false,
-      };
     case 'REQUEST_ADD_MUSIC_IN_PLAYLIST':
       return {
         ...state,
@@ -61,17 +54,9 @@ export const reducer = (state: State, action: Action) => {
         ...state,
         selectedMusicInResult: action.selectedInResult ?? [],
       };
-    case 'UNSELECT_MUSIC':
-      return {
-        ...state,
-        selectedMusicInResult: action.selectedInResult ?? [],
-      };
     default:
       return {
-        result: [],
-        selectedMusicInResult: [],
-        hasMore: false,
-        loading: false,
+        ...state,
       };
   }
 };
