@@ -2,9 +2,7 @@ import React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import styles from '../../../stylesheets/style.module.scss';
 import * as _ from 'lodash';
-// const socket = io();
 import { useSocket } from '../../../context/MyContext';
-import ScrollBar from '../../Util/scrollbar';
 interface chatType {
   id: number;
   msg: string;
@@ -70,11 +68,9 @@ function ChatComponent() {
   };
   return (
     <div className={styles.chatBox}>
-      {/* <ScrollBar> */}
       <div className={styles.chatList} ref={chatListRef}>
         <MakeChatList />
       </div>
-      {/* </ScrollBar> */}
       <div className={styles.chatInputSquare}>
         <input
           className={styles.chatInput}

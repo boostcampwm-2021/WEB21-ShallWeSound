@@ -9,7 +9,7 @@ function UploadModalInner() {
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const musicFileRef = useRef<HTMLInputElement>(null);
   const thumbnailFileRef = useRef<HTMLInputElement>(null);
-  const timerRef = useRef<timeoutRef>({timer:setTimeout(() => {})});
+  const timerRef = useRef<timeoutRef>({timer:setTimeout(() => {/*초기화용 빈 타이머*/})});
   const [uploadedFile, setUploadedFile] = useState<FileType>({
     musicName:'파일선택',
     thumbnailName: '파일선택',
