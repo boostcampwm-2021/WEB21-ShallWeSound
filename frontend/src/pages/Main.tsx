@@ -5,6 +5,7 @@ import config from '../config.host.json';
 import { useAsync } from '../context/useAsync';
 import { RouteComponentProps } from 'react-router';
 import { Cookies } from 'react-cookie';
+import ScrollBar from '../components/Util/scrollbar';
 
 import '../stylesheets/main.scss';
 import { fetchState, Room } from '../types';
@@ -52,7 +53,7 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
     });
 
     socket.on('createRoomRoute', (roomNumber: number) => {
-      console.log("방 번호", roomNumber);
+      console.log('방 번호', roomNumber);
       history.push(`/room/${roomNumber}`);
     });
 
