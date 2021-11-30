@@ -143,9 +143,7 @@ const dropListenerController = (
     event: React.DragEvent<HTMLDivElement>,
     uploadedFile:FileType,
     setUploadedFile:React.Dispatch<React.SetStateAction<FileType>>,
-    alertRef:React.RefObject<HTMLDivElement>,
-    musicFileRef:React.RefObject<HTMLInputElement>,
-    thumbnailFileRef:React.RefObject<HTMLInputElement>,) =>{
+    alertRef:React.RefObject<HTMLDivElement>) =>{
     overrideEventDefaults(event);
     const curObj = _.cloneDeep(uploadedFile);
     const imageType = { 'image/jpeg':true, 'image/png':true}
