@@ -26,8 +26,7 @@ export const reducer = (state: State, action: Action) => {
       };
     default:
       return {
-        success: false,
-        fail: false,
+        ...state,
       };
   }
 };
