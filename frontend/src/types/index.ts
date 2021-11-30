@@ -15,6 +15,16 @@ type Music = {
   description: string;
 };
 
+type music = {
+  MID: number;
+  name: string;
+  singer: string;
+  description: string;
+  thumbnail: string;
+  path: string;
+  isPlayed: boolean;
+};
+
 type FileType = {
   musicName: string;
   thumbnailName: string;
@@ -53,4 +63,4 @@ type joinData = {
   roomID: string;
 };
 
-export type { Music, FileType, timeoutRef, fetchState, Room, Action, musicResultItem, joinData };
+export type { Music, FileType, timeoutRef, fetchState, Room, Action, musicResultItem, joinData, music };

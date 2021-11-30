@@ -31,13 +31,7 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
       socket.emit('leaveRoom');
     };
     socket.emit('joinRoom', { roomID: roomData, userID: cookie.get('userID') });
-  }, []);
 
-  useEffect(() => {
-    if (userList[0] === cookie.get('userID')) setIsHost(true);
-  }, [userList]);
-
-  useEffect(() => {
     socket.on('updateUserList', refetchUserList);
     socket.on('delegateHost', hostDelegated);
 
@@ -46,6 +40,10 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
       socket.off('delegateHost');
     };
   }, []);
+
+  useEffect(() => {
+    if (userList[0] === cookie.get('userID')) setIsHost(true);
+  }, [userList]);
 
   if (userList[0] === 'bad') {
     return <div>잘못된 요청입니다.</div>;
@@ -58,7 +56,7 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
         <PlayList isHost={isHost}></PlayList>
       </div>
       <div>
-        <UserList user={userList} />
+        <UserList user={userList} isHost={isHost} />
         <ChatComponent />
       </div>
 

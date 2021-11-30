@@ -44,6 +44,7 @@ const socketHandler = (io: Server) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       socket.broadcast.to(targetRoom.id).emit('sync', currentPlayTime);
       namespace.to(targetRoom.id).emit('changeMusicInfo', targetRoom.playList.getCurrentMusic());
+      namespace.to(targetRoom.id).emit('responsePlayList', targetRoom.playList.getPlayList());
     });
 
     socket.on('playControl', playType => {
@@ -53,12 +54,6 @@ const socketHandler = (io: Server) => {
         utils.joinRoom(socket, namespace, targetRoomTemp);
       }
       if (targetRoom !== undefined) socket.to(targetRoom.id).emit('playControl', playType);
-    });
-
-    socket.on('requestPlayList', () => {
-      const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
-      const res = targetRoom?.playList.getPlayList() ?? [];
-      namespace.to(socket.id).emit('responsePlayList', res);
     });
 
     socket.on('nextMusicReq', () => {

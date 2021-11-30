@@ -29,8 +29,8 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
 
     return () => {
       socket.off('redundancyCheck');
-      socket.off('updateRoomList');
       socket.off('routingAfterCreateRoom');
+      socket.off('updateRoomList');
     };
   }, []);
 
