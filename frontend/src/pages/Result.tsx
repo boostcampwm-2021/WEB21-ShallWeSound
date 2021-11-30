@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, forwardRef, MutableRefObject } from
 import config from '../config.host.json';
 import { useInfiniteScroll } from '../hooks/useinfiniteScroll';
 import { musicResultItem } from '../types';
+import Progress from '../components/Room/MusicPlayer/Progress';
 
 interface ResultState {
   musicList: musicResultItem[];
@@ -10,33 +11,32 @@ interface ResultState {
 
 function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean }) {
   const musicControl = useRef<HTMLVideoElement | null>(null);
-  const musicProgress = useRef<HTMLInputElement>(null);
   const volumeProgress = useRef<HTMLInputElement>(null);
   const [musicPlayerState, setMusicPlayerState] = useState({
-    currentTime: 0,
+    currentTime: "",
+    duration: "",
     volume: 0.5,
+    progressDegree: 0,
     backupVolume: 0.5
   });
 
   function updateCurrentTime() {
     const playingMusic = musicControl.current;
-    const playingMusicProgress = musicProgress.current;
-    if (playingMusic && playingMusicProgress) {
-      playingMusicProgress.value = playingMusic.currentTime.toString();
+    if (playingMusic) {
       setMusicPlayerState({
         ...musicPlayerState,
-        currentTime: playingMusic.currentTime
+        currentTime: changeFormatToTime(playingMusic.currentTime),
+        duration: changeFormatToTime(playingMusic.duration),
+        progressDegree: playingMusic.currentTime * 100 / playingMusic.duration,
       });
-      playingMusicProgress.style.backgroundSize = (playingMusic.currentTime * 100) / playingMusic.duration + '% 100%';
     }
   }
 
-  function changeInputRange(e: any) {
+  function onChangeMusicProgress(val: number) {
     const playingMusic = musicControl.current;
-    const playingMusicProgress = musicProgress.current;
-    if (playingMusic && playingMusicProgress) {
-      playingMusic.currentTime = parseFloat(playingMusicProgress.value);
-      playingMusicProgress.style.backgroundSize = (e.target.value * 100) / e.target.max + '% 100%';
+    if (playingMusic) {
+      playingMusic.currentTime = val;
+      updateCurrentTime();
     }
   }
 
@@ -79,31 +79,28 @@ function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean
   useEffect (() => {
     setMusicPlayerState({
       ...musicPlayerState,
-      currentTime: 0,
+      currentTime: changeFormatToTime(0),
+      duration: musicControl.current ? changeFormatToTime(musicControl.current.duration) : "0",
       volume: 0.5,
     })
     toggleVolume();
     toggleVolume();
   }, []);
 
+  let musicProgressProps = {
+    tops: [musicPlayerState.currentTime, musicPlayerState.duration],
+    min: 0,
+    max: musicControl.current && musicControl.current.duration,
+    progressDegree: musicPlayerState.progressDegree,
+    onChange: onChangeMusicProgress,
+  }
+
   return (
     <>
     <video src={path} ref={musicControl} autoPlay onTimeUpdate={updateCurrentTime}/> 
     {musicControl &&
       <div className="searched-musicplayer">
-        <div className="musicplayer-timer">
-          <span className="current-time">{changeFormatToTime(musicControl.current?.currentTime || 0)}</span>
-          <span className="max-duration">{changeFormatToTime(musicControl.current?.duration || 0)}</span>
-        </div>
-        <input
-          className="input-range"
-          name="musicplayer-progress"
-          ref={musicProgress}
-          type="range"
-          min="0"
-          max={musicControl.current?.duration}
-          onInput={changeInputRange}
-        />
+        <Progress prop={musicProgressProps} ref={musicControl}/>
         <div className="serveral-icons">
           <div className="volume-wrap width-half">
             {musicControl.current?.volume === 0 ? (

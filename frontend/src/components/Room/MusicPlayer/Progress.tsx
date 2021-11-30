@@ -1,104 +1,73 @@
-import React, { useState, useRef, forwardRef } from "react";
+import React, { useState, useRef, forwardRef, useEffect } from "react";
 import '../../../stylesheets/Progress.scss';
 
 interface progress {
-  tops?: (string | number | null | HTMLImageElement)[];
-  lefts?: (string | number | null | HTMLImageElement)[];
-  rights?: (string | number | null | HTMLImageElement)[];
-  bottoms?: (string | number | null | HTMLImageElement)[];
-  ref: any;
-  min?: number | null;
-  max?: number | null;
+  tops?: (string | number | null | HTMLImageElement)[],
+  lefts?: (string | number | null | HTMLImageElement)[],
+  rights?: (string | number | null | HTMLImageElement)[],
+  bottoms?: (string | number | null | HTMLImageElement)[],
+  progressDegree?: number | null,
+  min: number,
+  max: number,
+  onUseEffect: () => void | null,
+  onChange: (arg: number) => void | null,
 };
 
-function Progress ({ tops, lefts, rights, bottoms, ref, min, max } : progress) {
-  const Target = ref;
+function Progress ( prop: any, ref: any ) {
+  const {
+    tops, lefts, bottoms, rights,
+    min, max, progressDegree,
+    onUseEffect,
+    onChange,
+  }: progress = { ...prop.prop };
   const ProgressInput = useRef<HTMLInputElement>(null);
-  // const [musicPlayerState, setMusicPlayerState] = useState({
-  //   currentTime: 0,
-  //   volume: 0.5,
-  //   backupVolume: 0.5
-  // });
 
-  // function updateCurrentTime() {
-  //   const playingMusic = musicControl.current;
-  //   const playingMusicProgress = musicProgress.current;
-  //   if (playingMusic && playingMusicProgress) {
-  //     playingMusicProgress.value = playingMusic.currentTime.toString();
-  //     setMusicPlayerState({
-  //       ...musicPlayerState,
-  //       currentTime: playingMusic.currentTime
-  //     });
-  //     playingMusicProgress.style.backgroundSize = (playingMusic.currentTime * 100) / playingMusic.duration + '% 100%';
-  //   }
-  // }
+  useEffect(() => {
+    if (onUseEffect) { onUseEffect() }
+  })
+
+  useEffect(() => {
+    const ProgressInputCurrent = ProgressInput.current;
+    if (ProgressInputCurrent && progressDegree) {
+      ProgressInputCurrent.value = (progressDegree / 100 * parseFloat(ProgressInputCurrent.max)).toString();
+      ProgressInputCurrent.style.backgroundSize = progressDegree + "% 100%";
+    }
+  }, [progressDegree]);
 
   function changeInputRange(e: React.BaseSyntheticEvent) {
-    const ProgressInputCurrent = ProgressInput.current;
-    if (ProgressInputCurrent) {
-      const currentValue = (e.target.value * 100) / e.target.max
-      ProgressInputCurrent.style.backgroundSize = currentValue + "% 100%";
-    }
+    if (onChange) { onChange(e.target.value) };
   }
-
-  // function changeFormatToTime(number: number) {
-  //   const minute = Math.floor(number / 60);
-  //   const second = Math.floor(number % 60);
-  //   const formattedSecond = second >= 10 ? second : '0' + second.toString();
-
-  //   return `${minute}:${formattedSecond}`;
-  // }
-
-  // useEffect (() => {
-  //   setMusicPlayerState({
-  //     ...musicPlayerState,
-  //     currentTime: 0,
-  //     volume: 0.5,
-  //   })
-  //   toggleVolume();
-  //   toggleVolume();
-  // }, []);
 
   return (
     <div className="progress-background">
-      {tops ?
+      {tops &&
       <div className="progress-vertical">
         {tops.map(el => <span className="progress-text">{el}</span>)}
-      </div> : null}
+      </div>}
       <div className="progress-horizontal">
-        {lefts ? 
+        {lefts && 
         <div className="progress-neighbor progress-left">
           {lefts.map(el => <span className="progress-text">{el}</span>)}
-        </div>
-        : null}
+        </div>}
         <input
           className="progress-bar"
           ref={ProgressInput}
           type="range"
-          min={min || 0}
-          max={max || 100}
+          min={min}
+          max={max}
           onInput={changeInputRange}
         />
-        {rights ? 
+        {rights &&
         <div className="progress-neighbor progress-right">
           {rights.map(el => <span className="progress-text">{el}</span>)}
-        </div>
-        : null}
+        </div>}
       </div>
-      {bottoms ? 
+      {bottoms &&
       <div className="progress-vertical">
         {bottoms.map(el => <span className="progress-text">{el}</span>)}
-      </div> : null}
+      </div>}
     </div>
   )
 }
 
-Progress.defaultProps = {
-  tops: [0, 1],
-  ref: null,
-  bottoms: null,
-  lefts: null,
-  rights: null,
-}
-
-export default Progress;
+export default forwardRef(Progress);

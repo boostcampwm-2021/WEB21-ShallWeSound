@@ -12,7 +12,7 @@
     align-items: center;
     background-color: $purple;
     border-radius: 1.5rem;
-    padding: 1.5rem;
+    // padding: 1.5rem;
     width: 100%;
   }
 
@@ -27,6 +27,10 @@
     display: flex;
     justify-content: space-between;
     margin: 0.5rem 0;
+
+    * {
+      margin: 0;
+    }
   }
 
   &-horizontal {
