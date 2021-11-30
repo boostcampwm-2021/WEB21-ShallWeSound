@@ -42,7 +42,7 @@ function UploadModalInner() {
   };
 
   const dropListener = (event: React.DragEvent<HTMLDivElement>) => {
-    uploadController.dropListenerController(event, uploadedFile, setUploadedFile, alertRef);
+    uploadController.dropListenerController(event, uploadedFile, setUploadedFile, alertRef, musicFileRef, thumbnailFileRef);
   };
 
   const overrideEventDefaults = (event: Event | React.DragEvent<HTMLDivElement>) => {

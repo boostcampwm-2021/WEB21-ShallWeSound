@@ -33,10 +33,15 @@ const checkSingerAndDescriptController = (
 
 const checkFileController=(
     musicFileRef:React.RefObject<HTMLInputElement>,
-    thumbnailFileRef:React.RefObject<HTMLInputElement>
+    thumbnailFileRef:React.RefObject<HTMLInputElement>,
+    uploadedFile:FileType
 )=>{
     if(musicFileRef.current!.value ===null || musicFileRef.current!.value==='' || thumbnailFileRef.current!.value === null || thumbnailFileRef.current!.value === '' ){
-        return false;
+        if(uploadedFile.musicFile===null || uploadedFile.thumbnailFile === null){
+            return false;
+        }else{
+            return true;
+        }
     }else{
     return true;
     }
@@ -55,7 +60,7 @@ const fileUploadMethodController = (
         alert('아티스트 이름과 곡 설명은 반드시 적어주셔야 합니다!')
         return;
     }
-    if(!checkFileController(musicFileRef, thumbnailFileRef)){
+    if(!checkFileController(musicFileRef, thumbnailFileRef, uploadedFile)){
         alert('mp3 파일과 썸네일 이미지 파일를 반드시 첨부해주셔야 합니다!')
         return;
     }
@@ -138,10 +143,17 @@ const dropListenerController = (
     event: React.DragEvent<HTMLDivElement>,
     uploadedFile:FileType,
     setUploadedFile:React.Dispatch<React.SetStateAction<FileType>>,
-    alertRef:React.RefObject<HTMLDivElement>) =>{
+    alertRef:React.RefObject<HTMLDivElement>,
+    musicFileRef:React.RefObject<HTMLInputElement>,
+    thumbnailFileRef:React.RefObject<HTMLInputElement>,) =>{
     overrideEventDefaults(event);
     const curObj = _.cloneDeep(uploadedFile);
-    const imageType=['image/jpeg', 'image/png']
+    const imageType = { 'image/jpeg':true, 'image/png':true}
+    console.log(event.dataTransfer.files[0].type)
+    console.log(typeof event.dataTransfer.files[0].type)
+    console.log(event.dataTransfer.files[0].name);
+    console.log(imageType);
+    console.log(event.dataTransfer.files[0].type in imageType);
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
         if(event.dataTransfer.files[0].type in imageType){
         curObj.thumbnailFile = event.dataTransfer.files;
