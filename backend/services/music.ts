@@ -6,7 +6,7 @@ const Op = require('sequelize').Op;
 
 export default {
   async search(keyword: string) {
-    const result = await MusicModel.findAll({
+    return await MusicModel.findAll({
       where: {
         [Op.or]: {
           name: { [Op.like]: '%' + keyword + '%' },
@@ -14,12 +14,16 @@ export default {
         },
       },
     });
-
-    return result;
   },
   async searchByPage(keyword: string, page: number) {
     const result = await MusicModel.findAll({
-      where: Sequelize.literal(`MATCH (name, singer) AGAINST ('+':keyword'*' in boolean mode)`),
+      // where: Sequelize.literal(`MATCH (name, singer) AGAINST ('+':keyword'*' in boolean mode)`),
+      where: {
+        [Op.or]: {
+          name: { [Op.like]: '%' + keyword + '%' },
+          singer: { [Op.like]: '%' + keyword + '%' },
+        },
+      },
       replacements: {
         keyword: keyword,
       },
