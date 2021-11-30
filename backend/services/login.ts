@@ -138,14 +138,14 @@ const verifyToken = async (accessToken:string) =>{
         }
         return makeReturnResultOfVerifyToken(true, getUserId(verifyResult), getUserEmail(verifyResult), null);
     }catch(err){
-        const refrashRes = await refrashToken(accessToken);
-        if (refrashRes !== null){
-            const DBsearchResult = await IDsearchInDB(`${refrashRes}`);
+        const refreshRes = await refreshToken(accessToken);
+        if (refreshRes !== null){
+            const DBsearchResult = await IDsearchInDB(`${refreshRes}`);
             if(DBsearchResult === true){
                 return makeReturnResultOfVerifyToken(true, 
-                    getUserId(jwt.verify(`${refrashRes}`, `${process.env.SALT}`)),
-                    getUserEmail(jwt.verify(`${refrashRes}`, `${process.env.SALT}`)) ,
-                    refrashRes);
+                    getUserId(jwt.verify(`${refreshRes}`, `${process.env.SALT}`)),
+                    getUserEmail(jwt.verify(`${refreshRes}`, `${process.env.SALT}`)) ,
+                    refreshRes);
             }else{
                 return makeReturnResultOfVerifyToken(false, null, null, null);
             }
@@ -157,7 +157,7 @@ const verifyToken = async (accessToken:string) =>{
 }
 
 const redisGET = promisify(client.get).bind(client);
-const refrashToken = async (accessToken:string)=>{
+const refreshToken = async (accessToken:string)=>{
     const rToken = await redisGET(accessToken);
     try{
         const rTokenVerifyResult = jwt.verify(rToken!, `${process.env.SALT}`);
