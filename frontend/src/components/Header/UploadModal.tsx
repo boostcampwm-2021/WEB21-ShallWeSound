@@ -5,6 +5,8 @@ import uploadController from '../Util/uploadController';
 
 function UploadModalInner() {
   const alertRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  const textAlertRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  const fileAlertRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const singerRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const musicFileRef = useRef<HTMLInputElement>(null);
@@ -28,7 +30,7 @@ function UploadModalInner() {
   };
   
   const fileUploadMethod = () => {
-    uploadController.fileUploadMethodController(descriptionRef, singerRef, musicFileRef, thumbnailFileRef, uploadedFile, setUploadedFile, timerRef)
+    uploadController.fileUploadMethodController(descriptionRef, singerRef, musicFileRef, thumbnailFileRef, uploadedFile, setUploadedFile, timerRef, textAlertRef, fileAlertRef);
   };
 
   const writeSingerName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,6 +136,12 @@ function UploadModalInner() {
       </div>
       <div className={'delegate'} ref={alertRef}>
         음악은 mp3, 썸네일은 jpeg, png만 업로드 가능합니다!
+      </div>
+      <div className={'delegate'} ref={textAlertRef}>
+        아티스트 이름과 곡 설명은 반드시 적어주셔야 합니다!
+      </div>
+      <div className={'delegate'} ref={fileAlertRef}>
+        mp3 파일과 썸네일 이미지 파일를 반드시 첨부해주셔야 합니다!
       </div>
     </div>
   );

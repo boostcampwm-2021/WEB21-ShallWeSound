@@ -54,14 +54,22 @@ const fileUploadMethodController = (
     thumbnailFileRef:React.RefObject<HTMLInputElement>,
     uploadedFile:FileType,
     setUploadedFile:React.Dispatch<React.SetStateAction<FileType>>,
-    timerRef: React.MutableRefObject<timeoutRef>
+    timerRef: React.MutableRefObject<timeoutRef>,
+    textAlertRef:React.RefObject<HTMLDivElement>,
+    fileAlertRef:React.RefObject<HTMLDivElement>
 ) =>{
     if(!checkSingerAndDescriptController(descriptionRef, singerRef)){
-        alert('아티스트 이름과 곡 설명은 반드시 적어주셔야 합니다!')
+        textAlertRef.current!.style.opacity = '1';
+        setTimeout(() => {
+            if (textAlertRef.current) textAlertRef.current!.style.opacity = '0';
+        }, 3000);
         return;
     }
     if(!checkFileController(musicFileRef, thumbnailFileRef, uploadedFile)){
-        alert('mp3 파일과 썸네일 이미지 파일를 반드시 첨부해주셔야 합니다!')
+        fileAlertRef.current!.style.opacity = '1';
+        setTimeout(() => {
+            if (fileAlertRef.current) fileAlertRef.current!.style.opacity = '0';
+        }, 3000);
         return;
     }
     if(timerRef.current){
@@ -149,17 +157,16 @@ const dropListenerController = (
     const imageType = { 'image/jpeg':true, 'image/png':true}
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
         if(event.dataTransfer.files[0].type in imageType){
-        curObj.thumbnailFile = event.dataTransfer.files;
-        curObj.thumbnailName = event.dataTransfer.files[0].name;
+            curObj.thumbnailFile = event.dataTransfer.files;
+            curObj.thumbnailName = event.dataTransfer.files[0].name;
         }else if(event.dataTransfer.files[0].type=== 'audio/mpeg'){
-        curObj.musicFile = event.dataTransfer.files;
-        curObj.musicName = event.dataTransfer.files[0].name;
+            curObj.musicFile = event.dataTransfer.files;
+            curObj.musicName = event.dataTransfer.files[0].name;
         }else{
-        alertRef.current!.style.opacity = '1';
-
-        setTimeout(() => {
-            if (alertRef.current) alertRef.current!.style.opacity = '0';
-        }, 3000);
+            alertRef.current!.style.opacity = '1';
+            setTimeout(() => {
+                if (alertRef.current) alertRef.current!.style.opacity = '0';
+            }, 3000);
         }
     }
     setUploadedFile(curObj);
