@@ -114,7 +114,7 @@ const getUserEmail = (obj:string|jwt.JwtPayload):string =>{
 
 const IDsearchInDB = async(verifyResult:string|jwt.JwtPayload)=>{
     try{
-        const DBresult = await models.USER.findAll({ID:getUserId(verifyResult)})
+        await models.USER.findAll({ID:getUserId(verifyResult)})
     }catch(DBerr){
         return false;
     }
@@ -160,10 +160,9 @@ const redisGET = promisify(client.get).bind(client);
 const refreshToken = async (accessToken:string)=>{
     const rToken = await redisGET(accessToken);
     try{
-        const rTokenVerifyResult = jwt.verify(rToken!, `${process.env.SALT}`);
-        const newToken = jwt.sign({userID:getUserId(jwt.decode(accessToken)!), userEmail:getUserEmail(jwt.decode(accessToken)!)}, 
+        jwt.verify(rToken!, `${process.env.SALT}`);
+        return jwt.sign({userID:getUserId(jwt.decode(accessToken)!), userEmail:getUserEmail(jwt.decode(accessToken)!)}, 
         `${process.env.SALT}`, {expiresIn:'30m'});
-        return newToken;
     }catch(err){
         return null
     }

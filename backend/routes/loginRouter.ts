@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginServie } from '../services/login';
+import { loginServie } from '../services/loginService';
 import * as jwt from 'jsonwebtoken';
 
 const router = express.Router();

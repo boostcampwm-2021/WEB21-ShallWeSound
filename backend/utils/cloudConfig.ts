@@ -2,7 +2,7 @@ import * as AWS from 'aws-sdk';
 const region = 'kr-standard';
 const access_key = `${process.env.ACCESS_KEY}`;
 const secret_key = `${process.env.SECRET_KEY}`;
-export const S3 = new AWS.S3({
+export const myS3 = new AWS.S3({
     endpoint:'https://kr.object.ncloudstorage.com',
     region,
     credentials: {
@@ -11,8 +11,7 @@ export const S3 = new AWS.S3({
     }
 });
 
-export const makeSignedURL = (S3:AWS.S3, contentHash:String, musicName:String):string =>{
+export const makeSignedURL = (S3:AWS.S3, contentHash:string, musicName:string):string =>{
     const params = {Bucket: 'sws', Key: `${contentHash}/${musicName}`, Expires: 5000000};
-    const url = S3.getSignedUrl('getObject', params);
-    return url;
+    return S3.getSignedUrl('getObject', params);
 }

@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import {makeHash} from '../utils/util'
-import {uploadLogic} from'../services/upload'
+import {uploadLogic} from'../services/uploadService'
 const upload = multer({
     storage: multer.memoryStorage()
 });

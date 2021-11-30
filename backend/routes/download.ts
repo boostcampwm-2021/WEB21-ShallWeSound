@@ -1,12 +1,12 @@
 import express from 'express';
-import {S3, makeSignedURL} from '../utils/cloudConfig'
+import {myS3, makeSignedURL} from '../utils/cloudConfig'
 const router = express.Router();
 router.use(express.json());
 
 router.get('/' ,(req, res)=>{
     const contentHash = req.body.contentHash;
     const musicName = req.body.musicName;
-    res.send(makeSignedURL(S3, contentHash, musicName));
+    res.send(makeSignedURL(myS3, contentHash, musicName));
 })
 
 
