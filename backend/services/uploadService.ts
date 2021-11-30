@@ -3,7 +3,7 @@ import {Readable} from 'stream';
 const models = require('../models/index.js');
 
 const options = {
-    partSize: 5 * 1024 * 1024
+    partSize: 15 * 1024 * 1024
 };
 
 const uploadToStorage = async(

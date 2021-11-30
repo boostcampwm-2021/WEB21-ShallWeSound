@@ -149,11 +149,6 @@ const dropListenerController = (
     overrideEventDefaults(event);
     const curObj = _.cloneDeep(uploadedFile);
     const imageType = { 'image/jpeg':true, 'image/png':true}
-    console.log(event.dataTransfer.files[0].type)
-    console.log(typeof event.dataTransfer.files[0].type)
-    console.log(event.dataTransfer.files[0].name);
-    console.log(imageType);
-    console.log(event.dataTransfer.files[0].type in imageType);
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
         if(event.dataTransfer.files[0].type in imageType){
         curObj.thumbnailFile = event.dataTransfer.files;

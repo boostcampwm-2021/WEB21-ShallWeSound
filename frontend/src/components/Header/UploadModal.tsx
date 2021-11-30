@@ -1,8 +1,6 @@
 import styles from '../../stylesheets/style.module.scss';
 import React, { useState, useRef} from 'react';
-import * as _ from 'lodash';
 import {FileType, timeoutRef} from '../../types'
-import '../Util/uploadController'
 import uploadController from '../Util/uploadController';
 
 function UploadModalInner() {

@@ -27,7 +27,6 @@ router.get('/github', (req, res) => {
 router.get('/github/callback', async (req, res) => {
   const { code } = req.query;
   const token = await loginServie.githubLogin(code);
-  console.log('data', code);
   res.cookie('userID', loginServie.getUserId(jwt.verify(token, `${process.env.SALT}`)));
   res.cookie('userEmail', loginServie.getUserEmail(jwt.verify(token, `${process.env.SALT}`)));
   res.cookie('jwt', token).redirect(`${process.env.LOCALHOST_URL}`);
