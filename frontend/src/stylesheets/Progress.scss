@@ -1,0 +1,96 @@
+@import './palette.scss';
+
+.progress {
+  &-background {
+    width: 100%;
+    min-height: fit-content;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: $purple;
+    border-radius: 1.5rem;
+    // padding: 1.5rem;
+    width: 100%;
+  }
+
+  &-text {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $semi-white;
+  }
+
+  &-vertical {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5rem 0;
+
+    * {
+      margin: 0;
+    }
+  }
+
+  &-horizontal {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-neighbor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span { 
+      display: block;
+    }
+  }
+
+  &-left {
+    span {
+      margin-right: 0.5rem;
+    }
+  }
+
+  &-right {
+    span {
+      margin-left: 0.5rem;
+    }
+  }
+
+  &-bar {
+    width: 100%;
+    height: 6px;
+    outline: 1px solid $semi-white;
+    border-radius: 50px;
+    cursor: pointer;
+    position: relative;
+  }
+
+}
+
+input[type='range'] {
+  appearance: none;
+  margin: 0;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: $purple;
+  background-image: linear-gradient($semi-white, $semi-white);
+  background-size: 0% 100%;
+  background-repeat: no-repeat;
+  outline: 1px solid $semi-white;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: $semi-white;
+    border-radius: 999px;
+  }
+}
