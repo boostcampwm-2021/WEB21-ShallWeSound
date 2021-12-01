@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import { Room } from '../pages/Room';
 import { MainPage } from '../pages/Main';
 import { ResultPage } from '../pages/Result';
@@ -37,10 +37,36 @@ function App() {
     }
   }
 
+  const authAsync= async()=>{
+    if (!jwt || jwt === undefined) {
+      return false;
+    }else{
+      const result = await fetch(`${config.localhost}/oauth/authenticate`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ jwt: cookies.get('jwt') }),
+      })
+      const authenticateResponse = await result.json();
+      if(authenticate != authenticateResponse.isOK){
+        setAuthenticate(authenticateResponse.isOK);
+      }
+      return true;
+    }
+
+  }
+  useEffect(() => {
+    (async()=>{
+      await authAsync();
+    })()
+  }, [])
+
   return (
     <>
       <Router>
-      {isAuthenticated()}
+      {/* {isAuthenticated()} */}
         <Switch>
           <Route
             exact
