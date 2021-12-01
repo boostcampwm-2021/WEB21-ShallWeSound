@@ -11,9 +11,9 @@ import socket from './socket';
 import roomRouter from './routes/room';
 import audioRouter from './routes/audio';
 import apiRouter from './routes/api/';
-import uploadRouter from './routes/upload';
+import uploadRouter from './routes/uploadRouter';
 import downloadRouter from './routes/download';
-import loginRouter from './routes/login';
+import loginRouter from './routes/loginRouter';
 
 const models = require('./models/index.js');
 const app: express.Application = express();

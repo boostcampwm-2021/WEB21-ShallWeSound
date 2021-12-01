@@ -33,18 +33,19 @@ function App() {
             setAuthenticate(res.isOK);
           }
         });
+      return true;
     }
   }
 
   return (
     <>
       <Router>
+      {isAuthenticated()}
         <Switch>
           <Route
             exact
             path="/login"
             render={() => {
-              isAuthenticated();
               if (!authenticate) {
                 return <LoginPage />;
               } else {
@@ -54,12 +55,10 @@ function App() {
           />
           <>
             <HeaderComponent />
-            {/* onLogout={Logout} /> */}
             <Route
               exact
               path="/"
               render={() => {
-                isAuthenticated();
                 if (!authenticate) {
                   return <Redirect to={{ pathname: '/login' }} />;
                 } else {
@@ -71,18 +70,16 @@ function App() {
               exact
               path="/main"
               render={() => {
-                isAuthenticated();
                 if (!authenticate) {
                   return <Redirect to={{ pathname: '/' }} />;
                 } else {
-                  return <Route path="/main" component={MainPage} />;
+                  return <Route component={MainPage} />;
                 }
               }}
             />
             <Route
               path="/room"
               render={() => {
-                isAuthenticated();
                 if (!authenticate) {
                   return <Redirect to={{ pathname: '/' }} />;
                 } else {
@@ -93,7 +90,6 @@ function App() {
             <Route
               path="/result"
               render={() => {
-                isAuthenticated();
                 if (!authenticate) {
                   return <Redirect to={{ pathname: '/' }} />;
                 } else {

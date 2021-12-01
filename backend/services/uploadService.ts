@@ -1,9 +1,9 @@
-import {S3, makeSignedURL} from '../utils/cloudConfig'
+import {myS3, makeSignedURL} from '../utils/cloudConfig'
 import {Readable} from 'stream';
 const models = require('../models/index.js');
 
 const options = {
-    partSize: 5 * 1024 * 1024
+    partSize: 15 * 1024 * 1024
 };
 
 const uploadToStorage = async(
@@ -51,9 +51,9 @@ export const uploadLogic = async (
                 thumbnail:thumbnailName,
                 path:'경로경로',
                 content_hash:contentHash});
-            await uploadToStorage(S3, object_name, bucket_name, files, contentHash, thumbnailName);
-            const path = makeSignedURL(S3, contentHash, object_name);
-            const thumbnailPath = makeSignedURL(S3, contentHash, thumbnailName);
+            await uploadToStorage(myS3, object_name, bucket_name, files, contentHash, thumbnailName);
+            const path = makeSignedURL(myS3, contentHash, object_name);
+            const thumbnailPath = makeSignedURL(myS3, contentHash, thumbnailName);
             await queryResult.update({path:path, thumbnail:thumbnailPath});
 
         }catch(e){

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { RouteComponentProps } from 'react-router';
 import { Cookies } from 'react-cookie';
+import config from '../../config.host.json';
 
 function UserModal({ onClose, history }: { onClose: () => void, history: RouteComponentProps['history'] }) {
   const cookies = new Cookies();
@@ -8,7 +9,8 @@ function UserModal({ onClose, history }: { onClose: () => void, history: RouteCo
   function Logout () {
     cookies.remove('jwt');
     cookies.remove('userID');
-    window.location.href="https://shallwesound.p-e.kr/login";
+    cookies.remove('userEmail');
+    window.location.href=`/login`;
   }
 
   return (

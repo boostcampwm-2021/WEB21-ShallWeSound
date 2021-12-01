@@ -1,9 +1,12 @@
 import express from 'express';
 import multer from 'multer';
 import {makeHash} from '../utils/util'
-import {uploadLogic} from'../services/upload'
+import {uploadLogic} from'../services/uploadService'
 const upload = multer({
-    storage: multer.memoryStorage()
+    storage: multer.memoryStorage(),
+    limits:{
+        fileSize: 15 * 1024 * 1024
+    }
 });
 const router = express.Router();
 const cpUpload = upload.fields([{name:'userFile1'}, {name:'userFile2'}])
