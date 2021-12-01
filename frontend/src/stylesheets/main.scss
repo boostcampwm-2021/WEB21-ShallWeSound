@@ -359,8 +359,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  // align-items: center;
   background-color: $purple;
   border-radius: 1.5rem;
   padding: 1.5rem;
@@ -414,16 +414,16 @@
       width: 200px;
       height: 200px;
     }
+  }
   
-    .width-half {
-      width: 50%;
-      box-sizing: border-box;
-    }
-  
-    .width-quarter {
-      width: 25%;
-      box-sizing: border-box;
-    }
+  .width-half {
+    width: 50%;
+    box-sizing: border-box;
+  }
+
+  .width-quarter {
+    width: 25%;
+    box-sizing: border-box;
   }
 }
 
