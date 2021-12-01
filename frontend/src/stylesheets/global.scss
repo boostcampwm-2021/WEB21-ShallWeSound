@@ -1,13 +1,5 @@
-@import 'https://fonts.googleapis.com/css2?family=Jua&display=swap';
-
+@import './palette.scss';
 /* Color */
-$white: #fff;
-$semi-white: #f9f9f9;
-$pink: #f7dbf0;
-$purple: #beaee2;
-$lightgreen: #cdf0ea;
-$black: #000;
-$semi-black: #1e2222;
 
 $background: linear-gradient(#4b6cb7, #182848);
 $color-chatbox: #9bbbd4;
@@ -22,6 +14,7 @@ $color-chatbox: #9bbbd4;
   justify-content: center;
   align-items: center;
   font-family: 'Jua', Arial, Helvetica, sans-serif;
+  overflow: hidden;
 }
 
 .record-image {
@@ -121,6 +114,22 @@ $color-chatbox: #9bbbd4;
     border: 4px solid $purple;
     padding: 0.4rem;
     box-sizing: border-box;
+  }
+}
+
+@mixin scrollbar($color: $white) {
+  overflow: auto;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+
+  &::-webkit-scrollbar {
+    /* Chrome, Safari, Opera*/
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    height: 17%;
+    background-color: $color;
+    border-radius: 10px;
   }
 }
 

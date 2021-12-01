@@ -43,7 +43,7 @@ const PlayListItem = ({ MID, title, singer, isPlayed, isHost }: Props) => {
             {singer}
           </Text>
         </TextWrapper>
-        {isHover ? isHost ? <CancelButton onClick={onRemove}>X</CancelButton> : <Detail></Detail> : <Detail></Detail>}
+        {isHover && isHost ? <CancelButton onClick={onRemove}>X</CancelButton> : <Detail></Detail>}
       </Layout>
     </Item>
   );

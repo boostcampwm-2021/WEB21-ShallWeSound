@@ -2,6 +2,11 @@ import { PlayList } from '../socket/music';
 
 type authCode = string | qs.ParsedQs | string[] | qs.ParsedQs[] | undefined;
 
+type userProfileRequestHeader={
+  Authorization:string,
+  contentType:string|null
+}
+
 type Music = {
   MID: number;
   name: string;
@@ -35,4 +40,4 @@ type musicTable = {
   content_hash: string;
 };
 
-export type { Music, socketInfo, userList, musicTable, authCode };
+export type { Music, socketInfo, userList, musicTable, authCode, userProfileRequestHeader};

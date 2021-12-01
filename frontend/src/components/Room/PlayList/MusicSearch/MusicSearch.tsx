@@ -6,6 +6,7 @@ import MusicSearchItem from './MusicSearchItem';
 import CircleButton from '../../../Util/CircleButton';
 import { useSocket } from '../../../../context/MyContext';
 import PopUp from '../../../Util/PopUp';
+import Loading from '../../../Util/Loading';
 import { Music } from '../../../../types';
 import { reducer as addMusicStatusReducer } from './reducer/addMusicState';
 import { reducer as searchResultReducer } from './reducer/searchResult';
@@ -21,17 +22,19 @@ const MusicSearch = () => {
     result: [],
     selectedMusicInResult: [],
     hasMore: false,
+    loading: false,
   });
   const [addMusicState, dispatchAddMusicState] = useReducer(addMusicStatusReducer, {
     success: false,
     fail: false,
   });
 
-  const { result, selectedMusicInResult, hasMore } = searchResult;
+  const { result, selectedMusicInResult, hasMore, loading } = searchResult;
   const { success, fail } = addMusicState;
 
   const fetchMusic = useCallback(
     async (more = true) => {
+      dispatchSearchResult({ type: 'FETCH_LOADING' });
       try {
         const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}&page=${page.current}`);
         const json = await res.json();
@@ -43,7 +46,7 @@ const MusicSearch = () => {
           dispatchSearchResult({ type: 'FETCH_SUCCESS', result: musics, hasMore: json.hasMore });
         }
       } catch (e) {
-        dispatchSearchResult({ type: 'FETCH_FAILURE' });
+        dispatchSearchResult({ type: 'INIT' });
       }
     },
     [keyword],
@@ -82,6 +85,7 @@ const MusicSearch = () => {
 
   useEffect(() => {
     page.current = result.length;
+    console.log('page: ', page.current);
   }, [result]);
 
   const onKeywordChange = (value: string) => {
@@ -93,7 +97,7 @@ const MusicSearch = () => {
   const onSelectMusic = (MID: number) => {
     if (isSelected(MID)) {
       const newSelectedList = selectedMusicInResult.filter((id: number) => id !== MID);
-      dispatchSearchResult({ type: 'UNSELECT_MUSIC', selectedInResult: newSelectedList });
+      dispatchSearchResult({ type: 'SELECT_MUSIC', selectedInResult: newSelectedList });
     } else {
       dispatchSearchResult({ type: 'SELECT_MUSIC', selectedInResult: [...selectedMusicInResult, MID] });
     }
@@ -140,10 +144,11 @@ const MusicSearch = () => {
                 onClick={() => onSelectMusic(+music.MID)}
               />
             ))
-          ) : (
+          ) : loading ? null : (
             <div>검색 결과 없음</div>
           )}
           <div ref={hasMore ? setObserveTarget : null}>&nbsp;</div>
+          <Spinner>{loading ? <Loading /> : null}</Spinner>
         </ScrollBar>
       </ResultWrapper>
       <ButtonWrapper>
@@ -179,6 +184,10 @@ const PopUpWrapper = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+`;
+
+const Spinner = styled.div`
+  margin: 0 50.7%;
 `;
 
 export default MusicSearch;

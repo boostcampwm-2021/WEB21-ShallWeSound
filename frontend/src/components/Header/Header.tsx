@@ -6,9 +6,10 @@ import CreateRoomButton from './CreateRoomModal';
 import { withRouter } from 'react-router-dom';
 import { useSocket } from '../../context/MyContext';
 import UserButton from './UserModal';
+import { Socket } from 'socket.io-client';
 
 function HeaderComponent({ history }: { history: RouteComponentProps['history'] }) {
-  const socket: any = useSocket();
+  const socket: Socket = useSocket()!;
   const timerRef = useRef<timeoutRef>({ timer: setTimeout(() => {}) });
   const [searchInput, setSearchInput] = useState('');
 
@@ -42,9 +43,9 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
 
   return (
     <div className="header">
-      <img className="header-logo" src="/images/logo.png" alt="logo" onClick={goMain}/>
+      <img className="header-logo" src="/images/logo.png" alt="logo" onClick={goMain} />
       <div className="header-left-wrap">
-        <UserButton history={history}/>
+        <UserButton history={history} />
         <UploadModal />
         <CreateRoomButton history={history} />
         <div className="header-search">

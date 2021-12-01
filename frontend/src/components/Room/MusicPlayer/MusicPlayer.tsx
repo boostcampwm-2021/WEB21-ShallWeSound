@@ -3,16 +3,8 @@ import { useSocket } from '../../../context/MyContext';
 import '../../../stylesheets/MusicPlayer.scss';
 import Title from './Title';
 import ThumbnailPlayer from './ThumbnailPlayer';
-
-interface music {
-  MID: number;
-  name: string;
-  singer: string;
-  description: string;
-  thumbnail: string;
-  path: string;
-  isPlayed: boolean;
-}
+import { Socket } from 'socket.io-client';
+import { music } from '../../../types';
 
 function MusicPlayer({ isHost }: { isHost: boolean }) {
   const musicControl = useRef<HTMLVideoElement | null>(null);
@@ -21,47 +13,47 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
   const [musicCurrentTime, setMusicCurrentTime] = useState(0);
   const [musicInfo, setMusicInfo] = useState<music>();
   const [backupMusicVolume, setBackupMusicVolume] = useState(0);
-  const socket: any = useSocket();
+  const socket: Socket = useSocket()!;
 
-  useEffect(() => {
-    socket.on('requestTime', () => {
-      console.log('방장이다.');
-      socket.emit('responseTime', musicControl.current?.currentTime);
+  const playController = (playType: string) => {
+    switch (playType) {
+      case 'play':
+        musicControl.current?.play();
+        break;
+      case 'pause':
+        musicControl.current?.pause();
+        break;
+      default:
+        if (musicControl.current) {
+          musicControl.current.currentTime = parseInt(playType);
+        }
+    }
+  };
+
+  const sync = (hostCurrentTime: number) => {
+    if (musicControl.current) {
+      musicControl.current.currentTime = hostCurrentTime;
+    }
+  };
+
+  const emitHostCurrentTime = () => {
+    socket.emit('responseTime', musicControl.current?.currentTime);
+  };
+
+  const setInfo = (musicData: music) => {
+    setMusicInfo({
+      ...musicInfo,
+      ...musicData,
     });
+  };
 
-    socket.on('sync', (data: number) => {
-      if (musicControl.current) {
-        musicControl.current.currentTime = data;
-      }
-    });
-
-    socket.on('changeMusicInfo', (data: music) => {
-      setMusicInfo({
-        ...musicInfo,
-        ...data,
-      });
-    });
-
-    socket.on('clientPause', (data: string) => {
-      musicControl.current?.pause();
-    });
-
-    socket.on('clientPlay', (data: string) => {
-      musicControl.current?.play();
-    });
-
-    socket.on('clientMoving', (data: number) => {
-      if (musicControl.current) {
-        musicControl.current.currentTime = data;
-      }
-    });
-
+  const autoPlayFake = () => {
     setTimeout(() => {
       if (musicControl.current) {
         musicControl.current.muted = false;
       }
     }, 200);
-  }, []);
+  };
 
   function goPrevMusic() {
     socket.emit('prevMusicReq');
@@ -83,12 +75,12 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
     if (playingMusic?.paused) {
       playingMusic.play();
       playingMusic.onplay = () => {
-        socket.emit('play');
+        socket.emit('playControl', 'play');
       };
     } else if (playingMusic?.paused === false) {
       playingMusic.pause();
       playingMusic.onpause = () => {
-        socket.emit('pause');
+        socket.emit('playControl', 'pause');
       };
     }
   }
@@ -105,7 +97,7 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
       playingMusicProgress.value = playingMusic.currentTime.toString();
       playingMusicProgress.style.backgroundSize = (playingMusic.currentTime * 100) / playingMusic.duration + '% 100%';
       playingMusic.onseeked = () => {
-        socket.emit('moving', playingMusic.currentTime);
+        socket.emit('playControl', playingMusic.currentTime);
       };
     }
   }
@@ -144,6 +136,14 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
     }
   }
 
+  useEffect(() => {
+    socket.on('requestTime', emitHostCurrentTime);
+    socket.on('sync', sync);
+    socket.on('changeMusicInfo', setInfo);
+    socket.on('playControl', playController);
+    autoPlayFake();
+  }, []);
+
   return (
     <>
       <div className="musicplayer">
@@ -151,7 +151,6 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
           id="video"
           src={musicInfo?.path}
           muted
-          // autoPlay
           ref={musicControl}
           onTimeUpdate={updateCurrentTime}
           onLoadedMetadata={updateMusic}
