@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { RouteComponentProps } from 'react-router';
 import { Cookies } from 'react-cookie';
-import config from '../../config.host.json';
 
 function UserModal({ onClose, history }: { onClose: () => void, history: RouteComponentProps['history'] }) {
   const cookies = new Cookies();

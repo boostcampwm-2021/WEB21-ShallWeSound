@@ -5,7 +5,7 @@ import Title from './Title';
 import ThumbnailPlayer from './ThumbnailPlayer';
 import { Socket } from 'socket.io-client';
 import { music } from '../../../types';
-import Progress from './Progress';
+import Progress from '../../Util/Progress';
 
 function MusicPlayer({ isHost }: { isHost: boolean }) {
   const socket: Socket = useSocket()!;

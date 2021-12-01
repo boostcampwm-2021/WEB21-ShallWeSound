@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import config from '../config.host.json';
 import { useInfiniteScroll } from '../hooks/useinfiniteScroll';
 import { musicResultItem } from '../types';
-import Progress from '../components/Room/MusicPlayer/Progress';
+import Progress from '../components/Util/Progress';
 
 interface ResultState {
   musicList: musicResultItem[];

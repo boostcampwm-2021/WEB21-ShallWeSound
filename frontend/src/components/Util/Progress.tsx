@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import '../../../stylesheets/Progress.scss';
+import '../../stylesheets/Progress.scss';
 
 interface progress {
   tops?: (string | number | null | HTMLImageElement)[],
