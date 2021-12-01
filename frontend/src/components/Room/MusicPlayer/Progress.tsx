@@ -6,9 +6,10 @@ interface progress {
   lefts?: (string | number | null | HTMLImageElement)[],
   rights?: (string | number | null | HTMLImageElement)[],
   bottoms?: (string | number | null | HTMLImageElement)[],
-  progressDegree: number | null,
+  disabled?: boolean,
   min: number,
   max: number,
+  progressDegree: number | null,
   onUseEffect: () => void | null,
   onChange: (arg: number) => void | null,
 };
@@ -16,7 +17,7 @@ interface progress {
 function Progress ( prop: any ) {
   const {
     tops, lefts, bottoms, rights,
-    min, max, progressDegree,
+    min, max, progressDegree, disabled = false,
     onUseEffect,
     onChange,
   }: progress = { ...prop.prop };
@@ -55,6 +56,7 @@ function Progress ( prop: any ) {
           type="range"
           min={min || 0}
           max={max || 1}
+          disabled={disabled}
           onInput={changeInputRange}
         />
         {rights &&
