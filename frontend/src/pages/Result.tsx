@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, forwardRef, MutableRefObject } from 'react';
+import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import config from '../config.host.json';
 import { useInfiniteScroll } from '../hooks/useinfiniteScroll';
 import { musicResultItem } from '../types';
@@ -76,13 +76,15 @@ function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean
         setMusicVolumeState({
           ...musicVolumeState,
           volume: 0,
-          backupVolume: playingMusic.volume
+          backupVolume: playingMusic.volume * 100,
+          progressDegree: 0,
         });
         playingMusic.volume = 0;
       } else {
         setMusicVolumeState({
           ...musicVolumeState,
           volume: musicVolumeState.backupVolume,
+          progressDegree: musicVolumeState.backupVolume,
         })
         playingMusic.volume = musicVolumeState.backupVolume / 100;
       }

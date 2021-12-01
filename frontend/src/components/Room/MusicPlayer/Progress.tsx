@@ -24,7 +24,7 @@ function Progress ( prop: any ) {
 
   useEffect(() => {
     if (onUseEffect) { onUseEffect() }
-  }, []);
+  }, [onUseEffect]);
 
   useEffect(() => {
     const ProgressInputCurrent = ProgressInput.current;
@@ -53,8 +53,8 @@ function Progress ( prop: any ) {
           className="progress-bar"
           ref={ProgressInput}
           type="range"
-          min={min}
-          max={max}
+          min={min || 0}
+          max={max || 1}
           onInput={changeInputRange}
         />
         {rights &&
