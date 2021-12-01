@@ -3,6 +3,8 @@ import { Socket } from 'socket.io-client';
 import { useSocket } from '../context/MyContext';
 import { useAsync } from '../context/useAsync';
 import { RouteComponentProps } from 'react-router';
+import { Cookies } from 'react-cookie';
+import ScrollBar from '../components/Util/scrollbar';
 import { apiFetch, fadeOut } from '../hooks/utils';
 import RoomItem from '../components/Main/RoomItem';
 import '../stylesheets/main.scss';

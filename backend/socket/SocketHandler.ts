@@ -67,16 +67,17 @@ const socketHandler = (io: Server) => {
       socket.emit('currentMusicRes', targetRoom?.playList.getCurrentMusic());
     });
 
-    socket.on('addMusicInPlayListReq', async (MIDS: number[]) => {
+    socket.on('addMusicInPlayListReq', async (MIDs: number[]) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       if (!targetRoom) {
         return;
       }
-      const musics: Music[] = await musicService.findMusicsBy(MIDS);
-      if (targetRoom.playList.isExist(musics)) {
+      if (targetRoom.playList.isExist(MIDs)) {
         namespace.to(socket.id).emit('duplicatedMusicInPlayList');
         return;
       }
+
+      const musics: Music[] = await musicService.findMusicsBy(MIDs);
       targetRoom.playList.addMusics(musics);
       namespace.to(socket.id).emit('successAddMusic');
 

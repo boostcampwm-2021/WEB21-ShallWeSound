@@ -46,23 +46,32 @@
 }
 
 .roomList {
+  @include scrollbar(#d3d3d3);
   width: 100%;
   height: 90%;
   box-sizing: border-box;
   padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
+  display: grid;
+  gap: 20px;
 
-  * + * {
-    margin-left: 1rem;
-    // margin-bottom: 0.5rem;
+  @media screen and (min-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media screen and (min-width: 992px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
   }
 
   .room {
     display: inline-block;
-    width: 25%;
+    height: 6.5rem;
     border: 4px solid $purple;
     border-radius: 1rem;
     color: $purple;
