@@ -3,13 +3,15 @@ import { useState, useRef, useEffect } from 'react';
 import styles from '../../../stylesheets/style.module.scss';
 import * as _ from 'lodash';
 import { useSocket } from '../../../context/MyContext';
+import { Socket } from 'socket.io-client';
+
 interface chatType {
   id: number;
   msg: string;
 }
 type event = React.ChangeEvent<HTMLInputElement>;
 function ChatComponent() {
-  const socket: any = useSocket();
+  const socket: Socket = useSocket()!;
   const [chats, setChats] = useState<chatType[]>([]);
   const [newChat, setNewChat] = useState<string>('');
   const chatListRef = useRef<HTMLDivElement>(null);

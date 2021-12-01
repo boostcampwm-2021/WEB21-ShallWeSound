@@ -27,14 +27,14 @@ const reducer = (state: fetchState, action: Action): fetchState => {
   }
 };
 
-const useAsync = (callback: Function, dep = []) => {
+const useAsync = (callback: Function, apiQuery: string, dep = []) => {
   const initialState = { loading: false, data: [], error: null };
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const fetchUser: any = async () => {
     try {
-      const result = await callback(); // session 쓸때 credentials : 'include' 설정해주기
+      const result = await callback(apiQuery); // session 쓸때 credentials : 'include' 설정해주기
 
       dispatch({ type: 'SUCCESS', data: result });
     } catch (e) {

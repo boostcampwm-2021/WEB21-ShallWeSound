@@ -15,6 +15,16 @@ type Music = {
   description: string;
 };
 
+type music = {
+  MID: number;
+  name: string;
+  singer: string;
+  description: string;
+  thumbnail: string;
+  path: string;
+  isPlayed: boolean;
+};
+
 type FileType = {
   musicName: string;
   thumbnailName: string;
@@ -48,4 +58,9 @@ type Action =
   | { type: 'ERROR'; error: Error }
   | { type: null };
 
-export type { Music, FileType, timeoutRef, fetchState, Room, Action, musicResultItem };
+type joinData = {
+  isRedundancy: boolean;
+  roomID: string;
+};
+
+export type { Music, FileType, timeoutRef, fetchState, Room, Action, musicResultItem, joinData, music };

@@ -1,4 +1,4 @@
-@import './global.scss';
+@import './palette.scss';
 
 .userList {
   width: 400px;
@@ -9,4 +9,8 @@
   padding: 1rem;
   box-sizing: border-box;
   border-radius: 0.25rem;
+
+  &-userItem {
+    cursor: pointer;
+  }
 }

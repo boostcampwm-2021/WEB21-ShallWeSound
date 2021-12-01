@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 const defaultOption = {
   root: null,
   rootMargin: '1px',
-  threshold: 0.1,
+  threshold: 1,
 };
 
 export const useInfiniteScroll = (callback: () => {}, option = defaultOption) => {
@@ -15,6 +15,7 @@ export const useInfiniteScroll = (callback: () => {}, option = defaultOption) =>
     if (ref) {
       observer = new IntersectionObserver(([entry]) => {
         if (entry.isIntersecting) {
+          console.log(entry.isIntersecting);
           callback();
         }
       }, option);

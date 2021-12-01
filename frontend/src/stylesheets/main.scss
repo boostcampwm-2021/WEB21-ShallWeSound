@@ -1,4 +1,4 @@
-@import './global.scss';
+@import './palette.scss';
 
 .main-wrap {
   width: 80%;
@@ -299,12 +299,12 @@
     display: flex;
     align-items: center;
     margin-bottom: 0;
-  
+
     // &:last-child {
     //   margin-bottom: 1rem;
     // }
   }
-  
+
   &-thumbnail {
     width: 100px;
     height: 100px;
@@ -333,7 +333,7 @@
     top: center;
     right: 2rem;
     cursor: pointer;
-    
+
     svg {
       width: 40px;
       height: 40px;
@@ -341,7 +341,7 @@
       border: 8px solid $purple;
       border-radius: 999px;
       fill: $purple;
-  
+
       &:hover {
         fill: $semi-white;
         background-color: $purple;
@@ -378,7 +378,7 @@
         margin-top: 0;
       }
     }
-  
+
     .progress {
       width: 100%;
       height: 6px;
@@ -386,7 +386,7 @@
       border-radius: 50px;
       cursor: pointer;
       position: relative;
-  
+
       &-bar {
         height: inherit;
         width: 0%;
@@ -394,7 +394,7 @@
         border: 0.5px solid $semi-white;
         border-radius: inherit;
         background-color: $semi-white;
-  
+
         &::before {
           content: '';
           position: absolute;
@@ -409,17 +409,17 @@
         }
       }
     }
-  
+
     output {
       width: 200px;
       height: 200px;
     }
-  
+
     .width-half {
       width: 50%;
       box-sizing: border-box;
     }
-  
+
     .width-quarter {
       width: 25%;
       box-sizing: border-box;

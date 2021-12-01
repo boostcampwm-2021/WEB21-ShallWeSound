@@ -18,18 +18,9 @@ const PlayList = ({ isHost }: { isHost: boolean }) => {
       setPlayList([...data]);
     });
 
-    socket.on('changeMusicInfo', () => {
-      socket.emit('requestPlayList');
-    });
-
     return () => {
       socket.off('responsePlayList');
-      socket.off('changeMusicInfo');
     };
-  }, [socket]);
-
-  useEffect(() => {
-    socket.emit('requestPlayList');
   }, [socket]);
 
   const toggleModal = () => setModalVisible(!modalVisible);

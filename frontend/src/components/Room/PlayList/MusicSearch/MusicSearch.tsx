@@ -82,6 +82,7 @@ const MusicSearch = () => {
 
   useEffect(() => {
     page.current = result.length;
+    console.log('page: ', page.current);
   }, [result]);
 
   const onKeywordChange = (value: string) => {
@@ -143,7 +144,9 @@ const MusicSearch = () => {
           ) : (
             <div>검색 결과 없음</div>
           )}
-          <div ref={hasMore ? setObserveTarget : null}>&nbsp;</div>
+          <div className={'infinitiy-root'} ref={hasMore ? setObserveTarget : null}>
+            아니 여기 뭔데
+          </div>
         </ScrollBar>
       </ResultWrapper>
       <ButtonWrapper>
