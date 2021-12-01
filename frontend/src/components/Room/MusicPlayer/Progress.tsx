@@ -1,4 +1,4 @@
-import React, { useState, useRef, forwardRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import '../../../stylesheets/Progress.scss';
 
 interface progress {
@@ -6,14 +6,14 @@ interface progress {
   lefts?: (string | number | null | HTMLImageElement)[],
   rights?: (string | number | null | HTMLImageElement)[],
   bottoms?: (string | number | null | HTMLImageElement)[],
-  progressDegree?: number | null,
+  progressDegree: number | null,
   min: number,
   max: number,
   onUseEffect: () => void | null,
   onChange: (arg: number) => void | null,
 };
 
-function Progress ( prop: any, ref: any ) {
+function Progress ( prop: any ) {
   const {
     tops, lefts, bottoms, rights,
     min, max, progressDegree,
@@ -24,9 +24,10 @@ function Progress ( prop: any, ref: any ) {
 
   useEffect(() => {
     if (onUseEffect) { onUseEffect() }
-  })
+  }, []);
 
   useEffect(() => {
+    console.log(prop);
     const ProgressInputCurrent = ProgressInput.current;
     if (ProgressInputCurrent && progressDegree) {
       ProgressInputCurrent.value = (progressDegree / 100 * parseFloat(ProgressInputCurrent.max)).toString();
@@ -70,4 +71,4 @@ function Progress ( prop: any, ref: any ) {
   )
 }
 
-export default forwardRef(Progress);
+export default Progress;
