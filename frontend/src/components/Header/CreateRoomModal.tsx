@@ -41,7 +41,6 @@ function CreateRoomModal({ history, onClose }: { history: RouteComponentProps['h
     }
 
     if (dialogInput.name && dialogInput.description) {
-      
       console.log('add Room');
       socket.emit('createRoom', {
         id: nextRoomIndex,
@@ -92,7 +91,7 @@ function CreateRoomModal({ history, onClose }: { history: RouteComponentProps['h
 
 function CreateRoomButton({ history }: { history: RouteComponentProps['history'] }) {
   const [viewModal, setViewModal] = useState(false);
-  const socket: any = useSocket();
+  const socket: Socket = useSocket()!;
   const [locations, setLocation] = useState<string>(window.location.pathname);
   function appearModal() {
     if (!window.location.pathname.includes('room')) {
