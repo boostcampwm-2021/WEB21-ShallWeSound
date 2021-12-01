@@ -16,6 +16,10 @@
   cursor: pointer;
   stroke: none;
   fill: $purple;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     svg {

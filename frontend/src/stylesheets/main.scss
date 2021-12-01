@@ -127,6 +127,10 @@
   align-items: center;
   z-index: 9999;
 
+  &-row {
+    flex-direction: row;
+  }
+
   *:nth-child(n) {
     margin: 0.5rem 0 0.5rem;
 
