@@ -27,7 +27,6 @@ function Progress ( prop: any ) {
   }, []);
 
   useEffect(() => {
-    console.log(prop);
     const ProgressInputCurrent = ProgressInput.current;
     if (ProgressInputCurrent && progressDegree) {
       ProgressInputCurrent.value = (progressDegree / 100 * parseFloat(ProgressInputCurrent.max)).toString();

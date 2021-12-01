@@ -424,16 +424,16 @@
       width: 200px;
       height: 200px;
     }
+  }
+  
+  .width-half {
+    width: 50%;
+    box-sizing: border-box;
+  }
 
-    .width-half {
-      width: 50%;
-      box-sizing: border-box;
-    }
-
-    .width-quarter {
-      width: 25%;
-      box-sizing: border-box;
-    }
+  .width-quarter {
+    width: 25%;
+    box-sizing: border-box;
   }
 
   input[type='range'] {

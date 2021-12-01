@@ -22,6 +22,13 @@ function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean
     progressDegree: 50,
   })
 
+  useEffect(() => {
+    const playingMusic = musicControl.current;
+    if (playingMusic) {
+      isPlay ? playingMusic.play() : playingMusic.pause();
+    }
+  }, [isPlay]);
+
   function changeFormatToTime(number: number) {
     const minute = Math.floor(number / 60);
     const second = Math.floor(number % 60);
@@ -71,6 +78,7 @@ function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean
           volume: 0,
           backupVolume: playingMusic.volume
         });
+        playingMusic.volume = 0;
       } else {
         setMusicVolumeState({
           ...musicVolumeState,
@@ -128,9 +136,11 @@ function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean
 
 function SearchResultItem ({ name, singer, thumbnail, description, path } : { name: string, singer: string, thumbnail: string, description: string, path: string }) {
   const [playMusic, setPlayMusic] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   function togglePlayMusic () {
-      setPlayMusic(!playMusic);
+    if (!isOpen) { setIsOpen(true) };
+    setPlayMusic(!playMusic);
   }
 
   return (
@@ -154,7 +164,7 @@ function SearchResultItem ({ name, singer, thumbnail, description, path } : { na
           }
         </div>
       </div>
-      {playMusic && <SearchedMusicPlayer path={path} isPlay={playMusic} />}
+      {isOpen && <SearchedMusicPlayer path={path} isPlay={playMusic} />}
     </div>
   );
 }
