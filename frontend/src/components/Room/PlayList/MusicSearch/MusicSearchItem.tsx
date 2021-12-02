@@ -20,14 +20,13 @@ const MusicSearchItem = ({ name, singer, thumbnail, description, selected, onCli
     setDetail(false);
   };
 
-  // const isOverflow = () => {
-  //   if (!item.current) return false;
-  //   // const cloneItem = item.current?.cloneNode(true);
-  //   return item.current.scrollWidth > item.current.clientWidth;
-  // };
+  const isOverflow = () => {
+    if (!item.current) return false;
+    return item.current.scrollWidth > item.current.clientWidth;
+  };
 
   return (
-    <SearchResultItem selected={selected} length={name.length} isOverflow={true} onClick={onClick}>
+    <SearchResultItem selected={selected} length={name.length} isOverflow={isOverflow()} onClick={onClick}>
       <Image src={thumbnail} alt="thumbnail" />
       <TextWrapper>
         <Title ref={item}>{name}</Title>
