@@ -20,9 +20,9 @@ function SearchedMusicPlayer({ path, isPlay }: { path: string; isPlay: boolean }
     progressDegree: 0,
   });
   const [musicVolumeState, setMusicVolumeState] = useState({
-    volume: 50,
+    volume: 10,
     backupVolume: 50,
-    progressDegree: 50,
+    progressDegree: 10,
   });
 
   useEffect(() => {
@@ -94,7 +94,7 @@ function SearchedMusicPlayer({ path, isPlay }: { path: string; isPlay: boolean }
     }
   }
 
-  useEffect(() => {
+  useEffect(() => {		
     setMusicPlayerState({
       ...musicPlayerState,
       currentTime: changeFormatToTime(0),
@@ -103,6 +103,11 @@ function SearchedMusicPlayer({ path, isPlay }: { path: string; isPlay: boolean }
     toggleVolume();
     toggleVolume();
   }, []);
+
+
+  useEffect(()=>{
+   if(musicControl && musicControl.current) musicControl.current.volume = 0.1;
+  }, [musicControl]);
 
   let musicProgressProps = {
     tops: [musicPlayerState.currentTime, musicPlayerState.duration],
@@ -173,6 +178,7 @@ function SearchResultItem({
           <p className="search-result-singer">{singer}</p>
           <p className="search-result-description">{description}</p>
         </div>
+        <div className="search-result-blank"></div>
         <div className="search-result-play" onClick={togglePlayMusic}>
           {playMusic ? (
             <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 0 24 24" width="48px" fill="#FFF">
@@ -197,6 +203,7 @@ const ResultPages = ({ history }: { history: RouteComponentProps['history'] }) =
     musicList: [],
     hasMore: false,
   });
+  const scrollBar = useRef<HTMLDivElement | null>(null);
   const keyword = useRef('');
   const page = useRef(0);
 
@@ -216,6 +223,7 @@ const ResultPages = ({ history }: { history: RouteComponentProps['history'] }) =
             musicList: data.result,
             hasMore: data.hasMore,
           });
+          scrollBar.current?.scrollTo(0, 0);
         }
       });
   };
@@ -247,8 +255,8 @@ const ResultPages = ({ history }: { history: RouteComponentProps['history'] }) =
   return (
     <div className="body">
       <div className="main-wrap">
-        <div className="search-result-wrap">
-          <p className="search-result-cnt">총 {musicList.length} 개의 검색 결과가 있습니다.</p>
+        <div className="search-result-wrap" ref={scrollBar}>
+          <p className="search-result-cnt">현재까지 '{musicList.length}'개의 결과가 검색 되었습니다.</p>
           {musicList.map(val => (
             <SearchResultItem
               name={val.name}

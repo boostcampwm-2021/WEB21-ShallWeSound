@@ -36,9 +36,10 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
   }
 
   function doSearch() {
-    if (window.location.pathname.includes('room')) socket.emit('leaveRoom');
-
-    history.push(`/result/${searchInput}`);
+    if (searchInput) {
+      if (window.location.pathname.includes('room')) socket.emit('leaveRoom');
+      history.push(`/result/${searchInput}`);
+    }
   }
 
   function searchInputSubmit(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -55,13 +56,13 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
     <div className="header">
       <img className="header-logo" src="/images/logo.png" alt="logo" onClick={goMain} />
       <div className="header-left-wrap">
-        {isPC || toggle ? (
+        {(isPC || toggle) && (
           <>
             <UserButton history={history} />
             <UploadModal />
             <CreateRoomButton history={history} />
           </>
-        ) : null}
+        )}
       </div>
       <div className="header-search">
         <input
@@ -73,11 +74,12 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
         />
         <img src="/icons/search.svg" alt="search" onClick={doSearch} />
       </div>
-      <div className="menu" onClick={() => setToggle(prev => !prev)}>
-        <div className="menu-line"></div>
-        <div className="menu-line"></div>
-        <div className="menu-line"></div>
+      {!isPC &&
+      <div className="menu header-button" onClick={() => setToggle(prev => !prev)}>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        <p>메뉴</p>
       </div>
+      }
     </div>
   );
 }

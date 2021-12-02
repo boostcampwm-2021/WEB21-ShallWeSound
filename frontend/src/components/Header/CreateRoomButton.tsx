@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Socket } from 'socket.io-client';
 import { useSocket } from '../../context/MyContext';
-import { fadeOut } from '../../hooks/utils';
+import { apiFetch, fadeOut } from '../../hooks/utils';
 import '../../stylesheets/header.scss';
 import { Room } from '../../types';
 
@@ -40,7 +40,6 @@ function CreateRoomModal({ history, onClose }: { history: RouteComponentProps['h
     }
 
     if (dialogInput.name && dialogInput.description) {
-      console.log('add Room');
       socket.emit('createRoom', {
         id: 0,
         name: dialogInput.name,
@@ -88,6 +87,9 @@ function CreateRoomModal({ history, onClose }: { history: RouteComponentProps['h
           다시 입력해주세요.
         </div>
       </div>
+      <div className={'delegate'} ref={alertRef}>
+        입력 칸을 다 채워 주세요
+      </div>
     </div>
   );
 }
@@ -127,7 +129,7 @@ function CreateRoomButton({ history }: { history: RouteComponentProps['history']
           <>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              enable-background="new 0 0 24 24"
+              enableBackground="new 0 0 24 24"
               height="24px"
               viewBox="0 0 24 24"
               width="24px"

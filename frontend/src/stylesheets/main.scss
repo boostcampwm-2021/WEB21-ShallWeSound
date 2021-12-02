@@ -3,6 +3,7 @@
 
 .main-wrap {
   width: 80%;
+  min-width: 1024px;
   height: 100%;
   background-color: $semi-white;
   color: $purple;
@@ -20,6 +21,10 @@
     font-weight: 700;
     font-size: 1.5rem;
     text-align: start;
+  }
+
+  .text-center {
+    text-align: center;
   }
 
   .room-empty-notice {
@@ -55,16 +60,16 @@
   display: grid;
   gap: 20px;
 
-  @media screen and (min-width: 576px) {
-    grid-template-columns: 1fr;
-  }
+  // @media screen and (min-width: 576px) {
+  //   grid-template-columns: 1fr;
+  // }
 
-  @media screen and (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
-  }
-  @media screen and (min-width: 992px) {
+  // @media screen and (min-width: 768px) {
+  //   grid-template-columns: 1fr 1fr;
+  // }
+  // @media screen and (min-width: 992px) {
     grid-template-columns: 1fr 1fr 1fr;
-  }
+    // }
 
   @media screen and (min-width: 1200px) {
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -231,7 +236,9 @@
 
 .room-wrap {
   width: 80%;
+  min-width: 1024px;
   height: 100%;
+  min-height: calc(768px - 130px - 1rem);  // 130px: Header
   background-color: $semi-white;
   color: $purple;
   box-sizing: border-box;
@@ -241,6 +248,14 @@
   position: relative;
   justify-content: center;
   align-items: center;
+
+  &-left {
+    height: 100%;
+  }
+
+  &-right {
+    height: 100%;
+  }
 }
 
 .search-main-wrap {
@@ -339,6 +354,11 @@
   &-singer {
     font-size: 1.125rem;
     font-style: italic;
+  }
+
+  &-blank {
+    width: 130px;
+    height: 1px;
   }
 
   &-play {

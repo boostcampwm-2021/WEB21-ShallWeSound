@@ -26,7 +26,7 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
     socket.on('routingAfterCreateRoom', (roomNumber: number) => {
       history.push(`/room/${roomNumber}`);
     });
-
+    socket.emit('leaveRoom');
     return () => {
       socket.off('redundancyCheck');
       socket.off('updateRoomList');
