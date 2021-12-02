@@ -22,8 +22,7 @@ export class PlayList {
   }
 
   getCurrentMusic(): Music {
-    const current = this.playlist.find(music => music.isPlayed)!;
-    return current;
+    return this.playlist.find(music => music.isPlayed)!;
   }
 
   addMusics(musics: Music[]): void {
