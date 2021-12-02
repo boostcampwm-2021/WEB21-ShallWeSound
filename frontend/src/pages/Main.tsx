@@ -22,15 +22,15 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
 
   useEffect(() => {
     socket.on('redundancyCheck', userRedundancyModalBlink);
+    socket.on('updateRoomList', fetchUser);
     socket.on('routingAfterCreateRoom', (roomNumber: number) => {
       history.push(`/room/${roomNumber}`);
     });
-    socket.on('updateRoomList', fetchUser);
 
     return () => {
       socket.off('redundancyCheck');
-      socket.off('routingAfterCreateRoom');
       socket.off('updateRoomList');
+      socket.off('routingAfterCreateRoom');
     };
   }, []);
 
