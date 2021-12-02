@@ -54,30 +54,6 @@
     margin-bottom: 0.5rem;
   }
 
-  &-title-area {
-    box-sizing: border-box;
-    outline: thick double $semi-white;
-    border-radius: 0.5rem;
-    color: $semi-white;
-    padding: 0.5rem;
-    width: 100%;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-  }
-
-  &-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    text-overflow: ellipsis;
-    margin-bottom: 0.25rem;
-  }
-
-  &-subtitle {
-    font-style: italic;
-    font-size: 1.25rem;
-  }
-
   &-body {
     width: 100%;
     height: 50%;
