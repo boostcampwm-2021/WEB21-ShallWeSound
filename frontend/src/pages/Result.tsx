@@ -198,6 +198,7 @@ const ResultPages = ({ history }: { history: RouteComponentProps['history'] }) =
     musicList: [],
     hasMore: false,
   });
+  const scrollBar = useRef<HTMLDivElement | null>(null);
   const keyword = useRef('');
   const page = useRef(0);
 
@@ -217,6 +218,7 @@ const ResultPages = ({ history }: { history: RouteComponentProps['history'] }) =
             musicList: data.result,
             hasMore: data.hasMore,
           });
+          scrollBar.current?.scrollTo(0, 0);
         }
       });
   };
@@ -248,7 +250,7 @@ const ResultPages = ({ history }: { history: RouteComponentProps['history'] }) =
   return (
     <div className="body">
       <div className="main-wrap">
-        <div className="search-result-wrap">
+        <div className="search-result-wrap" ref={scrollBar}>
           <p className="search-result-cnt">현재까지 '{musicList.length}'개의 결과가 검색 되었습니다.</p>
           {musicList.map(val => (
             <SearchResultItem

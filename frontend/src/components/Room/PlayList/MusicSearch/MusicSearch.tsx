@@ -16,6 +16,7 @@ import ScrollBar from '../../../Util/scrollbar';
 
 const MusicSearch = () => {
   const socket: any = useSocket();
+  const scrollBar = useRef<HTMLDivElement | null>(null);
   const page = useRef(0);
   const [keyword, setKeyword] = useState('');
   const [searchResult, dispatchSearchResult] = useReducer(searchResultReducer, {
@@ -44,6 +45,7 @@ const MusicSearch = () => {
           dispatchSearchResult({ type: 'FETCH_MORE_SUCCESS', result: musics, hasMore: json.hasMore });
         } else {
           dispatchSearchResult({ type: 'FETCH_SUCCESS', result: musics, hasMore: json.hasMore });
+          scrollBar.current?.scrollTo(0, 0);
         }
       } catch (e) {
         dispatchSearchResult({ type: 'INIT' });
@@ -131,22 +133,20 @@ const MusicSearch = () => {
     <Layout>
       <SearchBar onKeywordChange={onKeywordChange} />
       <ResultWrapper>
-        <ScrollBar color_={'#e8ecee'}>
-          {result.length ? (
-            result.map((music: Music, i: number) => (
-              <MusicSearchItem
-                key={i}
-                name={music.name}
-                singer={music.singer}
-                thumbnail={music.thumbnail}
-                description={music.description}
-                selected={isSelected(+music.MID)}
-                onClick={() => onSelectMusic(+music.MID)}
-              />
-            ))
-          ) : !loading && (
-            <div>검색 결과 없음</div>
-          )}
+        <ScrollBar color_={'#e8ecee'} ref={scrollBar}>
+          {result.length
+            ? result.map((music: Music, i: number) => (
+                <MusicSearchItem
+                  key={i}
+                  name={music.name}
+                  singer={music.singer}
+                  thumbnail={music.thumbnail}
+                  description={music.description}
+                  selected={isSelected(+music.MID)}
+                  onClick={() => onSelectMusic(+music.MID)}
+                />
+              ))
+            : !loading && <div>검색 결과 없음</div>}
           <div ref={hasMore ? setObserveTarget : null}>&nbsp;</div>
           <Spinner>{loading ? <Loading /> : null}</Spinner>
         </ScrollBar>
