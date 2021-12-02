@@ -3,6 +3,7 @@ import io, { Socket } from 'socket.io-client';
 import config from '../config.host.json';
 
 const socket: Socket = io(`${config.localhost}/music`);
+
 const SocketContext = createContext(socket);
 
 const ContextProvider = ({ children }: { children: ReactElement }) => {
