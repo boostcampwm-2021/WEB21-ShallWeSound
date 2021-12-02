@@ -9,18 +9,18 @@ interface ResultState {
   hasMore: boolean;
 }
 
-function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean }) {
+function SearchedMusicPlayer({ path, isPlay }: { path: string; isPlay: boolean }) {
   const musicControl = useRef<HTMLVideoElement | null>(null);
   const [musicPlayerState, setMusicPlayerState] = useState({
-    currentTime: "",
-    duration: "",
+    currentTime: '',
+    duration: '',
     progressDegree: 0,
   });
   const [musicVolumeState, setMusicVolumeState] = useState({
     volume: 50,
     backupVolume: 50,
     progressDegree: 50,
-  })
+  });
 
   useEffect(() => {
     const playingMusic = musicControl.current;
@@ -44,7 +44,7 @@ function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean
         ...musicPlayerState,
         currentTime: changeFormatToTime(playingMusic.currentTime),
         duration: changeFormatToTime(playingMusic.duration),
-        progressDegree: playingMusic.currentTime * 100 / playingMusic.duration,
+        progressDegree: (playingMusic.currentTime * 100) / playingMusic.duration,
       });
     }
   }
@@ -85,18 +85,18 @@ function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean
           ...musicVolumeState,
           volume: musicVolumeState.backupVolume,
           progressDegree: musicVolumeState.backupVolume,
-        })
+        });
         playingMusic.volume = musicVolumeState.backupVolume / 100;
       }
     }
   }
 
-  useEffect (() => {
+  useEffect(() => {
     setMusicPlayerState({
       ...musicPlayerState,
       currentTime: changeFormatToTime(0),
-      duration: musicControl.current ? changeFormatToTime(musicControl.current.duration) : "0",
-    })
+      duration: musicControl.current ? changeFormatToTime(musicControl.current.duration) : '0',
+    });
     toggleVolume();
     toggleVolume();
   }, []);
@@ -107,41 +107,57 @@ function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean
     max: musicControl.current && musicControl.current.duration,
     progressDegree: musicPlayerState.progressDegree,
     onChange: onChangeMusicProgress,
-  }
+  };
 
   let musicVolumeProps = {
-    lefts: [musicControl.current?.volume === 0 ? (
-      <img className="icon" src="/icons/volume-off.svg" alt="volume-off" onClick={toggleVolume} />
-    ) : (
-      <img className="icon" src="/icons/volume-up.svg" alt="volume-up" onClick={toggleVolume} />
-    )],
+    lefts: [
+      musicControl.current?.volume === 0 ? (
+        <img className="icon" src="/icons/volume-off.svg" alt="volume-off" onClick={toggleVolume} />
+      ) : (
+        <img className="icon" src="/icons/volume-up.svg" alt="volume-up" onClick={toggleVolume} />
+      ),
+    ],
     min: 0,
     max: 100,
     progressDegree: musicVolumeState.progressDegree,
     onChange: onChangeVolume,
-  }
+  };
 
   return (
     <>
-    <video src={path} ref={musicControl} autoPlay onTimeUpdate={updateCurrentTime}/> 
-    {musicControl &&
-      <div className="searched-musicplayer">
-        <Progress prop={musicProgressProps} />
-        <div className="volume-wrap width-quarter">
-          <Progress prop={musicVolumeProps} />
+      <video src={path} ref={musicControl} autoPlay onTimeUpdate={updateCurrentTime} />
+      {musicControl && (
+        <div className="searched-musicplayer">
+          <Progress prop={musicProgressProps} />
+          <div className="volume-wrap width-quarter">
+            <Progress prop={musicVolumeProps} />
+          </div>
         </div>
-      </div>
-    }
+      )}
     </>
-  )
+  );
 }
 
-function SearchResultItem ({ name, singer, thumbnail, description, path } : { name: string, singer: string, thumbnail: string, description: string, path: string }) {
+function SearchResultItem({
+  name,
+  singer,
+  thumbnail,
+  description,
+  path,
+}: {
+  name: string;
+  singer: string;
+  thumbnail: string;
+  description: string;
+  path: string;
+}) {
   const [playMusic, setPlayMusic] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  function togglePlayMusic () {
-    if (!isOpen) { setIsOpen(true) };
+  function togglePlayMusic() {
+    if (!isOpen) {
+      setIsOpen(true);
+    }
     setPlayMusic(!playMusic);
   }
 
@@ -155,15 +171,17 @@ function SearchResultItem ({ name, singer, thumbnail, description, path } : { na
           <p className="search-result-description">{description}</p>
         </div>
         <div className="search-result-play" onClick={togglePlayMusic}>
-          {playMusic ?
-          <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 0 24 24" width="48px" fill="#FFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-          </svg>
-          :
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
-            <path d="M0 0h24v24H0z" fill="none"/>
-            <path d="M8 5v14l11-7z"/>
-          </svg>
-          }
+          {playMusic ? (
+            <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 0 24 24" width="48px" fill="#FFF">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
+              <path d="M0 0h24v24H0z" fill="none" />
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          )}
         </div>
       </div>
       {isOpen && <SearchedMusicPlayer path={path} isPlay={playMusic} />}
@@ -234,4 +252,4 @@ const ResultPages = () => {
 
 const ResultPage = forwardRef(ResultPages);
 
-export { ResultPage }
+export { ResultPage };
