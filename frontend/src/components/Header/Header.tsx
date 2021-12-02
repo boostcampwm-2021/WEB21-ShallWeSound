@@ -11,7 +11,7 @@ import { useMediaQuery } from 'react-responsive';
 
 function HeaderComponent({ history }: { history: RouteComponentProps['history'] }) {
   const socket: Socket = useSocket()!;
-  const timerRef = useRef<timeoutRef>({ timer: setTimeout(() => {}) });
+  const timerRef = useRef<timeoutRef>({ timer: setTimeout(() => {/*this is empty timer*/}) });
   const [searchInput, setSearchInput] = useState('');
   const [toggle, setToggle] = useState(false);
 

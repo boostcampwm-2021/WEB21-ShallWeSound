@@ -1,14 +1,13 @@
 import axios from 'axios';
 import * as jwt from 'jsonwebtoken'
-import {authCode} from '../types/index'
+import {authCode, userProfileRequestHeader} from '../types/index'
 import {client, resultPrint, updateOrDeleteToken} from '../config/redis'
 import {promisify} from 'util'
-import {userProfileRequestHeader} from '../types/index'
 const models = require('../models/index.js');
 
 const makeOauthAccessToken = async (platform:string, cururl:string, curheaders:string)=>{
     if(platform === 'github'){
-        return await await axios({
+        return  axios({
             method: `POST`,
             withCredentials: true,
             url: cururl,
@@ -17,7 +16,7 @@ const makeOauthAccessToken = async (platform:string, cururl:string, curheaders:s
             },
         })
     }else{
-        return await await axios({
+        return  axios({
             method: `POST`,
             url: cururl,
             headers: {
@@ -30,7 +29,7 @@ const makeOauthAccessToken = async (platform:string, cururl:string, curheaders:s
 
 const getUserProfileFromOauth = async (platform:string, url:string, headers:userProfileRequestHeader) =>{
     if(platform === 'github'){
-        return await axios({
+        return  axios({
             method:'GET',
             withCredentials:true,
             url: url,
@@ -39,7 +38,7 @@ const getUserProfileFromOauth = async (platform:string, url:string, headers:user
             }
         })
     }else{
-        return await axios({
+        return  axios({
             method:'POST',
             withCredentials:true,
             url: url,
