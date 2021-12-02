@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router';
 import CreateRoomButton from './CreateRoomModal';
 import { withRouter } from 'react-router-dom';
 import { useSocket } from '../../context/MyContext';
-import UserButton from './UserModal';
+import UserButton from './UserButton';
 import { Socket } from 'socket.io-client';
 import { useMediaQuery } from 'react-responsive';
 

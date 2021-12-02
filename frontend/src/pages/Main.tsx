@@ -6,7 +6,7 @@ import { RouteComponentProps } from 'react-router';
 import { apiFetch, fadeOut } from '../hooks/utils';
 import RoomItem from '../components/Main/RoomItem';
 import '../stylesheets/main.scss';
-import { fetchState, Room, joinData } from '../types';
+import { fetchState, joinData } from '../types';
 
 export const MainPage = ({ history }: { history: RouteComponentProps['history'] }) => {
   const socket: Socket = useSocket()!;

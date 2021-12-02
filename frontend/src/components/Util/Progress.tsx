@@ -1,18 +1,20 @@
 import React, { useRef, useEffect } from "react";
 import '../../stylesheets/Progress.scss';
 
-interface progress {
-  tops?: (string | number | null | HTMLImageElement)[],
-  lefts?: (string | number | null | HTMLImageElement)[],
-  rights?: (string | number | null | HTMLImageElement)[],
-  bottoms?: (string | number | null | HTMLImageElement)[],
+type DecoType = (string | number | null | HTMLImageElement)[];
+
+interface TypeProgress {
+  tops?: DecoType,
+  lefts?: DecoType,
+  rights?: DecoType,
+  bottoms?: DecoType,
   disabled?: boolean,
   min: number,
   max: number,
   progressDegree: number | null,
   onUseEffect: () => void | null,
   onChange: (arg: number) => void | null,
-};
+}
 
 function Progress ( prop: any ) {
   const {
@@ -20,7 +22,7 @@ function Progress ( prop: any ) {
     min, max, progressDegree, disabled = false,
     onUseEffect,
     onChange,
-  }: progress = { ...prop.prop };
+  }: TypeProgress = { ...prop.prop };
   const ProgressInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ function Progress ( prop: any ) {
   }, [progressDegree]);
 
   function changeInputRange(e: React.BaseSyntheticEvent) {
-    if (onChange) { onChange(e.target.value) };
+    if (onChange) { onChange(e.target.value) }
   }
 
   return (
