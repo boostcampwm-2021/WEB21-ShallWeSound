@@ -1,6 +1,5 @@
 import { useReducer, useEffect } from 'react';
 import { fetchState, Action } from '../types';
-import config from '../config.host.json';
 
 const reducer = (state: fetchState, action: Action): fetchState => {
   switch (action.type) {
