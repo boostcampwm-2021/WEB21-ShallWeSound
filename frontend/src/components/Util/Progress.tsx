@@ -11,7 +11,7 @@ interface TypeProgress {
   disabled?: boolean,
   min: number,
   max: number,
-  progressDegree: number | null,
+  progressDegree: number,
   onUseEffect: () => void | null,
   onChange: (arg: number) => void | null,
 }
@@ -31,7 +31,7 @@ function Progress ( prop: any ) {
 
   useEffect(() => {
     const ProgressInputCurrent = ProgressInput.current;
-    if (ProgressInputCurrent && typeof progressDegree == "number") {
+    if (ProgressInputCurrent) {
       ProgressInputCurrent.value = (progressDegree / 100 * parseFloat(ProgressInputCurrent.max)).toString();
       ProgressInputCurrent.style.backgroundSize = progressDegree + "% 100%";
     }
