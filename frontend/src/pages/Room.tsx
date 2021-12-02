@@ -19,7 +19,7 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
   const roomData = decodeURI(history.location.pathname.match(/[^/]+/gm)![1]).toString();
   const [isHost, setIsHost] = useState<boolean>(false);
   const [state, refetchUserList] = useAsync(apiFetch, `userList?roomTitle=${roomData}`, []);
-  const { loading, data: userList, error } = state as fetchState;
+  const { data: userList } = state as fetchState;
 
   const hostDelegated = (isHostServer: boolean) => {
     setIsHost(isHostServer);

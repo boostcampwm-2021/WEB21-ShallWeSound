@@ -144,7 +144,7 @@ const MusicSearch = () => {
                 onClick={() => onSelectMusic(+music.MID)}
               />
             ))
-          ) : loading ? null : (
+          ) : !loading && (
             <div>검색 결과 없음</div>
           )}
           <div ref={hasMore ? setObserveTarget : null}>&nbsp;</div>

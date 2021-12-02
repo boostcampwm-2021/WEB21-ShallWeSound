@@ -11,7 +11,7 @@ import HeaderComponent from '../components/Header/Header';
 
 function App() {
   const cookies = new Cookies();
-  const [jwt, setJwt] = useState(cookies.get('jwt'));
+  const [jwt, ] = useState(cookies.get('jwt'));
   const [authenticate, setAuthenticate] = useState(false);
 
   const authAsync= async()=>{
