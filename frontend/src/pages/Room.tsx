@@ -5,7 +5,7 @@ import PlayList from '../components/Room/PlayList/PlayList';
 import ChatComponent from '../components/Room/Chat/chat';
 import UserList from '../components/Room/UserList/UserList';
 import { useSocket } from '../context/MyContext';
-import { useAsync } from '../context/useAsync';
+import { useAsync } from '../hooks/useAsync';
 import { RouteComponentProps } from 'react-router';
 import { fetchState } from '../types';
 import { Cookies } from 'react-cookie';

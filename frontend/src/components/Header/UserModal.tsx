@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { RouteComponentProps } from 'react-router';
 import { Cookies } from 'react-cookie';
-import config from '../../config.host.json';
 
 function UserModal({ onClose, history }: { onClose: () => void, history: RouteComponentProps['history'] }) {
   const cookies = new Cookies();
@@ -14,7 +13,7 @@ function UserModal({ onClose, history }: { onClose: () => void, history: RouteCo
   }
 
   return (
-    <div className="modal">
+    <div className="modal modal-row">
       <div className="modal-close" onClick={onClose}>
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
           <path d="M0 0h24v24H0V0z" fill="none" />
@@ -22,13 +21,9 @@ function UserModal({ onClose, history }: { onClose: () => void, history: RouteCo
         </svg>
       </div>
       <p className="modal-title">안녕하세요,<br/>{cookies.get('userID')} 님!</p>
-      <div className="input-wrap">
-        {/* <label>e-mail</label>
-        <p>blahblah@blahblah.com</p> */}
-        <div className="header-button" onClick={Logout}>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-          <p>로그아웃</p>
-        </div>
+      <div className="header-button" onClick={Logout}>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+        <p>로그아웃</p>
       </div>
     </div>
   );

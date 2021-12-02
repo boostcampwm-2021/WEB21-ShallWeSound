@@ -16,8 +16,6 @@ const socketHandler = (io: Server) => {
     userHash[socket.id] = userNum;
     userNum += 1;
 
-    socket.broadcast.emit('enterRoom', 'new user connected');
-
     socket.on('disconnect', () => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       const leaveUser = targetRoom?.socketId[0];
@@ -148,16 +146,7 @@ const socketHandler = (io: Server) => {
 
     socket.on('delegateManual', (userName: string) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
-      const idx = targetRoom.userId.indexOf(userName);
-      const targetSocket = targetRoom.socketId[idx];
-      targetRoom.socketId = [
-        targetRoom.socketId[idx],
-        ...targetRoom.socketId.filter((val, idxs, arr) => val !== arr[idx]),
-      ];
-      targetRoom.userId = [userName, ...targetRoom.userId.filter(val => val !== userName)];
-      namespace.to(targetRoom.id).emit('updateUserList');
-      namespace.to(socket.id).emit('delegateHost', false);
-      namespace.to(targetSocket).emit('delegateHost', true);
+      utils.delegateHost(targetRoom, userName, socket.id, namespace);
     });
   });
 };

@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef, forwardRef, MutableRefObject } from 'react';
+import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import config from '../config.host.json';
 import { useInfiniteScroll } from '../hooks/useinfiniteScroll';
 import { musicResultItem } from '../types';
-import Progress from '../components/Room/MusicPlayer/Progress';
+import Progress from '../components/Util/Progress';
 
 interface ResultState {
   musicList: musicResultItem[];
@@ -21,6 +21,13 @@ function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean
     backupVolume: 50,
     progressDegree: 50,
   })
+
+  useEffect(() => {
+    const playingMusic = musicControl.current;
+    if (playingMusic) {
+      isPlay ? playingMusic.play() : playingMusic.pause();
+    }
+  }, [isPlay]);
 
   function changeFormatToTime(number: number) {
     const minute = Math.floor(number / 60);
@@ -69,12 +76,15 @@ function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean
         setMusicVolumeState({
           ...musicVolumeState,
           volume: 0,
-          backupVolume: playingMusic.volume
+          backupVolume: playingMusic.volume * 100,
+          progressDegree: 0,
         });
+        playingMusic.volume = 0;
       } else {
         setMusicVolumeState({
           ...musicVolumeState,
           volume: musicVolumeState.backupVolume,
+          progressDegree: musicVolumeState.backupVolume,
         })
         playingMusic.volume = musicVolumeState.backupVolume / 100;
       }
@@ -128,9 +138,11 @@ function SearchedMusicPlayer ({ path, isPlay } : { path: string, isPlay: boolean
 
 function SearchResultItem ({ name, singer, thumbnail, description, path } : { name: string, singer: string, thumbnail: string, description: string, path: string }) {
   const [playMusic, setPlayMusic] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   function togglePlayMusic () {
-      setPlayMusic(!playMusic);
+    if (!isOpen) { setIsOpen(true) };
+    setPlayMusic(!playMusic);
   }
 
   return (
@@ -154,7 +166,7 @@ function SearchResultItem ({ name, singer, thumbnail, description, path } : { na
           }
         </div>
       </div>
-      {playMusic && <SearchedMusicPlayer path={path} isPlay={playMusic} />}
+      {isOpen && <SearchedMusicPlayer path={path} isPlay={playMusic} />}
     </div>
   );
 }

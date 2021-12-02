@@ -13,29 +13,6 @@ function App() {
   const cookies = new Cookies();
   const [jwt, setJwt] = useState(cookies.get('jwt'));
   const [authenticate, setAuthenticate] = useState(false);
-  function isAuthenticated() {
-    if (!jwt || jwt === undefined) {
-      return false;
-    } else {
-      fetch(`${config.localhost}/oauth/authenticate`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ jwt: cookies.get('jwt') }),
-      })
-        .then(res => {
-          return res.json();
-        })
-        .then(res => {
-          if (authenticate != res.isOK) {
-            setAuthenticate(res.isOK);
-          }
-        });
-      return true;
-    }
-  }
 
   const authAsync= async()=>{
     if (!jwt || jwt === undefined) {
@@ -66,7 +43,6 @@ function App() {
   return (
     <>
       <Router>
-      {/* {isAuthenticated()} */}
         <Switch>
           <Route
             exact
