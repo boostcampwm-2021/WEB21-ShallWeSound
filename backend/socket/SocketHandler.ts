@@ -57,12 +57,14 @@ const socketHandler = (io: Server) => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       if (socket.id !== targetRoom?.socketId[0]) return;
       namespace.to(targetRoom.id).emit('changeMusicInfo', targetRoom.playList.getNextMusic());
+      namespace.to(targetRoom.id).emit('responsePlayList', targetRoom.playList.getPlayList());
     });
 
     socket.on('prevMusicReq', () => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       if (socket.id !== targetRoom?.socketId[0]) return;
       namespace.to(targetRoom.id).emit('changeMusicInfo', targetRoom.playList.getPreMusic());
+      namespace.to(targetRoom.id).emit('responsePlayList', targetRoom.playList.getPlayList());
     });
 
     socket.on('currentMusicReq', () => {
