@@ -3,6 +3,7 @@
 
 .main-wrap {
   width: 80%;
+  min-width: 1024px;
   height: 100%;
   background-color: $semi-white;
   color: $purple;
@@ -231,7 +232,9 @@
 
 .room-wrap {
   width: 80%;
+  min-width: 1024px;
   height: 100%;
+  min-height: calc(768px - 130px - 1rem);  // 130px: Header
   background-color: $semi-white;
   color: $purple;
   box-sizing: border-box;
@@ -241,6 +244,14 @@
   position: relative;
   justify-content: center;
   align-items: center;
+
+  &-left {
+    height: 100%;
+  }
+
+  &-right {
+    height: 100%;
+  }
 }
 
 .search-main-wrap {
@@ -339,6 +350,11 @@
   &-singer {
     font-size: 1.125rem;
     font-style: italic;
+  }
+
+  &-blank {
+    width: 130px;
+    height: 1px;
   }
 
   &-play {

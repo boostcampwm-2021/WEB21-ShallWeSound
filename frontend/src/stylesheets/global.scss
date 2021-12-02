@@ -4,8 +4,14 @@
 $background: linear-gradient(#4b6cb7, #182848);
 $color-chatbox: #9bbbd4;
 
+body {
+  min-width: 1024px;
+  min-height: 768px;
+}
+
 #root {
   height: 100vh;
+  min-height: 768px;
   position: relative;
   background-color: $pink;
   display: flex;
@@ -14,9 +20,9 @@ $color-chatbox: #9bbbd4;
   align-items: center;
   font-family: 'Jua', Arial, Helvetica, sans-serif;
 
-  @media screen and (max-width: 900px) {
-    height: 100%;
-  }
+  // @media screen and (max-width: 900px) {
+  //   height: 100%;
+  // }
 }
 
 .record-image {
@@ -31,6 +37,7 @@ $color-chatbox: #9bbbd4;
 .body {
   position: relative;
   width: 100vw;
+  min-width: 1024px;
   height: calc(90% - 130px - 1rem);
   margin-bottom: 1rem;
   display: flex;
@@ -58,6 +65,7 @@ $color-chatbox: #9bbbd4;
 
 .header {
   width: 80%;
+  min-width: 1024px;
   height: 130px;
   padding: 0 4rem;
   margin-top: 1rem;
@@ -75,42 +83,42 @@ $color-chatbox: #9bbbd4;
     font: inherit;
   }
 
-  @media screen and (max-width: 1300px) {
-    padding: 0;
-  }
+  // @media screen and (max-width: 1300px) {
+  //   padding: 0;
+  // }
 
-  @media screen and (max-width: 900px) {
-    height: 100%;
-    border-radius: 40px;
-    padding: 0;
-    justify-content: center;
-  }
+  // @media screen and (max-width: 900px) {
+  //   height: 100%;
+  //   border-radius: 40px;
+  //   padding: 0;
+  //   justify-content: center;
+  // }
 
   .header-left-wrap {
     display: flex;
     align-items: center;
 
-    @media screen and (max-width: 900px) {
-      flex-direction: column;
-      justify-content: center;
-      padding-top: 100px;
-    }
+    // @media screen and (max-width: 900px) {
+    //   flex-direction: column;
+    //   justify-content: center;
+    //   padding-top: 100px;
+    // }
   }
 
   .header-logo {
     cursor: pointer;
 
-    @media screen and (max-width: 1200px) {
-      display: none;
-    }
+    // @media screen and (max-width: 1200px) {
+    //   display: none;
+    // }
   }
 
-  .header-search {
-    @media screen and (max-width: 900px) {
-      position: absolute;
-      top: 1.5rem;
-    }
-  }
+  // .header-search {
+  //   @media screen and (max-width: 900px) {
+  //     // position: absolute;
+  //     // top: 1.5rem;
+  //   }
+  // }
 
   .header-right-wrap {
     display: flex;
@@ -145,21 +153,21 @@ $color-chatbox: #9bbbd4;
     box-sizing: border-box;
   }
 
-  .menu {
-    @media screen and (max-width: 900px) {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      cursor: pointer;
+  // .menu {
+  //   @media screen and (max-width: 900px) {
+  //     position: absolute;
+  //     top: 1.5rem;
+  //     right: 1.5rem;
+  //     cursor: pointer;
 
-      .menu-line {
-        height: 3px;
-        width: 20px;
-        background-color: $purple;
-        margin: 3px 0px;
-      }
-    }
-  }
+  //     .menu-line {
+  //       height: 3px;
+  //       width: 20px;
+  //       background-color: $purple;
+  //       margin: 3px 0px;
+  //     }
+  //   }
+  // }
 }
 
 @mixin scrollbar($color: $white) {

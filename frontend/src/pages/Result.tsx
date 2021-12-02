@@ -173,6 +173,7 @@ function SearchResultItem({
           <p className="search-result-singer">{singer}</p>
           <p className="search-result-description">{description}</p>
         </div>
+        <div className="search-result-blank"></div>
         <div className="search-result-play" onClick={togglePlayMusic}>
           {playMusic ? (
             <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 0 24 24" width="48px" fill="#FFF">
@@ -248,7 +249,7 @@ const ResultPages = ({ history }: { history: RouteComponentProps['history'] }) =
     <div className="body">
       <div className="main-wrap">
         <div className="search-result-wrap">
-          <p className="search-result-cnt">총 {musicList.length} 개의 검색 결과가 있습니다.</p>
+          <p className="search-result-cnt">현재까지 '{musicList.length}'개의 결과가 검색 되었습니다.</p>
           {musicList.map(val => (
             <SearchResultItem
               name={val.name}

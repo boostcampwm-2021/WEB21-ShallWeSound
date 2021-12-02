@@ -206,8 +206,20 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
           <img className="icon" src="/icons/chevron-right.svg" alt="chevron-right" onClick={goNextMusic} />
         </div>
         <Progress prop={musicProgressProps} />
-        <div className="volume-wrap width-half">
-          <Progress prop={musicVolumeProps} />
+        <div className="volume-wrap">
+          <div className="width-half">
+            <Progress prop={musicVolumeProps} />
+          </div>
+          {isHost && 
+          <div className="mini-controller">
+            <img src="/icons/chevron-left.svg" alt="prev" onClick={goPrevMusic}/>
+            {musicControl.current?.paused ?
+            <img src="/icons/play.svg" alt="play" onClick={playOrPauseMusic}/> :
+            <img src="/icons/pause.svg" alt="pause" onClick={playOrPauseMusic}/>
+            }
+            <img src="/icons/chevron-right.svg" alt="next" onClick={goNextMusic}/>
+          </div>
+          }
         </div>
       </div>
     </>
