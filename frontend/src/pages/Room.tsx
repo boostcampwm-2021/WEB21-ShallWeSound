@@ -16,7 +16,7 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
   const socket: Socket = useSocket()!;
   const cookie = new Cookies();
   const alertRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
-  const roomData = decodeURI(history.location.pathname.match(/[^/]+/gm)![1]).toString();
+  const roomData = decodeURI(window.location.pathname.match(/[^/]+/gm)![1]).toString();
   const [isHost, setIsHost] = useState<boolean>(false);
   const [state, refetchUserList] = useAsync(apiFetch, `userList?roomTitle=${roomData}`, []);
   const { data: userList } = state as fetchState;
@@ -28,7 +28,10 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
 
   useEffect(() => {
     socket.emit('joinRoom', { roomID: roomData, userID: cookie.get('userID') });
+  }, []);
 
+
+ useEffect(() => {
     socket.on('updateUserList', refetchUserList);
     socket.on('delegateHost', hostDelegated);
 
@@ -36,7 +39,8 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
       socket.off('updateUserList');
       socket.off('delegateHost');
     };
-  }, []);
+ }, []);
+
 
   useEffect(() => {
     if (userList[0] === cookie.get('userID')) setIsHost(true);

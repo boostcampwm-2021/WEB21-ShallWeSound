@@ -48,7 +48,7 @@ function CreateRoomModal({ history, onClose }: { history: RouteComponentProps['h
 
       onClose();
     } else {
-      alert('입력칸을 다 채워주세요');
+      fadeOut(alertRef.current!);
     }
   }
 
@@ -82,6 +82,10 @@ function CreateRoomModal({ history, onClose }: { history: RouteComponentProps['h
         <button className="button" onClick={onClose}>
           취소
         </button>
+        <div className={'delegate'} ref={alertRef}>
+          공백만 입력할 수 없습니다. <br />
+          다시 입력해주세요.
+        </div>
       </div>
       <div className={'delegate'} ref={alertRef}>
         입력 칸을 다 채워 주세요
