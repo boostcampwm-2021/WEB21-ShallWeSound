@@ -1,7 +1,6 @@
 import { Socket } from 'socket.io';
 import { socketInfo } from '../types';
 import { PlayList } from '../socket/music';
-import { Server } from 'http';
 import crypto from 'crypto';
 
 export function makeHash(fileBuffer: string): string {
@@ -13,17 +12,14 @@ export function makeHash(fileBuffer: string): string {
 
 export const utils = {
   findRoom: function (socketData: socketInfo[], socketID: string) {
-    const target = socketData.find(val => val.socketId.some(client => client === socketID) === true)!;
-
-    return target;
+    return socketData.find(val => val.socketId.some(client => client === socketID) === true)!;
   },
 
   updateList: function (socketData: socketInfo[], targetRoom: socketInfo) {
     socketData.splice(socketData.indexOf(targetRoom), 1);
-    const data = socketData.map(val => {
+    return socketData.map(val => {
       return { id: val.id, name: val.name, description: val.description };
-    }); // utils로 기능 빼기
-    return data;
+    });
   },
 
   updateDisconnectData: function (targetRoom: socketInfo, socketData: socketInfo[], socket: Socket) {
@@ -56,7 +52,7 @@ export const utils = {
   getRoomListForClient: function (socketData: socketInfo[]) {
     return socketData.map(val => {
       return { id: val.id, name: val.name, description: val.description, totalUesr: val.socketId.length };
-    }); // utils로 기능 빼기
+    });
   },
 
   isRoomExist: function (socketData: socketInfo[], roomName: string) {
@@ -75,5 +71,19 @@ export const utils = {
   getUserBySocketID: function (targetRoom: socketInfo, socketID: string) {
     const targetIdx = targetRoom.socketId.indexOf(socketID);
     return targetRoom.userId[targetIdx];
+  },
+
+  delegateHost: function (targetRoom: socketInfo, userName: string, socketID: string, namespace: any) {
+    const targetSocket = this.findSocketIDByUserName(targetRoom, userName);
+    targetRoom.socketId = [targetSocket, ...targetRoom.socketId.filter(val => val !== targetSocket)];
+    targetRoom.userId = [userName, ...targetRoom.userId.filter(val => val !== userName)];
+    namespace.to(targetRoom.id).emit('updateUserList');
+    namespace.to(socketID).emit('delegateHost', false);
+    namespace.to(targetSocket).emit('delegateHost', true);
+  },
+
+  findSocketIDByUserName: function (targetRoom: socketInfo, userName: string) {
+    const idx = targetRoom.userId.indexOf(userName);
+    return targetRoom.socketId[idx];
   },
 };

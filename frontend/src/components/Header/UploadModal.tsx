@@ -1,15 +1,17 @@
 import styles from '../../stylesheets/style.module.scss';
 import React, { useState, useRef} from 'react';
-import * as _ from 'lodash';
-import {FileType, timeoutRef} from '../../types'
+import {FileType, timeoutRef, fileUploadObject} from '../../types'
+import uploadController from '../Util/uploadController';
 
 function UploadModalInner() {
-  console.log('render');
+  const alertRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  const textAlertRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  const fileAlertRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const singerRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const musicFileRef = useRef<HTMLInputElement>(null);
   const thumbnailFileRef = useRef<HTMLInputElement>(null);
-  const timerRef = useRef<timeoutRef>({timer:setTimeout(() => {})});
+  const timerRef = useRef<timeoutRef>({timer:setTimeout(() => {/*초기화용 빈 타이머*/})});
   const [uploadedFile, setUploadedFile] = useState<FileType>({
     musicName:'파일선택',
     thumbnailName: '파일선택',
@@ -20,101 +22,38 @@ function UploadModalInner() {
   });
 
   const isFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const curObj = _.cloneDeep(uploadedFile);
-    curObj.musicFile = e.target.files!
-    curObj.musicName = e.target.files![0].name;
-    setUploadedFile(curObj);
-    console.log(curObj);
-    // e.target.value='';
+    uploadController.fileUploadController(e, setUploadedFile, uploadedFile)
   };
 
   const isThumbUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const curObj = _.cloneDeep(uploadedFile);
-    curObj.thumbnailFile = e.target.files!;
-    curObj.thumbnailName = e.target.files![0].name;
-    setUploadedFile(curObj);
-    console.log(curObj)
-    // e.target.value='';
+    uploadController.thumbnailUploadController(e, setUploadedFile, uploadedFile)
   };
-
+  
   const fileUploadMethod = () => {
-    console.log(uploadedFile);
-    if(timerRef.current){
-      clearTimeout(timerRef.current.timer!);
+    const curObj:fileUploadObject={
+      descriptionRef,
+      singerRef,
+      musicFileRef,
+      thumbnailFileRef,
+      uploadedFile, 
+      setUploadedFile, 
+      timerRef, 
+      textAlertRef, 
+      fileAlertRef
     }
-    const uploadTimer = setTimeout(async () => {
-      const formData = new FormData();
-      Object.values(uploadedFile.musicFile!).forEach(el => {
-        formData.append('userFile1', el);
-      });
-      Object.values(uploadedFile.thumbnailFile!).forEach(el => {
-        formData.append('userFile2', el);
-      });
-      formData.append('singer', uploadedFile.singer!);
-      formData.append('description', uploadedFile.descript!);
-      await fetch('/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      const curObj = resetFileState(_.cloneDeep(uploadedFile));
-      setUploadedFile(curObj);
-      musicFileRef.current!.value = '';
-      thumbnailFileRef.current!.value='';
-    }, 200);
-    timerRef.current.timer = uploadTimer;
+    uploadController.fileUploadMethodController(curObj);
   };
-
-  const resetFileState = (curObj:FileType):FileType => {
-    curObj.musicName='파일선택';
-    curObj.thumbnailName='파일선택';
-    curObj.musicFile=null;
-    curObj.thumbnailFile=null;
-    curObj.singer='';
-    curObj.descript='';
-    descriptionRef.current!.value = '';
-    singerRef.current!.value = '';
-    return curObj;
-  }
 
   const writeSingerName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if(timerRef.current){
-      clearTimeout(timerRef.current.timer!);
-    }
-    const timer = setTimeout(function(){
-      const curObj = _.cloneDeep(uploadedFile);
-      curObj.singer=e.target.value;
-      console.log(curObj)
-      setUploadedFile(curObj);
-    }, 200);
-    timerRef.current!.timer = timer;
+    uploadController.writeSingerNameController(e, timerRef, uploadedFile, setUploadedFile);
   };
 
   const writeDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if(timerRef.current){
-      clearTimeout(timerRef.current.timer!);
-    }
-    const timer = setTimeout(function(){
-      const curObj = _.cloneDeep(uploadedFile);
-      curObj.descript=e.target.value;
-      console.log(curObj)
-      setUploadedFile(curObj);
-    }, 400);
-    timerRef.current!.timer = timer;
+    uploadController.writeDescriptionController(e, timerRef, uploadedFile, setUploadedFile);
   };
 
   const dropListener = (event: React.DragEvent<HTMLDivElement>) => {
-    overrideEventDefaults(event);
-    const curObj = _.cloneDeep(uploadedFile);
-    if (event.dataTransfer.files && event.dataTransfer.files[0]) {
-      if(event.dataTransfer.files[0].type === 'image/jpeg'){
-        curObj.thumbnailFile = event.dataTransfer.files;
-        curObj.thumbnailName = event.dataTransfer.files[0].name;
-      }else{
-        curObj.musicFile = event.dataTransfer.files;
-        curObj.musicName = event.dataTransfer.files[0].name;
-      }
-    }
-    setUploadedFile(curObj);
+    uploadController.dropListenerController(event, uploadedFile, setUploadedFile, alertRef);
   };
 
   const overrideEventDefaults = (event: Event | React.DragEvent<HTMLDivElement>) => {
@@ -170,6 +109,7 @@ function UploadModalInner() {
             name="userFile1"
             ref={musicFileRef}
             onChange={isFileUpload}
+            accept="audio/mp3"
           />
         </div>
         <div className={styles.thumbnailForm}
@@ -197,12 +137,22 @@ function UploadModalInner() {
             name="userFile2"
             ref={thumbnailFileRef}
             onChange={isThumbUpload}
+            accept='image/jpeg, image/png'
           />
         </div>
 
         <button className={styles.submitButton} onClick={fileUploadMethod}>
           업로드
         </button>
+      </div>
+      <div className={'delegate'} ref={alertRef}>
+        음악은 mp3, 썸네일은 jpeg, png만 업로드 가능합니다!
+      </div>
+      <div className={'delegate'} ref={textAlertRef}>
+        아티스트 이름과 곡 설명은 반드시 적어주셔야 합니다!
+      </div>
+      <div className={'delegate'} ref={fileAlertRef}>
+        mp3 파일과 썸네일 이미지 파일를 반드시 첨부해주셔야 합니다!
       </div>
     </div>
   );

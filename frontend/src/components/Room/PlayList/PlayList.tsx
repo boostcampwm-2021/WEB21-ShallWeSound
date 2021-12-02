@@ -18,18 +18,9 @@ const PlayList = ({ isHost }: { isHost: boolean }) => {
       setPlayList([...data]);
     });
 
-    socket.on('changeMusicInfo', () => {
-      socket.emit('requestPlayList');
-    });
-
     return () => {
       socket.off('responsePlayList');
-      socket.off('changeMusicInfo');
     };
-  }, [socket]);
-
-  useEffect(() => {
-    socket.emit('requestPlayList');
   }, [socket]);
 
   const toggleModal = () => setModalVisible(!modalVisible);
@@ -37,7 +28,6 @@ const PlayList = ({ isHost }: { isHost: boolean }) => {
   return (
     <Container>
       <Title>P L A Y &nbsp; L I S T</Title>
-      {/* <PlayListWrapper> */}
       <ScrollBar>
         {playList.length !== 0 ? (
           playList.map((music: Music, i: number) => (
@@ -54,7 +44,6 @@ const PlayList = ({ isHost }: { isHost: boolean }) => {
           <Title>방장이 아직 곡을 추가하지 않았습니다. 잠시만 기다려주세요! </Title>
         )}
       </ScrollBar>
-      {/* </PlayListWrapper> */}
       <ButtonWrapper>
         {isHost && (
           <CircleButton size="45px" colorP="#ffffff" onClick={toggleModal}>
@@ -75,12 +64,19 @@ const PlayList = ({ isHost }: { isHost: boolean }) => {
 const Container = styled.div`
   background: #beaee2;
   border-radius: 10px;
-  /* box-shadow: rgb(0 0 0 / 50%) 0px 10px 25px; */
   width: 400px;
   height: 300px;
   float: right;
   position: relative;
   margin-right: 2rem;
+
+  @media screen and (min-height: 768px) {
+    height: calc(100% - 220px - 1rem);
+  }
+
+  @media screen and (min-height: 968px) {
+    height: calc(100% - 420px - 1rem);//300px;
+  }
 `;
 
 const Title = styled.div`
@@ -93,22 +89,6 @@ const Title = styled.div`
   height: 30px;
   margin: 10px 0px;
 `;
-
-// const PlayListWrapper = styled.div`
-//   height: 80%;
-//   overflow: auto;
-//   -ms-overflow-style: none;
-//   scrollbar-width: none;
-
-//   &::-webkit-scrollbar {
-//     width: 6px;
-//   }
-//   &::-webkit-scrollbar-thumb {
-//     height: 17%;
-//     background-color: rgba(255, 255, 255, 1);
-//     border-radius: 10px;
-//   }
-// `;
 
 const ButtonWrapper = styled.div`
   position: absolute;

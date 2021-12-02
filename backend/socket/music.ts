@@ -1,10 +1,8 @@
-import music from '../services/music';
 import type { Music } from '../types';
 
 export class PlayList {
   playlist: Music[] = [];
 
-  constructor() {}
   getPlayList(): Music[] {
     return this.playlist;
   }
@@ -23,9 +21,29 @@ export class PlayList {
     return next;
   }
 
+  getPreMusic() {
+    const now = this.playlist.find(music => music.isPlayed);
+    if (!now) {
+      this.playlist[0].isPlayed = true;
+      return this.playlist[0];
+    }
+
+    let previous: Music;
+
+    if (this.playlist.indexOf(now) === 0) {
+      previous = this.playlist[this.playlist.length - 1];
+    } else {
+      previous = this.playlist[(this.playlist.indexOf(now) - 1) % this.playlist.length];
+    }
+
+    now.isPlayed = false;
+    previous.isPlayed = true;
+
+    return previous;
+  }
+
   getCurrentMusic(): Music {
-    const current = this.playlist.find(music => music.isPlayed)!;
-    return current;
+    return this.playlist.find(music => music.isPlayed)!;
   }
 
   addMusics(musics: Music[]): void {
@@ -45,8 +63,8 @@ export class PlayList {
     this.playlist = this.playlist.filter(music => music.MID !== MID);
   }
 
-  isExist(musics: Music[]): boolean {
-    const MIDs = this.playlist.map(music => music.MID);
-    return musics.find(music => MIDs.includes(music.MID)) ? true : false;
+  isExist(MIDs: number[]): boolean {
+    const temp = new Set(this.playlist.map(music => music.MID));
+    return MIDs.find(MID => temp.has(MID)) ? true : false;
   }
 }

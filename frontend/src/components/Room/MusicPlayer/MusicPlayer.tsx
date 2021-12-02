@@ -3,65 +3,64 @@ import { useSocket } from '../../../context/MyContext';
 import '../../../stylesheets/MusicPlayer.scss';
 import Title from './Title';
 import ThumbnailPlayer from './ThumbnailPlayer';
-
-interface music {
-  MID: number;
-  name: string;
-  singer: string;
-  description: string;
-  thumbnail: string;
-  path: string;
-  isPlayed: boolean;
-}
+import { Socket } from 'socket.io-client';
+import { music } from '../../../types';
+import Progress from '../../Util/Progress';
 
 function MusicPlayer({ isHost }: { isHost: boolean }) {
+  const socket: Socket = useSocket()!;
   const musicControl = useRef<HTMLVideoElement | null>(null);
-  const musicProgress = useRef<HTMLInputElement>(null);
-  const volumeProgress = useRef<HTMLInputElement>(null);
-  const [musicCurrentTime, setMusicCurrentTime] = useState(0);
   const [musicInfo, setMusicInfo] = useState<music>();
-  const [backupMusicVolume, setBackupMusicVolume] = useState(0);
-  const socket: any = useSocket();
+  const [musicPlayerState, setMusicPlayerState] = useState({
+    currentTime: "0:00",
+    duration: "0:00",
+    progressDegree: 0,
+  });
+  const [musicVolumeState, setMusicVolumeState] = useState({
+    volume: 10,
+    backupVolume: 50,
+    progressDegree: 10,
+  })
 
-  useEffect(() => {
-    socket.on('requestTime', () => {
-      console.log('방장이다.');
-      socket.emit('responseTime', musicControl.current?.currentTime);
+  const playController = (playType: string) => {
+    switch (playType) {
+      case 'play':
+        musicControl.current?.play();
+        break;
+      case 'pause':
+        musicControl.current?.pause();
+        break;
+      default:
+        if (musicControl.current) {
+          musicControl.current.currentTime = parseInt(playType);
+        }
+    }
+  };
+
+  const sync = (hostCurrentTime: number) => {
+    if (musicControl.current) {
+      musicControl.current.currentTime = hostCurrentTime;
+    }
+  };
+
+  const emitHostCurrentTime = () => {
+    socket.emit('responseTime', musicControl.current?.currentTime);
+  };
+
+  const setInfo = (musicData: music) => {
+    setMusicInfo({
+      ...musicInfo,
+      ...musicData,
     });
+  };
 
-    socket.on('sync', (data: number) => {
-      if (musicControl.current) {
-        musicControl.current.currentTime = data;
-      }
-    });
-
-    socket.on('changeMusicInfo', (data: music) => {
-      setMusicInfo({
-        ...musicInfo,
-        ...data,
-      });
-    });
-
-    socket.on('clientPause', (data: string) => {
-      musicControl.current?.pause();
-    });
-
-    socket.on('clientPlay', (data: string) => {
-      musicControl.current?.play();
-    });
-
-    socket.on('clientMoving', (data: number) => {
-      if (musicControl.current) {
-        musicControl.current.currentTime = data;
-      }
-    });
-
+  const autoPlayFake = () => {
     setTimeout(() => {
       if (musicControl.current) {
         musicControl.current.muted = false;
       }
     }, 200);
-  }, []);
+  };
 
   function goPrevMusic() {
     socket.emit('prevMusicReq');
@@ -83,12 +82,12 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
     if (playingMusic?.paused) {
       playingMusic.play();
       playingMusic.onplay = () => {
-        socket.emit('play');
+        socket.emit('playControl', 'play');
       };
     } else if (playingMusic?.paused === false) {
       playingMusic.pause();
       playingMusic.onpause = () => {
-        socket.emit('pause');
+        socket.emit('playControl', 'pause');
       };
     }
   }
@@ -99,49 +98,94 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
 
   function updateCurrentTime() {
     const playingMusic = musicControl.current;
-    const playingMusicProgress = musicProgress.current;
-    if (playingMusic && playingMusicProgress) {
-      setMusicCurrentTime(playingMusic.currentTime);
-      playingMusicProgress.value = playingMusic.currentTime.toString();
-      playingMusicProgress.style.backgroundSize = (playingMusic.currentTime * 100) / playingMusic.duration + '% 100%';
+    if (playingMusic) {
+      setMusicPlayerState({
+        ...musicPlayerState,
+        currentTime: changeFormatToTime(playingMusic.currentTime),
+        duration: changeFormatToTime(playingMusic.duration),
+        progressDegree: playingMusic.currentTime * 100 / playingMusic.duration,
+      });
       playingMusic.onseeked = () => {
-        socket.emit('moving', playingMusic.currentTime);
+        socket.emit('playControl', playingMusic.currentTime);
       };
     }
   }
 
-  function changeInputRange(e: any) {
-    const playingMusic = musicControl?.current;
-    const playingMusicProgress = musicProgress.current;
-    if (playingMusic && playingMusicProgress) {
-      playingMusic.currentTime = parseFloat(playingMusicProgress.value);
-      playingMusicProgress.style.backgroundSize = (e.target.value * 100) / e.target.max + '% 100%';
+  function onChangeMusicProgress(val: number) {
+    const playingMusic = musicControl.current;
+    if (playingMusic) {
+      playingMusic.currentTime = val;
+      updateCurrentTime();
     }
   }
 
-  function changeVolume(e: any) {
+  function onChangeVolume(e: number) {
     const playingMusic = musicControl.current;
     if (playingMusic) {
-      playingMusic.volume = e.target.value / 100;
-      e.target.style.backgroundSize = e.target.value + '% 100%';
+      playingMusic.volume = e / 100;
+      setMusicVolumeState({
+        ...musicVolumeState,
+        volume: e,
+        progressDegree: e,
+      });
     }
   }
 
   function toggleVolume() {
     const playingMusic = musicControl.current;
-    const musicVolume = volumeProgress.current;
-    if (playingMusic && musicVolume) {
+    if (playingMusic) {
       if (playingMusic.volume > 0) {
-        setBackupMusicVolume(playingMusic.volume);
-        musicVolume.value = '0';
+        setMusicVolumeState({
+          ...musicVolumeState,
+          volume: 0,
+          backupVolume: playingMusic.volume * 100,
+          progressDegree: 0,
+        });
         playingMusic.volume = 0;
-        musicVolume.style.backgroundSize = playingMusic.volume * 100 + '% 100%';
       } else {
-        musicVolume.value = (backupMusicVolume * 100).toString();
-        playingMusic.volume = backupMusicVolume;
-        musicVolume.style.backgroundSize = playingMusic.volume * 100 + '% 100%';
+        setMusicVolumeState({
+          ...musicVolumeState,
+          volume: musicVolumeState.backupVolume,
+          progressDegree: musicVolumeState.backupVolume,
+        })
+        playingMusic.volume = musicVolumeState.backupVolume / 100;
       }
     }
+  }
+
+  useEffect(() => {
+    socket.on('requestTime', emitHostCurrentTime);
+    socket.on('sync', sync);
+    socket.on('changeMusicInfo', setInfo);
+    socket.on('playControl', playController);
+    autoPlayFake();
+  }, []);
+
+  useEffect(()=>{
+    if(musicControl && musicControl.current) musicControl.current.volume = 0.1;
+    
+  }, []);
+
+
+  let musicProgressProps = {
+    tops: [musicPlayerState.currentTime, musicPlayerState.duration],
+    min: 0,
+    max: musicControl.current && musicControl.current.duration,
+    progressDegree: musicPlayerState.progressDegree,
+    disabled: !isHost,
+    onChange: onChangeMusicProgress,
+  }
+
+  let musicVolumeProps = {
+    lefts: [musicControl.current?.volume === 0 ? (
+      <img className="icon" src="/icons/volume-off.svg" alt="volume-off" onClick={toggleVolume} />
+    ) : (
+      <img className="icon" src="/icons/volume-up.svg" alt="volume-up" onClick={toggleVolume} />
+    )],
+    min: 0,
+    max: 100,
+    progressDegree: musicVolumeState.progressDegree,
+    onChange: onChangeVolume,
   }
 
   return (
@@ -151,7 +195,6 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
           id="video"
           src={musicInfo?.path}
           muted
-          // autoPlay
           ref={musicControl}
           onTimeUpdate={updateCurrentTime}
           onLoadedMetadata={updateMusic}
@@ -168,43 +211,21 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
           />
           <img className="icon" src="/icons/chevron-right.svg" alt="chevron-right" onClick={goNextMusic} />
         </div>
-        <div className="musicplayer-timer">
-          <span className="current-time">{changeFormatToTime(musicControl.current?.currentTime || 0)}</span>
-          <span className="max-duration">{changeFormatToTime(musicControl.current?.duration || 0)}</span>
-        </div>
-        <input
-          className="input-range"
-          name="musicplayer-progress"
-          ref={musicProgress}
-          type="range"
-          min="0"
-          max={musicControl.current?.duration || 0}
-          onInput={changeInputRange}
-          disabled={!isHost}
-        />
-        <div className="serveral-icons">
-          <div className="volume-wrap width-half">
-            {musicControl.current?.volume === 0 ? (
-              <img className="icon" src="/icons/volume-off.svg" alt="volume-off" onClick={toggleVolume} />
-            ) : (
-              <img className="icon" src="/icons/volume-up.svg" alt="volume-up" onClick={toggleVolume} />
-            )}
-            <div className="progress-wrap width-half">
-              <input
-                className="input-range"
-                name="volume-progress"
-                ref={volumeProgress}
-                type="range"
-                min="0"
-                max="100"
-                onInput={changeVolume}
-              />
-            </div>
+        <Progress prop={musicProgressProps} />
+        <div className="volume-wrap">
+          <div className="width-half">
+            <Progress prop={musicVolumeProps} />
           </div>
-          {/* <div className="icons-wrap">
-            <img className="icon" src="/icons/thumbs-up.svg" alt="thumbs-up" />
-            <img className="icon" src="/icons/playlist-add.svg" alt="playlist-add" />
-          </div> */}
+          {isHost && 
+          <div className="mini-controller">
+            <img src="/icons/chevron-left.svg" alt="prev" onClick={goPrevMusic}/>
+            {musicControl.current?.paused ?
+            <img src="/icons/play.svg" alt="play" onClick={playOrPauseMusic}/> :
+            <img src="/icons/pause.svg" alt="pause" onClick={playOrPauseMusic}/>
+            }
+            <img src="/icons/chevron-right.svg" alt="next" onClick={goNextMusic}/>
+          </div>
+          }
         </div>
       </div>
     </>

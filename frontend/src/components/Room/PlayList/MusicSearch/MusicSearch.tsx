@@ -6,6 +6,7 @@ import MusicSearchItem from './MusicSearchItem';
 import CircleButton from '../../../Util/CircleButton';
 import { useSocket } from '../../../../context/MyContext';
 import PopUp from '../../../Util/PopUp';
+import Loading from '../../../Util/Loading';
 import { Music } from '../../../../types';
 import { reducer as addMusicStatusReducer } from './reducer/addMusicState';
 import { reducer as searchResultReducer } from './reducer/searchResult';
@@ -15,23 +16,26 @@ import ScrollBar from '../../../Util/scrollbar';
 
 const MusicSearch = () => {
   const socket: any = useSocket();
+  const scrollBar = useRef<HTMLDivElement | null>(null);
   const page = useRef(0);
   const [keyword, setKeyword] = useState('');
   const [searchResult, dispatchSearchResult] = useReducer(searchResultReducer, {
     result: [],
     selectedMusicInResult: [],
     hasMore: false,
+    loading: false,
   });
   const [addMusicState, dispatchAddMusicState] = useReducer(addMusicStatusReducer, {
     success: false,
     fail: false,
   });
 
-  const { result, selectedMusicInResult, hasMore } = searchResult;
+  const { result, selectedMusicInResult, hasMore, loading } = searchResult;
   const { success, fail } = addMusicState;
 
   const fetchMusic = useCallback(
     async (more = true) => {
+      dispatchSearchResult({ type: 'FETCH_LOADING' });
       try {
         const res = await fetch(`${config.localhost}/api/music?keyword=${keyword}&page=${page.current}`);
         const json = await res.json();
@@ -41,9 +45,10 @@ const MusicSearch = () => {
           dispatchSearchResult({ type: 'FETCH_MORE_SUCCESS', result: musics, hasMore: json.hasMore });
         } else {
           dispatchSearchResult({ type: 'FETCH_SUCCESS', result: musics, hasMore: json.hasMore });
+          scrollBar.current?.scrollTo(0, 0);
         }
       } catch (e) {
-        dispatchSearchResult({ type: 'FETCH_FAILURE' });
+        dispatchSearchResult({ type: 'INIT' });
       }
     },
     [keyword],
@@ -93,7 +98,7 @@ const MusicSearch = () => {
   const onSelectMusic = (MID: number) => {
     if (isSelected(MID)) {
       const newSelectedList = selectedMusicInResult.filter((id: number) => id !== MID);
-      dispatchSearchResult({ type: 'UNSELECT_MUSIC', selectedInResult: newSelectedList });
+      dispatchSearchResult({ type: 'SELECT_MUSIC', selectedInResult: newSelectedList });
     } else {
       dispatchSearchResult({ type: 'SELECT_MUSIC', selectedInResult: [...selectedMusicInResult, MID] });
     }
@@ -127,23 +132,22 @@ const MusicSearch = () => {
     <Layout>
       <SearchBar onKeywordChange={onKeywordChange} />
       <ResultWrapper>
-        <ScrollBar color_={'#e8ecee'}>
-          {result.length ? (
-            result.map((music: Music, i: number) => (
-              <MusicSearchItem
-                key={i}
-                name={music.name}
-                singer={music.singer}
-                thumbnail={music.thumbnail}
-                description={music.description}
-                selected={isSelected(+music.MID)}
-                onClick={() => onSelectMusic(+music.MID)}
-              />
-            ))
-          ) : (
-            <div>검색 결과 없음</div>
-          )}
+        <ScrollBar color_={'#e8ecee'} ref={scrollBar}>
+          {result.length
+            ? result.map((music: Music, i: number) => (
+                <MusicSearchItem
+                  key={i}
+                  name={music.name}
+                  singer={music.singer}
+                  thumbnail={music.thumbnail}
+                  description={music.description}
+                  selected={isSelected(+music.MID)}
+                  onClick={() => onSelectMusic(+music.MID)}
+                />
+              ))
+            : !loading && <div>검색 결과 없음</div>}
           <div ref={hasMore ? setObserveTarget : null}>&nbsp;</div>
+          <Spinner>{loading ? <Loading /> : null}</Spinner>
         </ScrollBar>
       </ResultWrapper>
       <ButtonWrapper>
@@ -179,6 +183,10 @@ const PopUpWrapper = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+`;
+
+const Spinner = styled.div`
+  margin: 0 50.7%;
 `;
 
 export default MusicSearch;

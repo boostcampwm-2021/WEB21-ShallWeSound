@@ -26,7 +26,7 @@ function ThumbnailPlayer({
         {thumbnail ? (
           <img src={thumbnail} alt={name} />
         ) : (
-          <img className="no-thumbnail" src="/icons/music-note.svg" alt="no-thumbnail" />
+          <img className="no-thumbnail" src="/images/logo.png" alt="no-thumbnail" />
         )}
         {isHover && (
           <>

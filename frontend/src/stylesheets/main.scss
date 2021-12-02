@@ -1,7 +1,9 @@
+@import './palette.scss';
 @import './global.scss';
 
 .main-wrap {
   width: 80%;
+  min-width: 1024px;
   height: 100%;
   background-color: $semi-white;
   color: $purple;
@@ -19,6 +21,10 @@
     font-weight: 700;
     font-size: 1.5rem;
     text-align: start;
+  }
+
+  .text-center {
+    text-align: center;
   }
 
   .room-empty-notice {
@@ -46,23 +52,31 @@
 }
 
 .roomList {
+  @include scrollbar(#d3d3d3);
   width: 100%;
   height: 90%;
   box-sizing: border-box;
   padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
+  display: grid;
+  gap: 20px;
 
-  * + * {
-    margin-left: 1rem;
-    // margin-bottom: 0.5rem;
+  // @media screen and (min-width: 576px) {
+  //   grid-template-columns: 1fr;
+  // }
+
+  // @media screen and (min-width: 768px) {
+  //   grid-template-columns: 1fr 1fr;
+  // }
+  // @media screen and (min-width: 992px) {
+    grid-template-columns: 1fr 1fr 1fr;
+    // }
+
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
   }
 
   .room {
-    display: inline-block;
-    width: 25%;
+    height: 6.5rem;
     border: 4px solid $purple;
     border-radius: 1rem;
     color: $purple;
@@ -116,6 +130,10 @@
   justify-content: center;
   align-items: center;
   z-index: 9999;
+
+  &-row {
+    flex-direction: row;
+  }
 
   *:nth-child(n) {
     margin: 0.5rem 0 0.5rem;
@@ -218,7 +236,9 @@
 
 .room-wrap {
   width: 80%;
+  min-width: 1024px;
   height: 100%;
+  min-height: calc(768px - 130px - 1rem);  // 130px: Header
   background-color: $semi-white;
   color: $purple;
   box-sizing: border-box;
@@ -228,6 +248,14 @@
   position: relative;
   justify-content: center;
   align-items: center;
+
+  &-left {
+    height: 100%;
+  }
+
+  &-right {
+    height: 100%;
+  }
 }
 
 .search-main-wrap {
@@ -299,12 +327,12 @@
     display: flex;
     align-items: center;
     margin-bottom: 0;
-  
+
     // &:last-child {
     //   margin-bottom: 1rem;
     // }
   }
-  
+
   &-thumbnail {
     width: 100px;
     height: 100px;
@@ -328,12 +356,17 @@
     font-style: italic;
   }
 
+  &-blank {
+    width: 130px;
+    height: 1px;
+  }
+
   &-play {
     position: absolute;
     top: center;
     right: 2rem;
     cursor: pointer;
-    
+
     svg {
       width: 40px;
       height: 40px;
@@ -341,7 +374,7 @@
       border: 8px solid $purple;
       border-radius: 999px;
       fill: $purple;
-  
+
       &:hover {
         fill: $semi-white;
         background-color: $purple;
@@ -359,8 +392,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  // align-items: center;
   background-color: $purple;
   border-radius: 1.5rem;
   padding: 1.5rem;
@@ -378,7 +411,7 @@
         margin-top: 0;
       }
     }
-  
+
     .progress {
       width: 100%;
       height: 6px;
@@ -386,7 +419,7 @@
       border-radius: 50px;
       cursor: pointer;
       position: relative;
-  
+
       &-bar {
         height: inherit;
         width: 0%;
@@ -394,7 +427,7 @@
         border: 0.5px solid $semi-white;
         border-radius: inherit;
         background-color: $semi-white;
-  
+
         &::before {
           content: '';
           position: absolute;
@@ -409,79 +442,79 @@
         }
       }
     }
-  
+
     output {
       width: 200px;
       height: 200px;
     }
-  
-    .width-half {
-      width: 50%;
-      box-sizing: border-box;
-    }
-  
-    .width-quarter {
-      width: 25%;
-      box-sizing: border-box;
-    }
   }
-}
+  
+  .width-half {
+    width: 50%;
+    box-sizing: border-box;
+  }
 
-input[type='range'] {
-  appearance: none;
-  width: 100%;
-  height: 6px;
-  border-radius: 999px;
-  background: $purple;
-  background-image: linear-gradient($semi-white, $semi-white);
-  background-size: 0% 100%;
-  background-repeat: no-repeat;
-  outline: 1px solid $semi-white;
-  cursor: pointer;
+  .width-quarter {
+    width: 25%;
+    box-sizing: border-box;
+  }
 
-  &::-webkit-slider-thumb {
+  input[type='range'] {
     appearance: none;
-    width: 12px;
-    height: 12px;
-    background: $semi-white;
+    width: 100%;
+    height: 6px;
     border-radius: 999px;
-  }
-}
-
-.serveral-icons {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-
-  .icon {
+    background: $purple;
+    background-image: linear-gradient($semi-white, $semi-white);
+    background-size: 0% 100%;
+    background-repeat: no-repeat;
+    outline: 1px solid $semi-white;
     cursor: pointer;
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      background: $semi-white;
+      border-radius: 999px;
+    }
   }
 
-  .volume-wrap {
+  .serveral-icons {
+    width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .icon {
+      cursor: pointer;
+    }
+
+    .volume-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .progress-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 0;
+      margin-left: 1rem;
+    }
+
+    .icon + .icon {
+      margin-left: 1rem;
+    }
   }
 
-  .progress-wrap {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 0;
-    margin-left: 1rem;
-  }
-
-  .icon + .icon {
-    margin-left: 1rem;
-  }
-}
-
-@keyframes fadeOut {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
   }
 }
 

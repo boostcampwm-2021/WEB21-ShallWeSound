@@ -1,4 +1,3 @@
-import { PlayList } from './music';
 import { socketInfo, userList } from '../types';
 
 const userHash: userList = {};

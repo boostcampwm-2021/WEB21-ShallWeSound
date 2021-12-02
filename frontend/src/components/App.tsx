@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import { Room } from '../pages/Room';
 import { MainPage } from '../pages/Main';
 import { ResultPage } from '../pages/Result';
@@ -6,57 +6,61 @@ import { LoginPage } from '../pages/Login';
 import '../stylesheets/reset.css';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
+import config from '../config.host.json';
 import HeaderComponent from '../components/Header/Header';
 
 function App() {
   const cookies = new Cookies();
-  const [jwt, setJwt] = useState(cookies.get('jwt'));
+  const [jwt, ] = useState(cookies.get('jwt'));
   const [authenticate, setAuthenticate] = useState(false);
-  function isAuthenticated() {
+
+  const authAsync= async()=>{
     if (!jwt || jwt === undefined) {
       return false;
-    } else {
-      fetch('/oauth/authenticate', {
+    }else{
+      const result = await fetch(`${config.localhost}/oauth/authenticate`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ jwt: cookies.get('jwt') }),
       })
-        .then(res => {
-          return res.json();
-        })
-        .then(res => {
-          if (authenticate != res.isOK) {
-            setAuthenticate(res.isOK);
-          }
-        });
+      const authenticateResponse = await result.json();
+      if(authenticate != authenticateResponse.isOK){
+        setAuthenticate(authenticateResponse.isOK);
+      }
+      return true;
     }
+
   }
+  useEffect(() => {
+    (async()=>{
+      await authAsync();
+    })()
+  }, [])
 
   return (
     <>
       <Router>
         <Switch>
           <Route
-            exact path="/login"
-            render={()=>{
-              isAuthenticated();
-              if(!authenticate){
-                return <LoginPage/>;
-              }else{
-                return <Redirect to={{ pathname: "/main" }} />;
+            exact
+            path="/login"
+            render={() => {
+              if (!authenticate) {
+                return <LoginPage />;
+              } else {
+                return <Redirect to={{ pathname: '/main' }} />;
               }
             }}
           />
           <>
             <HeaderComponent />
-            {/* onLogout={Logout} /> */}
             <Route
               exact
               path="/"
               render={() => {
-                isAuthenticated();
                 if (!authenticate) {
                   return <Redirect to={{ pathname: '/login' }} />;
                 } else {
@@ -68,18 +72,16 @@ function App() {
               exact
               path="/main"
               render={() => {
-                isAuthenticated();
                 if (!authenticate) {
                   return <Redirect to={{ pathname: '/' }} />;
                 } else {
-                  return <Route path="/main" component={MainPage} />;
+                  return <Route component={MainPage} />;
                 }
               }}
             />
             <Route
               path="/room"
               render={() => {
-                isAuthenticated();
                 if (!authenticate) {
                   return <Redirect to={{ pathname: '/' }} />;
                 } else {
@@ -90,7 +92,6 @@ function App() {
             <Route
               path="/result"
               render={() => {
-                isAuthenticated();
                 if (!authenticate) {
                   return <Redirect to={{ pathname: '/' }} />;
                 } else {
