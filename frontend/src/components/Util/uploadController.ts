@@ -47,7 +47,7 @@ const checkFileController=(
     }
 }
 
-const fileUploadMethodController = (
+function fileUploadMethodController(
     descriptionRef:React.RefObject<HTMLTextAreaElement>,
     singerRef:React.RefObject<HTMLInputElement>,
     musicFileRef:React.RefObject<HTMLInputElement>,
@@ -57,7 +57,7 @@ const fileUploadMethodController = (
     timerRef: React.MutableRefObject<timeoutRef>,
     textAlertRef:React.RefObject<HTMLDivElement>,
     fileAlertRef:React.RefObject<HTMLDivElement>
-) =>{
+){
     if(!checkSingerAndDescriptController(descriptionRef, singerRef)){
         textAlertRef.current!.style.opacity = '1';
         setTimeout(() => {
