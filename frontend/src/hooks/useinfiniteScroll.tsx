@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 const defaultOption = {
   root: null,
   rootMargin: '1px',
-  threshold: 1,
+  threshold: 0.1,
 };
 
 export const useInfiniteScroll = (callback: () => {}, option = defaultOption) => {
