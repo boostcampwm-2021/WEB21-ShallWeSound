@@ -78,7 +78,7 @@ const Container = styled.div`
   }
 
   @media screen and (min-height: 968px) {
-    height: 300px;
+    height: calc(100% - 420px - 1rem);//300px;
   }
 `;
 
