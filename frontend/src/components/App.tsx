@@ -40,7 +40,7 @@ function App() {
   return (
     <>
       <Router>
-      {isAuthenticated()}
+        {isAuthenticated()}
         <Switch>
           <Route
             exact

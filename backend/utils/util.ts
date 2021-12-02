@@ -76,4 +76,19 @@ export const utils = {
     const targetIdx = targetRoom.socketId.indexOf(socketID);
     return targetRoom.userId[targetIdx];
   },
+
+  delegateHost: function (targetRoom: socketInfo, userName: string, socketID: string, namespace: any) {
+    const targetSocket = this.findSocketIDByUserName(targetRoom, userName);
+    targetRoom.socketId = [targetSocket, ...targetRoom.socketId.filter(val => val !== targetSocket)];
+    targetRoom.userId = [userName, ...targetRoom.userId.filter(val => val !== userName)];
+    namespace.to(targetRoom.id).emit('updateUserList');
+    namespace.to(socketID).emit('delegateHost', false);
+    namespace.to(targetSocket).emit('delegateHost', true);
+  },
+
+  findSocketIDByUserName: function (targetRoom: socketInfo, userName: string) {
+    const idx = targetRoom.userId.indexOf(userName);
+    const targetSocket = targetRoom.socketId[idx];
+    return targetSocket;
+  },
 };

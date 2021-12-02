@@ -15,7 +15,6 @@ export const useInfiniteScroll = (callback: () => {}, option = defaultOption) =>
     if (ref) {
       observer = new IntersectionObserver(([entry]) => {
         if (entry.isIntersecting) {
-          console.log(entry.isIntersecting);
           callback();
         }
       }, option);
