@@ -72,6 +72,14 @@ const Container = styled.div`
   float: right;
   position: relative;
   margin-right: 2rem;
+
+  @media screen and (min-height: 768px) {
+    height: calc(100% - 220px - 1rem);
+  }
+
+  @media screen and (min-height: 968px) {
+    height: 300px;
+  }
 `;
 
 const Title = styled.div`

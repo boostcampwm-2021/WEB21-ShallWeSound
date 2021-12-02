@@ -51,11 +51,11 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
 
   return (
     <div className="room-wrap">
-      <div>
+      <div className="room-wrap-left">
         <MusicPlayer isHost={isHost}></MusicPlayer>
         <PlayList isHost={isHost}></PlayList>
       </div>
-      <div>
+      <div className="room-wrap-right">
         <UserList user={userList} isHost={isHost} />
         <ChatComponent />
       </div>

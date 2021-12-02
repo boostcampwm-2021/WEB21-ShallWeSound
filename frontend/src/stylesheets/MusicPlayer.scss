@@ -12,8 +12,17 @@
   margin-right: 2rem;
   margin-bottom: 1rem;
   width: 400px;
-  height: 420px;
+  height: calc(100% - 300px - 1rem);
+  min-height: 220px;
   border-radius: 0.25rem;
+
+  @media screen and (min-height: 768px) {
+    height: calc(100% - 500px - 1rem);
+  }
+
+  @media screen and (min-height: 968px) {
+    height: calc(100% - 300px - 1rem);
+  }
 
   .hover {
     position: absolute;
@@ -72,12 +81,16 @@
   &-body {
     width: 100%;
     height: 50%;
-    display: flex;
+    display: none;
     justify-content: space-around;
     align-items: center;
 
     .icon {
       cursor: pointer;
+    }
+
+    @media screen and (min-height: 968px) {
+      display: flex;
     }
   }
 
@@ -92,11 +105,11 @@
     box-sizing: border-box;
     border-radius: 999px;
     width: 50%;
-    height: 100%;
+    height: 176px;
 
     img {
       width: 100%;
-      height: 100%;
+      height: 176px;
       border-radius: 999px;
     }
 
