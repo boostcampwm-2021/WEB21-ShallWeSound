@@ -30,9 +30,13 @@ function Progress ( prop: any ) {
   }, [onUseEffect]);
 
   useEffect(() => {
+    console.log(progressDegree);
     const ProgressInputCurrent = ProgressInput.current;
-    if (ProgressInputCurrent && progressDegree) {
+    if (ProgressInputCurrent && typeof progressDegree == "number") {
+      console.log(progressDegree);
       ProgressInputCurrent.value = (progressDegree / 100 * parseFloat(ProgressInputCurrent.max)).toString();
+      console.log((progressDegree / 100 * parseFloat(ProgressInputCurrent.max)).toString());
+      console.log(ProgressInputCurrent.value);
       ProgressInputCurrent.style.backgroundSize = progressDegree + "% 100%";
     }
   }, [progressDegree]);
