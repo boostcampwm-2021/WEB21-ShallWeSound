@@ -127,6 +127,10 @@
   align-items: center;
   z-index: 9999;
 
+  &-row {
+    flex-direction: row;
+  }
+
   *:nth-child(n) {
     margin: 0.5rem 0 0.5rem;
 
@@ -424,16 +428,16 @@
       width: 200px;
       height: 200px;
     }
+  }
+  
+  .width-half {
+    width: 50%;
+    box-sizing: border-box;
+  }
 
-    .width-half {
-      width: 50%;
-      box-sizing: border-box;
-    }
-
-    .width-quarter {
-      width: 25%;
-      box-sizing: border-box;
-    }
+  .width-quarter {
+    width: 25%;
+    box-sizing: border-box;
   }
 
   input[type='range'] {
