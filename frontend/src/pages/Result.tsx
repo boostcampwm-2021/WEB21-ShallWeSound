@@ -141,7 +141,7 @@ function SearchResultItem ({ name, singer, thumbnail, description, path } : { na
   const [isOpen, setIsOpen] = useState(false);
 
   function togglePlayMusic () {
-    if (!isOpen) { setIsOpen(true) };
+    if (!isOpen) { setIsOpen(true) }
     setPlayMusic(!playMusic);
   }
 

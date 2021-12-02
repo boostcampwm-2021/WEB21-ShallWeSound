@@ -5,13 +5,13 @@ import { RouteComponentProps } from 'react-router';
 import CreateRoomButton from './CreateRoomModal';
 import { withRouter } from 'react-router-dom';
 import { useSocket } from '../../context/MyContext';
-import UserButton from './UserModal';
+import UserButton from './UserButton';
 import { Socket } from 'socket.io-client';
 import { useMediaQuery } from 'react-responsive';
 
 function HeaderComponent({ history }: { history: RouteComponentProps['history'] }) {
   const socket: Socket = useSocket()!;
-  const timerRef = useRef<timeoutRef>({ timer: setTimeout(() => {}) });
+  const timerRef = useRef<timeoutRef>({ timer: setTimeout(() => {/*this is empty timer*/}) });
   const [searchInput, setSearchInput] = useState('');
   const [toggle, setToggle] = useState(false);
 

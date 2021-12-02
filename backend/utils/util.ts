@@ -52,7 +52,7 @@ export const utils = {
   getRoomListForClient: function (socketData: socketInfo[]) {
     return socketData.map(val => {
       return { id: val.id, name: val.name, description: val.description, totalUesr: val.socketId.length };
-    }); // utils로 기능 빼기
+    });
   },
 
   isRoomExist: function (socketData: socketInfo[], roomName: string) {

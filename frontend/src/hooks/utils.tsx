@@ -12,7 +12,7 @@ const fadeOut = (targetDomElement: HTMLElement) => {
   if (targetDomElement !== null) {
     targetDomElement.style.opacity = '1';
     setTimeout(() => {
-      if (targetDomElement !== null) targetDomElement.style.opacity = '0';
+      targetDomElement.style.opacity = '0';
     }, 3000);
   }
 };
