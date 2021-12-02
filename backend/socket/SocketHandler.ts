@@ -59,6 +59,12 @@ const socketHandler = (io: Server) => {
       namespace.to(targetRoom.id).emit('changeMusicInfo', targetRoom.playList.getNextMusic());
     });
 
+    socket.on('prevMusicReq', () => {
+      const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
+      if (socket.id !== targetRoom?.socketId[0]) return;
+      namespace.to(targetRoom.id).emit('changeMusicInfo', targetRoom.playList.getPreMusic());
+    });
+
     socket.on('currentMusicReq', () => {
       const targetRoom: socketInfo = utils.findRoom(socketData, socket.id);
       socket.emit('currentMusicRes', targetRoom?.playList.getCurrentMusic());
