@@ -1,0 +1,11 @@
+ACCESS_KEY=fMF4RKMYkGHlHGc10iRP
+SECRET_KEY=XoJNBdZRJQgqTAQFAv2ToGsFjDgYsGoND1dsjELk
+SALT=thisisweb21swsservice
+KAKAO_CLIENT_KEY=44fbb460b4a5e9218da2813b2be85712
+KAKAO_CALLBACK_URL=http://localhost:3000/oauth/kakao/callback
+GOOGLE_CLIENT_KEY=767149482341-klf4p31o8ueoj36a60p6nu1d5jkb00kp.apps.googleusercontent.com
+GITHUB_CLIENT_ID=5bdaaf70b0d18ef8d787
+GITHUB_CLIENT_SECRET=8baf3df30f00b75b70e6b706880a03d43c9875de
+GITHUB_CALLBACK_URL=http://localhost:3000/oauth/github/callback
+LOCALHOST_URL_TWO=http://localhost:3001/
+LOCALHOST_URL=https://shallwesound.p-e.kr/
