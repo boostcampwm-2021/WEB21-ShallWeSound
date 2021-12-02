@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef, ReactComponentElement } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import '../stylesheets/main.scss';
 import MusicPlayer from '../components/Room/MusicPlayer/MusicPlayer';
 import PlayList from '../components/Room/PlayList/PlayList';
-import ChatComponent from '../components/Room/Chat/chat';
+import ChatComponent from '../components/Room/Chat/ChatComponent';
 import UserList from '../components/Room/UserList/UserList';
 import { useSocket } from '../context/MyContext';
 import { useAsync } from '../hooks/useAsync';

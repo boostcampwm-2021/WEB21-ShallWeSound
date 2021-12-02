@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io-client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSocket } from '../../../context/MyContext';
 const UserSelectModal = ({ userName, off }: { userName: string; off: Function }) => {

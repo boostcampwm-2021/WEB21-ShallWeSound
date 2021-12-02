@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import UploadModal from './UploadModal';
 import { timeoutRef } from '../../types';
 import { RouteComponentProps } from 'react-router';
-import CreateRoomButton from './CreateRoomModal';
+import CreateRoomButton from './CreateRoomButton';
 import { withRouter } from 'react-router-dom';
 import { useSocket } from '../../context/MyContext';
 import UserButton from './UserButton';

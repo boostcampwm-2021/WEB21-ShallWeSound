@@ -1,6 +1,5 @@
 import { Server, Socket } from 'socket.io';
 import { socketData, userHash } from './userData';
-import { PlayList } from './music';
 import musicService from '../services/music';
 import { utils } from '../utils/util';
 import type { Music, socketInfo } from '../types';

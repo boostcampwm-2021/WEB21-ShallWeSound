@@ -5,14 +5,14 @@ import * as _ from 'lodash';
 import { useSocket } from '../../../context/MyContext';
 import { Socket } from 'socket.io-client';
 
-interface chatType {
+interface ChatType {
   id: number;
   msg: string;
 }
 type event = React.ChangeEvent<HTMLInputElement>;
 function ChatComponent() {
   const socket: Socket = useSocket()!;
-  const [chats, setChats] = useState<chatType[]>([]);
+  const [chats, setChats] = useState<ChatType[]>([]);
   const [newChat, setNewChat] = useState<string>('');
   const chatListRef = useRef<HTMLDivElement>(null);
   const scrollToBottom = () => {
@@ -21,7 +21,7 @@ function ChatComponent() {
     }
   };
   useEffect(() => {
-    socket?.on('chatMessage', ({ id, msg }: chatType) => {
+    socket?.on('chatMessage', ({ id, msg }: ChatType) => {
       const curChat = _.cloneDeep(chats);
       curChat.push({ id: id, msg: msg });
       setChats(curChat);
