@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import '../../../stylesheets/userList.scss';
-import config from '../../../config.host.json';
+import { Socket } from 'socket.io-client';
 import { useSocket } from '../../../context/MyContext';
 import ScrollBar from '../../Util/scrollbar';
 import UserItem from './UserItem';
 
 const UserList = ({ user, isHost }: { user: string[]; isHost: boolean }) => {
-  const socket: any = useSocket();
+  const socket: Socket = useSocket();
 
   const userList = user.map((val, idx) => {
     if (idx === 0 && val === socket.id) return `👑 ${val} (나)`;

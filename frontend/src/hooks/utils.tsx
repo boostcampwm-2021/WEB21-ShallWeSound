@@ -1,7 +1,4 @@
-import React from 'react';
-import { String } from 'lodash';
 import config from '../config.host.json';
-import { RouteComponentProps } from 'react-router';
 
 const apiFetch = async (apiQuery: string) => {
   const result = await fetch(`${config.localhost}/api/${apiQuery}`, {
@@ -12,10 +9,10 @@ const apiFetch = async (apiQuery: string) => {
 };
 
 const fadeOut = (targetDomElement: HTMLElement) => {
-  if (targetDomElement) {
+  if (targetDomElement !== null) {
     targetDomElement.style.opacity = '1';
     setTimeout(() => {
-      if (targetDomElement) targetDomElement.style.opacity = '0';
+      if (targetDomElement !== null) targetDomElement.style.opacity = '0';
     }, 3000);
   }
 };
