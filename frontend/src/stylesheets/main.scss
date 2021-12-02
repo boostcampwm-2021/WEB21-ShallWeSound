@@ -3,6 +3,7 @@
 
 .main-wrap {
   width: 80%;
+  min-width: 1024px;
   height: 100%;
   background-color: $semi-white;
   color: $purple;
@@ -231,6 +232,7 @@
 
 .room-wrap {
   width: 80%;
+  min-width: 1024px;
   height: 100%;
   background-color: $semi-white;
   color: $purple;
@@ -339,6 +341,11 @@
   &-singer {
     font-size: 1.125rem;
     font-style: italic;
+  }
+
+  &-blank {
+    width: 130px;
+    height: 1px;
   }
 
   &-play {
