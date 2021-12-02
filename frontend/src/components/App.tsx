@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import { Room } from '../pages/Room';
 import { MainPage } from '../pages/Main';
 import { ResultPage } from '../pages/Result';
@@ -13,11 +13,12 @@ function App() {
   const cookies = new Cookies();
   const [jwt, setJwt] = useState(cookies.get('jwt'));
   const [authenticate, setAuthenticate] = useState(false);
-  function isAuthenticated() {
+
+  const authAsync= async()=>{
     if (!jwt || jwt === undefined) {
       return false;
-    } else {
-      fetch(`${config.localhost}/oauth/authenticate`, {
+    }else{
+      const result = await fetch(`${config.localhost}/oauth/authenticate`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -25,22 +26,23 @@ function App() {
         },
         body: JSON.stringify({ jwt: cookies.get('jwt') }),
       })
-        .then(res => {
-          return res.json();
-        })
-        .then(res => {
-          if (authenticate != res.isOK) {
-            setAuthenticate(res.isOK);
-          }
-        });
+      const authenticateResponse = await result.json();
+      if(authenticate != authenticateResponse.isOK){
+        setAuthenticate(authenticateResponse.isOK);
+      }
       return true;
     }
+
   }
+  useEffect(() => {
+    (async()=>{
+      await authAsync();
+    })()
+  }, [])
 
   return (
     <>
       <Router>
-        {isAuthenticated()}
         <Switch>
           <Route
             exact
