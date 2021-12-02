@@ -8,6 +8,7 @@ import { useSocket } from '../../context/MyContext';
 import UserButton from './UserButton';
 import { Socket } from 'socket.io-client';
 import { useMediaQuery } from 'react-responsive';
+import { userInfo } from 'os';
 
 function HeaderComponent({ history }: { history: RouteComponentProps['history'] }) {
   const socket: Socket = useSocket()!;
@@ -36,9 +37,10 @@ function HeaderComponent({ history }: { history: RouteComponentProps['history'] 
   }
 
   function doSearch() {
-    if (window.location.pathname.includes('room')) socket.emit('leaveRoom');
-
-    history.push(`/result/${searchInput}`);
+    if (searchInput) {
+      if (window.location.pathname.includes('room')) socket.emit('leaveRoom');
+      history.push(`/result/${searchInput}`);
+    }
   }
 
   function searchInputSubmit(e: React.KeyboardEvent<HTMLInputElement>) {
