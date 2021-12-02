@@ -87,7 +87,6 @@ const MusicSearch = () => {
 
   useEffect(() => {
     page.current = result.length;
-    console.log('page: ', page.current);
   }, [result]);
 
   const onKeywordChange = (value: string) => {
