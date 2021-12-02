@@ -17,9 +17,9 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
     progressDegree: 0,
   });
   const [musicVolumeState, setMusicVolumeState] = useState({
-    volume: 50,
+    volume: 10,
     backupVolume: 50,
-    progressDegree: 50,
+    progressDegree: 10,
   })
 
   const playController = (playType: string) => {
@@ -160,6 +160,12 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
     socket.on('playControl', playController);
     autoPlayFake();
   }, []);
+
+  useEffect(()=>{
+    if(musicControl && musicControl.current) musicControl.current.volume = 0.1;
+    
+  }, []);
+
 
   let musicProgressProps = {
     tops: [musicPlayerState.currentTime, musicPlayerState.duration],

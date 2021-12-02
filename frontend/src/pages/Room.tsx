@@ -27,9 +27,6 @@ const Room = ({ history }: { history: RouteComponentProps['history'] }) => {
   };
 
   useEffect(() => {
-    window.onpopstate = event => {
-      socket.emit('leaveRoom');
-    };
     socket.emit('joinRoom', { roomID: roomData, userID: cookie.get('userID') });
 
     socket.on('updateUserList', refetchUserList);

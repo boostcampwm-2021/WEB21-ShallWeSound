@@ -20,9 +20,9 @@ function SearchedMusicPlayer({ path, isPlay }: { path: string; isPlay: boolean }
     progressDegree: 0,
   });
   const [musicVolumeState, setMusicVolumeState] = useState({
-    volume: 50,
+    volume: 10,
     backupVolume: 50,
-    progressDegree: 50,
+    progressDegree: 10,
   });
 
   useEffect(() => {
@@ -94,7 +94,7 @@ function SearchedMusicPlayer({ path, isPlay }: { path: string; isPlay: boolean }
     }
   }
 
-  useEffect(() => {
+  useEffect(() => {		
     setMusicPlayerState({
       ...musicPlayerState,
       currentTime: changeFormatToTime(0),
@@ -103,6 +103,11 @@ function SearchedMusicPlayer({ path, isPlay }: { path: string; isPlay: boolean }
     toggleVolume();
     toggleVolume();
   }, []);
+
+
+  useEffect(()=>{
+   if(musicControl && musicControl.current) musicControl.current.volume = 0.1;
+  }, [musicControl]);
 
   let musicProgressProps = {
     tops: [musicPlayerState.currentTime, musicPlayerState.duration],

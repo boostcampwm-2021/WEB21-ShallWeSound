@@ -1,4 +1,4 @@
 {
-  "localhost": "http://localhost:3000",
-  "deploy": "https://shallwesound.p-e.kr"
+  "deploy": "http://localhost:3000",
+  "localhost": "https://shallwesound.p-e.kr"
 }
