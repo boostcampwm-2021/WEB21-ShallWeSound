@@ -29,8 +29,6 @@ app.use(
 app.use('/api', apiRouter);
 
 app.get('/', (req, res) => {
-  // client.set("key", "value", redis.print);
-  // console.log(client.get("key", redis.print));
   res.send('hello');
 });
 

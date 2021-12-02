@@ -12,25 +12,25 @@ export const MainPage = ({ history }: { history: RouteComponentProps['history'] 
   const socket: Socket = useSocket()!;
   const alertRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const [state, fetchUser] = useAsync(apiFetch, 'room', []);
-  const { loading, data: roomList, error } = state as fetchState;
+  const { data: roomList } = state as fetchState;
 
-  const userRedundancyModalBlink = (joinData: joinData) => {
-    if (!joinData.isRedundancy) {
-      history.push(`/room/${joinData.roomID}`);
+  const userRedundancyModalBlink = (joinCheck: joinData) => {
+    if (!joinCheck.isRedundancy) {
+      history.push(`/room/${joinCheck.roomID}`);
     } else fadeOut(alertRef.current!);
   };
 
   useEffect(() => {
     socket.on('redundancyCheck', userRedundancyModalBlink);
+    socket.on('updateRoomList', fetchUser);
     socket.on('routingAfterCreateRoom', (roomNumber: number) => {
       history.push(`/room/${roomNumber}`);
     });
-    socket.on('updateRoomList', fetchUser);
 
     return () => {
       socket.off('redundancyCheck');
-      socket.off('routingAfterCreateRoom');
       socket.off('updateRoomList');
+      socket.off('routingAfterCreateRoom');
     };
   }, []);
 

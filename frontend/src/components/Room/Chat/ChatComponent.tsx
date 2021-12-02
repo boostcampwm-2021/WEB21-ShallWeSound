@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from '../../../stylesheets/style.module.scss';
 import * as _ from 'lodash';
 import { useSocket } from '../../../context/MyContext';

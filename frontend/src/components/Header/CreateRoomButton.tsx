@@ -8,7 +8,6 @@ import { Room } from '../../types';
 
 function CreateRoomModal({ history, onClose }: { history: RouteComponentProps['history']; onClose: () => void }) {
   const socket: Socket = useSocket()!;
-  const [nextRoomIndex, setNextRoomIndex] = useState(1);
 
   const [dialogInput, setDialogInput] = useState<Room>({
     id: '',
@@ -43,7 +42,7 @@ function CreateRoomModal({ history, onClose }: { history: RouteComponentProps['h
     if (dialogInput.name && dialogInput.description) {
       console.log('add Room');
       socket.emit('createRoom', {
-        id: nextRoomIndex,
+        id: 0,
         name: dialogInput.name,
         description: dialogInput.description,
       });
