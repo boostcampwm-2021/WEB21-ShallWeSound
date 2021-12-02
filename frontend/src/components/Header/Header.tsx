@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import UploadModal from './UploadModal';
 import { timeoutRef } from '../../types';
 import { RouteComponentProps } from 'react-router';

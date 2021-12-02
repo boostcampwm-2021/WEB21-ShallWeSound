@@ -6,7 +6,6 @@ import Progress from '../components/Util/Progress';
 import { useSocket } from '../context/MyContext';
 import { Socket } from 'socket.io-client';
 import { RouteComponentProps } from 'react-router';
-import { SocketAddress } from 'net';
 
 interface ResultState {
   musicList: musicResultItem[];
