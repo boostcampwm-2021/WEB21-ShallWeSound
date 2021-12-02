@@ -17,9 +17,9 @@ function MusicPlayer({ isHost }: { isHost: boolean }) {
     progressDegree: 0,
   });
   const [musicVolumeState, setMusicVolumeState] = useState({
-    volume: 50,
+    volume: 1,
     backupVolume: 50,
-    progressDegree: 50,
+    progressDegree: 1,
   })
 
   const playController = (playType: string) => {
