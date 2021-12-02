@@ -26,20 +26,21 @@ const MusicSearchItem = ({ name, singer, thumbnail, description, selected, onCli
   };
 
   return (
-    <SearchResultItem selected={selected} length={name.length} isOverflow={isOverflow()} onClick={onClick}>
-      <Image src={thumbnail} alt="thumbnail" />
-      <TextWrapper>
-        <Title ref={item}>{name}</Title>
-        <Singer>{singer}</Singer>
-      </TextWrapper>
-      <DescriptionIcon onMouseEnter={onDetail} onMouseLeave={onDetailOut}>
-        {detail ? (
-          <Description>
-            <p>{description}</p>
-          </Description>
-        ) : null}
-      </DescriptionIcon>
-    </SearchResultItem>
+    <>
+      <SearchResultItem selected={selected} length={name.length} isOverflow={isOverflow()} onClick={onClick}>
+        <Image src={thumbnail} alt="thumbnail" />
+        <TextWrapper>
+          <Title ref={item}>{name}</Title>
+          <Singer>{singer}</Singer>
+        </TextWrapper>
+        <DescriptionIcon onMouseEnter={onDetail} onMouseLeave={onDetailOut} />
+      </SearchResultItem>
+      {detail ? (
+        <Description>
+          <p>{description}</p>
+        </Description>
+      ) : null}
+    </>
   );
 };
 
@@ -150,16 +151,15 @@ const DescriptionIcon = styled.div`
 `;
 
 const Description = styled.div`
-  position: fixed;
-  width: 8rem;
+  width: 14.5rem;
   font-size: 0.8rem;
   border: 1px solid #cacfd2;
-  background-color: #f7f9f9;
-  box-shadow: rgb(0 0 0 / 20%) 0px 10px 25px;
   color: #969696;
   border-radius: 0.5rem;
   padding: 0.8rem;
   text-align: justify;
+  display: flex;
+  justify-content: center;
 `;
 
 export default MusicSearchItem;
