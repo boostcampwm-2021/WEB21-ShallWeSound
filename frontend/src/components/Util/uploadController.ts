@@ -1,4 +1,4 @@
-import {FileType, timeoutRef} from '../../types'
+import {FileType, timeoutRef, fileUploadObject} from '../../types'
 import * as _ from 'lodash'
 
 const fileUploadController = (e:React.ChangeEvent<HTMLInputElement>, 
@@ -47,54 +47,44 @@ const checkFileController=(
     }
 }
 
-function fileUploadMethodController(
-    descriptionRef:React.RefObject<HTMLTextAreaElement>,
-    singerRef:React.RefObject<HTMLInputElement>,
-    musicFileRef:React.RefObject<HTMLInputElement>,
-    thumbnailFileRef:React.RefObject<HTMLInputElement>,
-    uploadedFile:FileType,
-    setUploadedFile:React.Dispatch<React.SetStateAction<FileType>>,
-    timerRef: React.MutableRefObject<timeoutRef>,
-    textAlertRef:React.RefObject<HTMLDivElement>,
-    fileAlertRef:React.RefObject<HTMLDivElement>
-){
-    if(!checkSingerAndDescriptController(descriptionRef, singerRef)){
-        textAlertRef.current!.style.opacity = '1';
+function fileUploadMethodController(fileUploadObj:fileUploadObject){
+    if(!checkSingerAndDescriptController(fileUploadObj.descriptionRef, fileUploadObj.singerRef)){
+        fileUploadObj.textAlertRef.current!.style.opacity = '1';
         setTimeout(() => {
-            if (textAlertRef.current) textAlertRef.current!.style.opacity = '0';
+            if (fileUploadObj.textAlertRef.current) fileUploadObj.textAlertRef.current!.style.opacity = '0';
         }, 3000);
         return;
     }
-    if(!checkFileController(musicFileRef, thumbnailFileRef, uploadedFile)){
-        fileAlertRef.current!.style.opacity = '1';
+    if(!checkFileController(fileUploadObj.musicFileRef, fileUploadObj.thumbnailFileRef, fileUploadObj.uploadedFile)){
+        fileUploadObj.fileAlertRef.current!.style.opacity = '1';
         setTimeout(() => {
-            if (fileAlertRef.current) fileAlertRef.current!.style.opacity = '0';
+            if (fileUploadObj.fileAlertRef.current) fileUploadObj.fileAlertRef.current!.style.opacity = '0';
         }, 3000);
         return;
     }
-    if(timerRef.current){
-        clearTimeout(timerRef.current.timer!);
+    if(fileUploadObj.timerRef.current){
+        clearTimeout(fileUploadObj.timerRef.current.timer!);
     }
     const uploadTimer = setTimeout(async ()=>{
         const formData = new FormData();
-        Object.values(uploadedFile.musicFile!).forEach(el=>{
+        Object.values(fileUploadObj.uploadedFile.musicFile!).forEach(el=>{
             formData.append('userFile1', el);
         });
-        Object.values(uploadedFile.thumbnailFile!).forEach(el=>{
+        Object.values(fileUploadObj.uploadedFile.thumbnailFile!).forEach(el=>{
             formData.append('userFile2', el);
         })
-        formData.append('singer', uploadedFile.singer!);
-        formData.append('description', uploadedFile.descript!);
+        formData.append('singer', fileUploadObj.uploadedFile.singer!);
+        formData.append('description', fileUploadObj.uploadedFile.descript!);
         await fetch('/upload', {
             method:'POST',
             body: formData,
         })
-        const curObj = resetFileState(_.cloneDeep(uploadedFile), descriptionRef, singerRef);
-        setUploadedFile(curObj);
-        musicFileRef.current!.value = '';
-        thumbnailFileRef.current!.value='';
+        const curObj = resetFileState(_.cloneDeep(fileUploadObj.uploadedFile), fileUploadObj.descriptionRef, fileUploadObj.singerRef);
+        fileUploadObj.setUploadedFile(curObj);
+        fileUploadObj.musicFileRef.current!.value = '';
+        fileUploadObj.thumbnailFileRef.current!.value='';
     }, 200)
-    timerRef.current.timer = uploadTimer;
+    fileUploadObj.timerRef.current.timer = uploadTimer;
     return;
 }
 

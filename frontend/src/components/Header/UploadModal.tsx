@@ -1,6 +1,6 @@
 import styles from '../../stylesheets/style.module.scss';
 import React, { useState, useRef} from 'react';
-import {FileType, timeoutRef} from '../../types'
+import {FileType, timeoutRef, fileUploadObject} from '../../types'
 import uploadController from '../Util/uploadController';
 
 function UploadModalInner() {
@@ -30,7 +30,18 @@ function UploadModalInner() {
   };
   
   const fileUploadMethod = () => {
-    uploadController.fileUploadMethodController(descriptionRef, singerRef, musicFileRef, thumbnailFileRef, uploadedFile, setUploadedFile, timerRef, textAlertRef, fileAlertRef);
+    const curObj:fileUploadObject={
+      descriptionRef,
+      singerRef,
+      musicFileRef,
+      thumbnailFileRef,
+      uploadedFile, 
+      setUploadedFile, 
+      timerRef, 
+      textAlertRef, 
+      fileAlertRef
+    }
+    uploadController.fileUploadMethodController(curObj);
   };
 
   const writeSingerName = (e: React.ChangeEvent<HTMLInputElement>) => {

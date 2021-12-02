@@ -1,3 +1,15 @@
+type fileUploadObject={
+  descriptionRef:React.RefObject<HTMLTextAreaElement>,
+  singerRef:React.RefObject<HTMLInputElement>,
+  musicFileRef:React.RefObject<HTMLInputElement>,
+  thumbnailFileRef:React.RefObject<HTMLInputElement>,
+  uploadedFile:FileType,
+  setUploadedFile:React.Dispatch<React.SetStateAction<FileType>>,
+  timerRef: React.MutableRefObject<timeoutRef>,
+  textAlertRef:React.RefObject<HTMLDivElement>,
+  fileAlertRef:React.RefObject<HTMLDivElement>
+}
+
 type Room = {
   id: string;
   name: string;
@@ -63,4 +75,4 @@ type joinData = {
   roomID: string;
 };
 
-export type { Music, FileType, timeoutRef, fetchState, Room, Action, musicResultItem, joinData, music };
+export type { Music, FileType, timeoutRef, fetchState, Room, Action, musicResultItem, joinData, music, fileUploadObject};
