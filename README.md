@@ -60,4 +60,4 @@
 
 ## 상세소개
 
-[프로젝트 노션 링크](https://www.notion.so/d42fb316e50d4e199e4f27559d1ebe3d?v=f33e3ada30064e5faafdaad174b7dd11&p=e15fcfdb965b4aa08bf9c8c5cf795796)
+[프로젝트 노션 링크](https://wind-knight-242.notion.site/15-10-Web21-e15fcfdb965b4aa08bf9c8c5cf795796)
