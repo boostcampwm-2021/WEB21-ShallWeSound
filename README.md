@@ -60,4 +60,4 @@
 
 ## 상세소개
 
-[프로젝트 노션 링크](https://wind-knight-242.notion.site/15-10-Web21-e15fcfdb965b4aa08bf9c8c5cf795796)
+[프로젝트 노션 링크](https://www.notion.so/boostcamp-wm/15-10-Web21-e15fcfdb965b4aa08bf9c8c5cf795796)
